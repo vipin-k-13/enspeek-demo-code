@@ -42,7 +42,7 @@ const LoginForm = () => {
           userType: data.usertype,
         }),
       );
-      toast.success("login successfully");
+      toast.success("Login Successful!");
       navigate("/");
     },
   });

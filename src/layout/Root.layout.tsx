@@ -14,6 +14,15 @@ const Root_layout = () => {
   const { hasQuestionnaire } = useSelector((state: RootState) => state.study);
  const { isAddingQuestion } = useSelector((state: RootState) => state.trigger);
  const { submitItems } = useSelector((state: RootState) => state.question);
+ const forceShowChatRoutes = [
+  "/report",
+  "/crosstab",
+  "/publish-survey"
+];
+
+const isForceShowChat = forceShowChatRoutes.some(route =>
+  location.pathname.startsWith(route)
+);
   return (
     <div className="h-screen flex flex-col">
       <Header />
@@ -26,9 +35,11 @@ const Root_layout = () => {
           )}
         >
           <Outlet />
-          { (!isHome && submitItems.length>0) && <ChatTextArea />}
+          {/* { (!isHome && submitItems.length>0) && <ChatTextArea />} */}
+          { (!isHome && (submitItems.length > 0 || isForceShowChat)) && <ChatTextArea />}
         </div>
-        {(Boolean(!isHome && hasQuestionnaire) || Boolean(!isHome && isAddingQuestion) )&& (
+        {/* {(Boolean(!isHome && hasQuestionnaire) || Boolean(!isHome && isAddingQuestion) )&& ( */}
+        {((!isHome && hasQuestionnaire) ||  (!isHome && isAddingQuestion) || (!isHome && isForceShowChat)) && (
           <div className="w-[30%] h-full" id="otherChat">
             <ChatWindow />
           </div>
