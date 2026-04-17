@@ -1,0 +1,401 @@
+declare type DropdownData = {
+  Title: string;
+  Icon?: React.ElementType;
+  onClick: () => void;
+};
+
+declare type Question = {
+  qID: string;
+  openai_to_show: number;
+  "ADD-OPTION": string;
+  qText: string;
+  qText2: string;
+  qType: string;
+  ri: string;
+  status: string;
+  qLabel_esp: string;
+  qText_esp: string | null;
+  qText2_esp: string | null;
+  ri_esp: string | null;
+  qLabel: string;
+  rating: number;
+  hidden_column: number;
+  from_output: number;
+  modify: number;
+  "PIPE-IN-OPTIONS": string;
+  logic2: any[];
+  note2: any[];
+  qNote3: string;
+  rowOptionList: Option[];
+  colOptionList: Option[];
+};
+
+declare type Option = {
+  skip_to: string;
+  terminate: number;
+  exclusive: number;
+  optionCode: number;
+  optionID: string;
+  optionLogic: string;
+  optionNote: string;
+  optionText: string;
+  optionTextSpanish: string;
+  optionType: "single-select" | "multiple-select";
+  other: boolean;
+};
+
+declare type User = {
+  apiToken: string;
+  firstName: string;
+  lastName: string;
+  userType: "admin" | "user" | string;
+  grp: string;
+  suggest_login_password: number;
+  updated_on: string;
+  enabled: number;
+};
+
+declare type Study = {
+  projectDescription: string;
+  studyName: string;
+  studyCategory: string;
+  studyState: string;
+  createdOn: string;
+  studyID: string;
+  isActive: number;
+  isArchived: number;
+  isShared: number;
+  program: number;
+  programmed: number;
+  launch: number;
+  link: number;
+  liveLink: string | null;
+  data: number;
+  externalData: number;
+  externalDataLink: string | null;
+  dashboard: number;
+  dashboardLink: string | null;
+  report: number;
+  tier: number;
+  hasQuestionnaire: number;
+  downloadReport: string | null;
+  output: number;
+  studyType: string;
+  whichCS: number;
+  closed: number;
+  kdi: number;
+  tracking: number;
+  isOwner: number;
+  name: string;
+  email: string;
+  share: number;
+  programAllow: number;
+  upload: number;
+};
+
+declare type QuestionPayload = {
+  apiToken: string;
+  studyID: string;
+  newQID: string;
+  qType: string;
+  qText: string;
+  qLabel: string;
+  qText2: string | null;
+  colOptionList: any[] | null;
+  rowOptionList: any[] | null;
+  logic1: Record<string, unknown> | null;
+  logic2: string;
+  logic3: string;
+  note1: string;
+  note2: string;
+  note3: string;
+  ri: string;
+  rating: number;
+  hidden_column: number;
+  from_output: number;
+  status: string | null;
+  min_selection?: number;
+  max_selection?: number;
+};
+
+declare type QuestionRedux = {
+  CQID: string;
+};
+
+declare type QuestionFormat = {
+  label: string;
+  options: string[];
+  qText: string;
+  qType: "single-select" | "multi-select" | string;
+};
+
+declare type QuestionList = {
+  qID: string;
+  qType: string;
+  qText: string;
+  qText2: string;
+  ri: string;
+  qLabel: string;
+};
+
+declare type QuestionGroup = {
+  groupID: string;
+  groupText: string;
+  groupLogic: string;
+  qList: QuestionList[];
+  logicOptions: {};
+};
+
+declare type QuestionData = {
+  _coloptions: Record<string, unknown>;
+  _coloptions_table: Record<string, unknown>;
+  _colorder: string[];
+  _colorder_table: string[];
+  _rowoptions: Record<string, string>;
+  _rowoptions_table: Record<string, string>;
+  _roworder: string[];
+  _roworder_table: string[];
+  all_rollup: string[];
+  base: number;
+  base_text: string;
+  color_code: Record<string, string>;
+  data: Record<string, number> | any;
+  data_table: Record<string, number>;
+  external: number;
+  external_link: string;
+  is_base: number;
+  is_roll_up: number;
+  label: string;
+  responding_base: Record<string, number>;
+  set_roll_up: number;
+  symbol: string;
+  text: string;
+  type: string;
+};
+
+declare type SurveyData = {
+  BASE: number;
+  Cell: string;
+  "FILTERED BASE": number;
+  [key: string]: QuestionData;
+  cell_id: number;
+  seq: string[];
+};
+
+declare type ReportFilterType = {
+  seq: string[];
+  [key: string]: Record<string, any>;
+  BASE: number;
+};
+
+declare type FilterList = {
+  id: string;
+  label: string;
+  marked: boolean;
+  type: string;
+};
+
+declare type FilterItem = {
+  id: string;
+  label: string;
+  text: string;
+  type: string;
+  _rowoptions: Record<string, unknown>;
+  _coloptions: Record<string, unknown>;
+  _roworder: string[];
+  _colorder: string[];
+  _rowlogic: Record<string, unknown>;
+  _collogic: Record<string, unknown>;
+};
+
+declare type filterSliceType = {
+  FilterList: FilterList[];
+  ReportFilterList: FilterItem[];
+  tableQList: string[];
+  selected: string;
+  fliterReportData: string[];
+  side_by_side: string;
+};
+
+declare type BannerInfo = {
+  active: number;
+  bannerID: string;
+  bannerList_logic: {
+    pointLogic: string;
+  }[];
+  count: number;
+  default: number;
+  description: string;
+  firstName: string;
+  lastName: string;
+  percent: number;
+  seq: number;
+  statGroup: string;
+  statLevel: string;
+  tableID_list: string[];
+  tb_enabled: number;
+  timestamp: string;
+  title: string;
+  userID: string;
+};
+
+declare type AddBannerPayload = {
+  title: string;
+  description: string;
+  logic: any[];
+  count: number;
+  percent: number;
+};
+
+declare type EditBannerPayload = {
+  bannerID: string;
+  title: string;
+  description: string;
+  statGroup: string;
+  logic: {
+    pointLogic: string;
+  }[];
+  count: number;
+  percent: number;
+};
+
+declare type Banner = {
+  bannerid: string;
+  title: string;
+  description: string;
+  bannerList_logic: string;
+  active: number;
+  seq: number;
+  statGroup: string;
+  statLevel: string | null;
+  tb_enabled: number;
+  userID: string;
+  count: number;
+  percent: number;
+  default: number;
+  tableID_list: string[];
+};
+
+declare type CrossTabDataSliceState = {
+  Banners: Banner[];
+  BannersAll: Banner[];
+  BannerPointer: BannerPoint[];
+  optsData: Record<string, any>;
+  varsData: Record<string, any>;
+  LogicData: Record<number, any>;
+  tableData: BannerTable[];
+};
+
+declare type pointerSegment = {
+  pointID: string;
+  segTitle: string;
+  groupName: string;
+  logic: Record<string, string>[];
+};
+
+declare type BannerPoint = {
+  active: number;
+  alpha: string;
+  bannerGroup: string;
+  logic: {
+    pointLogic: string;
+  }[];
+  pointID: string;
+  seq: number;
+  statLevel: string | null;
+  title: string;
+};
+
+declare type BannerTable = {
+  tableID: string;
+  title: string;
+  description: string;
+  qID: string;
+  qType: string;
+  active: number;
+  tbl_logic: any[];
+};
+
+declare type EditTableListQuestionPayload = {
+  bannerID: string;
+  description: string;
+  tableID: string;
+  title: string;
+  rowOptionList: {
+    active: number;
+    id: string;
+    optionCode: number;
+    optionLogic: {
+      pointLogic: string;
+    }[];
+    optionText: string;
+    optionType: string;
+    seq: number;
+  }[];
+  logic: {
+    pointLogic: string;
+  }[];
+};
+
+declare type AddCustomTablePayload = {
+  bannerID: string;
+  description: string;
+  title: string;
+  qType: string;
+  rowOptionList: {
+    active: number;
+    id: string;
+    optionCode: number;
+    optionLogic: {
+      pointLogic: string;
+    }[];
+    optionText: string;
+    optionType: string;
+    seq: number;
+  }[];
+  logic: {
+    pointLogic: string;
+  }[];
+};
+declare type QuestionOption = {
+  id: string;
+  optionText: string;
+  optionType: string;
+  optionLogic: {
+    pointLogic: string;
+  }[];
+  optionCode: number;
+  seq: number;
+  active: number;
+  op_show: number;
+  include_in_base: number;
+  net: any[];
+  mean: number;
+  median: number;
+  stdev: number;
+  old_q: number;
+  net_val: number;
+};
+
+declare type QuesLogicPayload = {
+  logic1: {
+    SKIP: [
+      {
+        _lgic: string;
+        QID: string;
+        optionID: string;
+        param: string;
+        value: string;
+        extend: [
+          {
+            _lgic: string;
+            QID: string;
+            optionID: string;
+            param: string;
+            value: string;
+          }
+        ];
+      }
+    ];
+  };
+};

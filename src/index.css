@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #112D4E;
+  --color-action: #3F72AF;
+  --color-bg: #ffffff;
+  --color-text: #000;
+  --color-airesp: #d0dee8;
+}
+
+body{
+  @apply bg-white
+}
+
+.sidebar_icons{
+  @apply w-full py-2 flex text-xl justify-center focus:outline-none hover:text-primary hover:bg-white transition-colors duration-200
+}
+
+/* .no-scrollbar::-webkit-scrollbar {
+  display: none;
+} */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b8c7d8;
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #a1afc2;
+}
