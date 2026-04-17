@@ -104,7 +104,8 @@ const Router = createBrowserRouter(
     },
   ],
   {
-    basename: "/enspeek/",
+    // basename: "/enspeek/",
+    basename: "/",
   }
 );
 
