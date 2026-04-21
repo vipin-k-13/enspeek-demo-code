@@ -6,6 +6,14 @@
   --color-bg: #ffffff;
   --color-text: #000;
   --color-airesp: #d0dee8;
+  --color-login-bg-start: #5f63e9;
+  --color-login-bg-end: #6a66f4;
+  --color-login-card: #f9f9fc;
+  --color-login-muted: #8f93b0;
+  --color-login-input: #f1f2fb;
+  --color-login-input-text: #262942;
+  --color-login-primary: #4f56e6;
+  --color-login-primary-hover: #444be0;
 }
 
 body{
