@@ -4,6 +4,7 @@ export interface DropdownItem {
   id: string;
   label: string;
   icon?: React.ReactNode;
+  description?: string;
   onClick?: () => void;
   disabled?: boolean;
 }
@@ -22,6 +23,7 @@ const NewDropdown: React.FC<DropdownProps> = ({
   className = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -51,15 +53,24 @@ const NewDropdown: React.FC<DropdownProps> = ({
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchTerm("");
+    }
+  }, [isOpen]);
+
   const handleItemClick = (item: DropdownItem) => {
     if (!item.disabled && item.onClick) {
       item.onClick();
     }
     setIsOpen(false);
   };
+  const filteredItems = items.filter((item) =>
+    item.label.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const getPositionClasses = () => {
-    const baseClasses = "absolute z-50 w-56 ml-8 bg-white rounded-lg shadow-lg ring-1 ring-gray-200 ring-opacity-5 transition-all duration-200 ease-out transform max-h-80 overflow-y-auto dropdown-scroll";
+    const baseClasses = "absolute z-50 w-72 bg-white rounded-2xl shadow-[0_14px_45px_rgba(38,44,86,0.16)] ring-1 ring-gray-200 ring-opacity-70 transition-all duration-200 ease-out transform max-h-96 overflow-y-auto dropdown-scroll";
     
     switch (position) {
       case "top-left":
@@ -91,24 +102,41 @@ const NewDropdown: React.FC<DropdownProps> = ({
 
       {isOpen && (
         <div className={getPositionClasses()}>
-          <div className="py-1" role="menu" aria-orientation="vertical">
-            {items.map((item) => (
+          {items.length > 5 && (
+            <div className="sticky top-0 z-10 bg-white p-2">
+              <input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search commands..."
+                className="h-9 w-full rounded-xl border border-[#d4d8ef] bg-[#f8f9ff] px-3 text-sm text-gray-700 outline-none focus:border-[#8f97f4]"
+              />
+            </div>
+          )}
+          <div className="p-2" role="menu" aria-orientation="vertical">
+            {filteredItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleItemClick(item)}
                 data-test-id={item.label}
                 disabled={item.disabled}
-                className={`w-full text-left px-4 py-2 text-sm transition-colors duration-150 flex items-center gap-3 ${
+                className={`w-full text-left rounded-xl px-3 py-2.5 text-sm transition-colors duration-150 flex items-start gap-3 ${
                   item.disabled
                     ? "text-gray-400 cursor-not-allowed"
-                    : "text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer"
+                    : "text-gray-700 hover:bg-[#f4f5ff] hover:text-gray-900 cursor-pointer"
                 }`}
                 role="menuitem"
               >
                 {item.icon && (
-                  <span className="flex-shrink-0">{item.icon}</span>
+                  <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#eef0ff] text-[#5962eb]">
+                    {item.icon}
+                  </span>
                 )}
-                <span>{item.label}</span>
+                <span className="flex flex-col">
+                  <span className="text-[15px] font-medium leading-tight">{item.label}</span>
+                  {item.description && (
+                    <span className="mt-1 text-xs text-gray-500">{item.description}</span>
+                  )}
+                </span>
               </button>
             ))}
           </div>

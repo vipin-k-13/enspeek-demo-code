@@ -4,16 +4,15 @@ import type { AppDispatch, RootState } from "../../store/store";
 import { StudyCard } from "./card";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "../../services/apiService";
-import { HiOutlineDotsVertical } from "react-icons/hi";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import { cn } from "../../utils";
-import NewDropdown from "./NewDropDown";
 import { setFilterStudys, setStudys } from "../../store/CrosstabStudySlice";
 import Input from "../ui/Input";
 import { HiSearch } from "react-icons/hi";
 import DeleteModel from "../common/list/DeleteModel";
 import ListingCopyModel from "./ListingCopyModal";
+import { setMessage } from "../../store/ChatSlice";
 
 const HomeSidebar: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
@@ -64,6 +63,10 @@ const HomeSidebar: React.FC = () => {
   }, [searchTerm, Studys, dispatch]);
 
   useEffect(() => {
+    setPage(1);
+  }, [activeTab, searchTerm]);
+
+  useEffect(() => {
     const calculateLimit = () => {
       if (!sidebarRef.current) return;
 
@@ -94,60 +97,60 @@ const HomeSidebar: React.FC = () => {
   const currentItems = FilterStudys?.slice(start, start + limit) ?? [];
 
   const totalPages = FilterStudys ? Math.ceil(FilterStudys.length / limit) : 0;
-  const dropdownItems = [
-    {
-      id: "myactive",
-      label: "My Active",
-      onClick: () => setActiveTab("myactive"),
-    },
-    {
-      id: "allactive",
-      label: "All Active",
-      onClick: () => setActiveTab("allactive"),
-    },
-    {
-      id: "isarchived",
-      label: "Is Archived",
-      onClick: () => setActiveTab("isarchived"),
-    },
-  ].filter((item) => item.id !== activeTab);
+  const activeCount = Studys.filter((s: any) => !Boolean(s.isarchived)).length;
+  const allCount = Studys.length;
+  const archivedCount = Studys.filter((s: any) => Boolean(s.isarchived)).length;
 
   return (
-    <div className="h-full w-[25%] px-4 py-2 relative" ref={sidebarRef}>
-      <div className="flex items-center justify-between mb-2">
-        <span>{`${
-          activeTab === "myactive"
-            ? "My Active"
-            : activeTab === "allactive"
-            ? "All Active"
-            : "Archived"
-        } Studies (${
-          studyList && studyList.data ? studyList.data.length : 0
-        })`}</span>
-        <NewDropdown
-          trigger={
-            <div
-              data-test-id="MORE_ACTIONS"
-              className="peer/menu-button flex w-8 items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:bg-gray-200 hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0"
-            >
-              <HiOutlineDotsVertical />
-            </div>
-          }
-          items={dropdownItems}
-        />
+    <div className="h-full w-[25%] border-r border-[#e8e9f5] bg-white px-3 py-3 flex flex-col" ref={sidebarRef}>
+      <div className="mb-3 flex items-center justify-between">
+        <p className="text-[24px] font-semibold text-[#2b2d49]">My Studies</p>
       </div>
-      <div className="my-2 flex items-center border border-gray-200 rounded-lg px-1">
+      <div className="mb-3 grid grid-cols-3 gap-1 rounded-xl bg-[#f5f6ff] p-1 text-sm">
+        <button
+          className={cn(
+            "rounded-lg px-2 py-1.5 text-[13px] transition-colors",
+            activeTab === "myactive"
+              ? "bg-login-primary text-white font-semibold shadow-sm"
+              : "text-[#6f7394] hover:bg-white"
+          )}
+          onClick={() => setActiveTab("myactive")}
+        >
+          {`Active (${activeCount})`}
+        </button>
+        <button
+          className={cn(
+            "rounded-lg px-2 py-1.5 text-[13px] transition-colors",
+            activeTab === "allactive"
+              ? "bg-login-primary text-white font-semibold shadow-sm"
+              : "text-[#6f7394] hover:bg-white"
+          )}
+          onClick={() => setActiveTab("allactive")}
+        >
+          {`All (${allCount})`}
+        </button>
+        <button
+          className={cn(
+            "rounded-lg px-2 py-1.5 text-[13px] transition-colors",
+            activeTab === "isarchived"
+              ? "bg-login-primary text-white font-semibold shadow-sm"
+              : "text-[#6f7394] hover:bg-white"
+          )}
+          onClick={() => setActiveTab("isarchived")}
+        >
+          {`Archive (${archivedCount})`}
+        </button>
+      </div>
+      <div className="my-2 flex h-10 items-center rounded-xl bg-[#f4f5ff] px-3">
+        <HiSearch className="h-4 w-4 text-[#b2b6d1]" />
         <Input
-          placeholder="Search study..."
-          className="focus:outline-none border-0 bg-white focus-visible:ring-0"
+          placeholder="Search studies..."
+          className="h-full border-0 bg-transparent px-2 text-sm text-[#7d82a7] placeholder:text-[#b5b8d1] focus:outline-none focus-visible:ring-0"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <div>
-          <HiSearch className="h-5 w-5" />
-        </div>
       </div>
-      <div className="flex flex-col items-center gap-2 w-full pb-4">
+      <div className="flex-1 flex flex-col items-center gap-3 w-full pb-2 overflow-y-auto">
         {isListLoading ? (
           <div className="flex items-center justify-center w-full h-full">
             <AiOutlineLoading3Quarters
@@ -174,16 +177,16 @@ const HomeSidebar: React.FC = () => {
         )}
       </div>
       {totalPages > 1 && (
-        <div className="flex justify-end items-center absolute bottom-2 right-2 gap-2">
+        <div className="mt-1 flex justify-center items-center gap-2 border-t border-[#ececf8] pt-2">
           <div
-            className="peer/menu-button flex w-8 items-center gap-2 overflow-hidden border border-gray-200 rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:bg-gray-200 hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0"
+            className="flex w-8 items-center justify-center rounded-lg border border-[#dddff0] p-2 text-[#676c93] hover:bg-[#f1f2ff]"
             onClick={() => setPage((prev) => (prev === 1 ? prev : prev - 1))}
           >
             <MdNavigateBefore />
           </div>
-          <div>{`${page} of ${totalPages}`}</div>
+          <div className="text-sm text-[#7a7ea2]">{`${page} of ${totalPages}`}</div>
           <div
-            className="peer/menu-button flex w-8 items-center gap-2 overflow-hidden border border-gray-200 rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:bg-gray-200 hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0"
+            className="flex w-8 items-center justify-center rounded-lg border border-[#dddff0] p-2 text-[#676c93] hover:bg-[#f1f2ff]"
             onClick={() =>
               setPage((prev) => (prev < totalPages ? prev + 1 : prev))
             }

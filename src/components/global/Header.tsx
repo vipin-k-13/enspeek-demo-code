@@ -51,12 +51,12 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="sticky top-0 z-40 bg-gray-100 border-b border-gray-200 px-4 text-2xl flex items-center justify-between">
+    <div className="sticky top-0 z-40 flex items-center justify-between border-b border-[#e9eaf5] bg-white px-4 py-2 text-2xl">
       <div className="flex items-center">
         <Link to={"/"}>
-          <img src={ICON} alt="Insights Curry" className="w-full h-12" />
+          <img src={ICON} alt="Insights Curry" className="h-8 w-auto" />
         </Link>
-        <div className="text-[17px] font-medium text-blue-900 ml-4">
+        <div className="ml-2 text-[24px] font-bold text-login-primary">
           Enspeek
         </div>
         {name !== "" && (
@@ -71,13 +71,13 @@ const Header = () => {
       <div className="relative items-center" ref={dropdownRef}>
         <div className="flex items-center gap-2">
           {firstName && (
-            <span className="text-sm font-medium text-gray-500 capitalize">
+            <span className="text-sm font-medium text-[#2f3251] capitalize">
               {firstName}
             </span>
           )}
           <FaUserCircle
             data-test-id="PROFILE"
-            className="cursor-pointer text-gray-400"
+            className="cursor-pointer text-login-primary"
             onClick={toggleDropdown}
             size={28}
           />

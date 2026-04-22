@@ -12,6 +12,7 @@ import LoaderSpinner from "../../../global/LoaderSpinner";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../../../store/store";
 import { Login } from "../../../../store/UserSlice";
+import { ColoredLogo } from "../../../../assets/icons";
 
 const LoginForm = () => {
   const [isPasswordVisible, setIsPasswordVisible] =
@@ -74,53 +75,35 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="w-full md:w-1/2 p-8 md:p-5 md:px-10 flex flex-col justify-center bg-gray-50">
-      <div>
-        <h2 className="text-2xl md:text-3xl font-bold mb-1 text-gray-800">
-          Welcome Back
+    <div className="w-full max-w-[32rem] rounded-[24px] border border-white/30 bg-login-card/95 px-5 py-7 shadow-[0_20px_60px_rgba(27,30,78,0.22)] backdrop-blur-sm sm:px-7 sm:py-9">
+      <div className="mb-6 flex flex-col items-center text-center sm:mb-7">
+        <div className="mb-5 inline-flex w-fit items-center justify-center gap-[5px]">
+          <img src={ColoredLogo} alt="Enspeek" className="h-10 w-auto sm:h-11" />
+          <span className="text-[2rem] font-bold leading-none text-login-primary">
+            Enspeek
+          </span>
+        </div>
+        <h2 className="text-[2rem] font-semibold leading-tight text-[#232542]">
+          Welcome back
         </h2>
-        <p className="text-gray-500 mb-6">Sign in to your account</p>
-        <Button varinat={"social"} className="cursor-not-allowed" disabled>
-          <GoogleIcon />
-          <span>Login with Google</span>
-        </Button>
-      </div>
-      <div className="relative my-4">
-        <div className=" absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-200" />
-        </div>
-        <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-gray-50 text-gray-500">or</span>
-        </div>
+        <p className="mt-1 text-sm text-login-muted">Sign in to your account</p>
       </div>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Email <span className="text-blue-500">*</span>
-          </label>
           <Input
             id="email"
             data-test-id="EMAIL"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email address"
-            className="bg-white border-gray-200 placeholder:text-gray-400 text-gray-800 w-full focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Email"
+            className="h-12 rounded-xl border-0 bg-login-input px-4 text-base text-login-input-text placeholder:text-[#a5a8bf] focus-visible:ring-2 focus-visible:ring-login-primary/40"
           />
           {errors.email && (
             <p className="mt-1 text-sm text-red-600">{errors.email}</p>
           )}
         </div>
         <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Password <span className="text-blue-500">*</span>
-          </label>
           <div className="relative">
             <Input
               id="password"
@@ -128,12 +111,12 @@ const LoginForm = () => {
               data-test-id="PASSWORD"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="bg-white border-gray-200 placeholder:text-gray-400 text-gray-800 w-full pr-10 focus:border-blue-500 focus:ring-blue-500"
+              placeholder="Password"
+              className="h-12 rounded-xl border-0 bg-login-input px-4 pr-11 text-base text-login-input-text placeholder:text-[#a5a8bf] focus-visible:ring-2 focus-visible:ring-login-primary/40"
             />
             <button
               type="button"
-              className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+              className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#a2a6be] hover:text-[#7f839f]"
               onClick={() => setIsPasswordVisible(!isPasswordVisible)}
             >
               {isPasswordVisible ? <LuEyeOff size={18} /> : <LuEye size={18} />}
@@ -147,7 +130,7 @@ const LoginForm = () => {
           type="submit"
           data-test-id="SUBMIT"
           className={cn(
-            "w-full relative overflow-hidden bg-primary hover:bg-primary/90 text-white py-2 rounded-lg transition-all duration-300",
+            "h-12 w-full rounded-xl bg-gradient-to-r from-login-primary to-login-bg-end text-base font-semibold text-white transition-all duration-300 hover:from-login-primary-hover hover:to-login-primary",
           )}
         >
           <span className="flex items-center justify-center">
@@ -155,10 +138,26 @@ const LoginForm = () => {
             <LuArrowRight className="ml-2 h-4 w-4" />
           </span>
         </Button>
-        <div className="text-center mt-2">
+        <div className="relative my-2">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-[#dddff0]" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="bg-login-card px-3 text-login-muted">or</span>
+          </div>
+        </div>
+        <Button
+          varinat={"social"}
+          className="h-12 rounded-xl border border-[#e2e4f1] bg-white text-[15px] font-medium text-[#30334d] shadow-none hover:bg-[#f8f8fd] cursor-not-allowed"
+          disabled
+        >
+          <GoogleIcon />
+          <span>Continue with Google</span>
+        </Button>
+        <div className="text-center">
           <Button
             varinat={"link"}
-            className="text-blue-600 hover:text-blue-700 text-sm transition-colors cursor-not-allowed"
+            className="text-sm text-[#5f63e9] hover:text-[#4f56e6] transition-colors cursor-not-allowed"
             disabled
           >
             Forgot password?
