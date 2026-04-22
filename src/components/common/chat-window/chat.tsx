@@ -65,8 +65,8 @@ const ChatWindow: React.FC = () => {
     <div className="h-full w-full max-w-full z-50">
       <div
         className={cn(
-          " overflow-y-auto bg-white scrollbar-thin scrollbar-thumb-gray-300 p-4",
-          pathname === "/" ? "h-[71vh]" : "h-[73vh]"
+          "overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-4",
+          pathname === "/" ? "h-[71vh] bg-[#f4f5ff]" : "h-[73vh] bg-white"
         )}
       >
         {messages.map((msg, index) => (
@@ -81,10 +81,10 @@ const ChatWindow: React.FC = () => {
               className={
                 msg.sdata || msg.crosstab
                   ? ""
-                  : `inline-block px-3 py-1.5 text-sm rounded-lg shadow text-left ${
+                  : `inline-block px-4 py-2 text-sm rounded-2xl shadow-sm text-left ${
                       msg.sender === "user"
-                        ? "bg-gray-200/60 text-black rounded-br-none max-w-[80%]"
-                        : "text-black border border-gray-100 rounded-bl-none focus:outline-none max-w-full"
+                        ? "bg-gradient-to-r from-login-primary to-login-bg-end text-white max-w-[70%]"
+                        : "bg-white text-[#252842] border border-[#e6e9f6] max-w-full"
                     }`
               }
             >
@@ -359,9 +359,9 @@ const ChatWindow: React.FC = () => {
               </>
             </div>
             {msg.sender === "user" ? (
-              <p className="text-[10px] mt-1 text-right">{`${firstName} ${lastName}`}</p>
+              <p className="text-[10px] mt-1 text-right text-[#7e83a5]">{`${firstName} ${lastName}`}</p>
             ) : (
-              <p className="text-[10px] mt-1">AI Assistant</p>
+              <p className="text-[10px] mt-1 text-[#7e83a5]">AI</p>
             )}
           </div>
         ))}

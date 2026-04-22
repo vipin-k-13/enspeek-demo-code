@@ -94,7 +94,7 @@ const ChatTextArea = () => {
 
       <div
         className={cn(
-          "flex flex-col rounded-[16px] shadow-lg transition-all duration-300 ease-in-out bg-white border-[1px] border-gray-200 cursor-text absolute bottom-4 z-50 w-full max-w-2xl transform left-1/2 -translate-x-1/2",
+          "flex flex-col rounded-[20px] shadow-[0_8px_24px_rgba(79,86,230,0.15)] transition-all duration-300 ease-in-out bg-white border border-[#e6e8f7] cursor-text absolute bottom-4 z-50 w-[86%] max-w-2xl transform left-1/2 -translate-x-1/2",
           isChatOpen
             ? "opacity-100 translate-y-0 scale-100"
             : "opacity-0 translate-y-8 scale-95 pointer-events-none",
@@ -106,9 +106,20 @@ const ChatTextArea = () => {
         )}
       >
         <div
-          className="overflow-y-auto flex items-center p-2"
+          className="overflow-y-auto flex items-center gap-2 p-2"
           style={{ maxHeight: "400px" }}
         >
+          <NewDropdown
+            position="top-left"
+            trigger={
+              <Tooltip content="Quick Commands" position="top">
+                <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#eef0ff] text-[#5962eb] transition-colors hover:bg-[#e6e9ff] cursor-pointer">
+                  <CiCircleList className="w-5 h-5" />
+                </button>
+              </Tooltip>
+            }
+            items={PromptsList()}
+          />
           <textarea
             ref={internalTextareaRef}
             data-test-id="CONVER"
@@ -120,7 +131,7 @@ const ChatTextArea = () => {
             onKeyDown={(e) => handleKeyPress(e, handleSubmit)}
             placeholder="Ask something..."
             className={cn(
-              "w-full resize-none border-0 bg-transparent p-3 text-foreground placeholder:text-muted-foreground focus:ring-0 focus-visible:outline-none",
+              "w-full resize-none border-0 bg-transparent p-2 text-foreground placeholder:text-[#b1b5ce] focus:ring-0 focus-visible:outline-none",
               "min-h-8"
             )}
           />
@@ -130,29 +141,21 @@ const ChatTextArea = () => {
                 disabled={isTyping}
                 data-test-id="SEND"
                 onClick={handleSubmit}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none text-white hover:bg-gray-200 disabled:bg-gray-300 cursor-pointer"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-login-primary to-login-bg-end text-sm font-medium transition-all hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:bg-gray-300 cursor-pointer"
               >
-                <IoMdSend className="h-5 w-5 text-gray-500" />
+                <IoMdSend className="h-5 w-5 text-white" />
                 <span className="sr-only">Send message</span>
               </button>
             </Tooltip>
           </div>
         </div>
-
-        <div className="mt-0.5 bg-gray-100 rounded-b-[16px] p-2">
+        <div
+          className={cn(
+            "rounded-b-[20px] border-t border-[#eceeff] bg-[#fafbff] px-3 py-2",
+            pathname === "/" ? "hidden" : "block"
+          )}
+        >
           <div className="flex items-center gap-3">
-            <NewDropdown
-              position="top"
-              trigger={
-                <Tooltip content="Explore Prompts" position="bottom">
-                  <button className="flex h-7 items-center gap-2 rounded-full p-2 text-sm text-foreground transition-colors hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-ring cursor-pointer">
-                    <CiCircleList className="w-4 h-4" />
-                  </button>
-                </Tooltip>
-              }
-              items={PromptsList()}
-            />
-
             <Suggestion />
 
             <div className="ml-auto flex items-center gap-2">

@@ -1,18 +1,23 @@
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../store/store";
 import { setMessage } from "../../store/ChatSlice";
+import { LuArchive, LuCalendar, LuCirclePlus, LuFolders, LuSearchCheck } from "react-icons/lu";
 
 const PromptsList = () => {
   const dispatch = useDispatch<AppDispatch>();
   return [
   {
     id: "studies created by [owner name]",
-    label: "📚 Studies created by",
+    label: "Studies by Owner",
+    icon: <LuFolders className="h-4 w-4" />,
+    description: "AI lists all studies from that owner",
     onClick: () => dispatch(setMessage("studies created by [owner name]")),
   },
   {
     id: "count of in progress studies",
-    label: "📊 Count of progress studies",
+    label: "In Progress Count",
+    icon: <LuSearchCheck className="h-4 w-4" />,
+    description: "AI tells how many studies are in progress",
     onClick: () => dispatch(setMessage("count of in progress studies")),
   },
   {
@@ -22,17 +27,23 @@ const PromptsList = () => {
   },
   {
     id: "studies created on [mm, dd]",
-    label: "🗓️ Studies created on",
+    label: "Studies by Date",
+    icon: <LuCalendar className="h-4 w-4" />,
+    description: "AI filters studies by creation date",
     onClick: () => dispatch(setMessage("studies created on [mm, dd]")),
   },
   {
     id: "give me archived studies",
-    label: "🗄️ Archived studies",
+    label: "Archived Studies",
+    icon: <LuArchive className="h-4 w-4" />,
+    description: "AI lists all archived studies",
     onClick: () => dispatch(setMessage("give me archived studies")),
   },
   {
     id: "create [study name]",
-    label: "➕ Create study",
+    label: "Create Study",
+    icon: <LuCirclePlus className="h-4 w-4" />,
+    description: "Creates a new study and navigates",
     onClick: () => dispatch(setMessage("create [study name]")),
   },
   {
