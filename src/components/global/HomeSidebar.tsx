@@ -12,7 +12,6 @@ import Input from "../ui/Input";
 import { HiSearch } from "react-icons/hi";
 import DeleteModel from "../common/list/DeleteModel";
 import ListingCopyModel from "./ListingCopyModal";
-import { setMessage } from "../../store/ChatSlice";
 
 const HomeSidebar: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
@@ -97,22 +96,31 @@ const HomeSidebar: React.FC = () => {
   const currentItems = FilterStudys?.slice(start, start + limit) ?? [];
 
   const totalPages = FilterStudys ? Math.ceil(FilterStudys.length / limit) : 0;
-  const activeCount = Studys.filter((s: any) => !Boolean(s.isarchived)).length;
-  const allCount = Studys.length;
-  const archivedCount = Studys.filter((s: any) => Boolean(s.isarchived)).length;
+  const activeCount =
+    studyList?.count?.active ??
+    Studys.filter((s: any) => !Boolean(s.isarchived)).length;
+  const archivedCount =
+    studyList?.count?.archived ??
+    Studys.filter((s: any) => Boolean(s.isarchived)).length;
+  const allCount = studyList?.count
+    ? (studyList.count.active || 0) +
+      (studyList.count.archived || 0) +
+      (studyList.count.shared || 0)
+    : Studys.length;
 
   return (
-    <div className="h-full w-[25%] border-r border-[#e8e9f5] bg-white px-3 py-3 flex flex-col" ref={sidebarRef}>
-      <div className="mb-3 flex items-center justify-between">
-        <p className="text-[24px] font-semibold text-[#2b2d49]">My Studies</p>
-      </div>
-      <div className="mb-3 grid grid-cols-3 gap-1 rounded-xl bg-[#f5f6ff] p-1 text-sm">
+    <div className="home-surface flex w-full shrink-0 flex-col border-r home-border md:h-full md:w-[320px]" ref={sidebarRef}>
+      <div className="border-b home-border-soft px-4 py-4">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <p className="home-heading text-[18px] font-semibold">My Studies</p>
+        </div>
+        <div className="home-panel-bg grid grid-cols-3 gap-1 rounded-[18px] p-1 text-sm">
         <button
           className={cn(
-            "rounded-lg px-2 py-1.5 text-[13px] transition-colors",
+            "rounded-[14px] px-2 py-2 text-[13px] transition-colors",
             activeTab === "myactive"
               ? "bg-login-primary text-white font-semibold shadow-sm"
-              : "text-[#6f7394] hover:bg-white"
+              : "home-muted hover:bg-white"
           )}
           onClick={() => setActiveTab("myactive")}
         >
@@ -120,10 +128,10 @@ const HomeSidebar: React.FC = () => {
         </button>
         <button
           className={cn(
-            "rounded-lg px-2 py-1.5 text-[13px] transition-colors",
+            "rounded-[14px] px-2 py-2 text-[13px] transition-colors",
             activeTab === "allactive"
               ? "bg-login-primary text-white font-semibold shadow-sm"
-              : "text-[#6f7394] hover:bg-white"
+              : "home-muted hover:bg-white"
           )}
           onClick={() => setActiveTab("allactive")}
         >
@@ -131,26 +139,30 @@ const HomeSidebar: React.FC = () => {
         </button>
         <button
           className={cn(
-            "rounded-lg px-2 py-1.5 text-[13px] transition-colors",
+            "rounded-[14px] px-2 py-2 text-[13px] transition-colors",
             activeTab === "isarchived"
               ? "bg-login-primary text-white font-semibold shadow-sm"
-              : "text-[#6f7394] hover:bg-white"
+              : "home-muted hover:bg-white"
           )}
           onClick={() => setActiveTab("isarchived")}
         >
           {`Archive (${archivedCount})`}
         </button>
       </div>
-      <div className="my-2 flex h-10 items-center rounded-xl bg-[#f4f5ff] px-3">
-        <HiSearch className="h-4 w-4 text-[#b2b6d1]" />
+      </div>
+      <div className="px-4 py-4">
+      <div className="home-search-bg flex h-10 items-center rounded-[18px] px-3">
+        <HiSearch className="home-muted h-4 w-4" />
         <Input
           placeholder="Search studies..."
-          className="h-full border-0 bg-transparent px-2 text-sm text-[#7d82a7] placeholder:text-[#b5b8d1] focus:outline-none focus-visible:ring-0"
+          className="home-text h-full border-0 bg-transparent px-2 text-sm home-chat-placeholder focus:outline-none focus-visible:ring-0"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <div className="flex-1 flex flex-col items-center gap-3 w-full pb-2 overflow-y-auto">
+      </div>
+      <div className="max-h-[40vh] flex-1 overflow-y-auto px-4 pb-3 md:max-h-none">
+      <div className="flex w-full flex-col items-center gap-3">
         {isListLoading ? (
           <div className="flex items-center justify-center w-full h-full">
             <AiOutlineLoading3Quarters
@@ -164,29 +176,31 @@ const HomeSidebar: React.FC = () => {
               key={item.studyid}
               id={item.studyid}
               name={item.studyname}
-              status={item.studyState}
+              status={item.studystate}
               owner={item.createdbyname}
               createAt={item.createdon}
               share={item?.isOwner ? item.isOwner : 0}
               isArchived={item.isarchived}
               launch={item.launch}
+              studystate={item.studystate}
             />
           ))
         ) : (
           <h4 className="mt-8">No Study Found</h4>
         )}
       </div>
+      </div>
       {totalPages > 1 && (
-        <div className="mt-1 flex justify-center items-center gap-2 border-t border-[#ececf8] pt-2">
+        <div className="mx-4 mt-1 flex items-center justify-center gap-2 border-t home-border-soft pt-3">
           <div
-            className="flex w-8 items-center justify-center rounded-lg border border-[#dddff0] p-2 text-[#676c93] hover:bg-[#f1f2ff]"
+            className="home-muted flex w-8 cursor-pointer items-center justify-center rounded-lg border home-border p-2 hover:bg-home-panel"
             onClick={() => setPage((prev) => (prev === 1 ? prev : prev - 1))}
           >
             <MdNavigateBefore />
           </div>
-          <div className="text-sm text-[#7a7ea2]">{`${page} of ${totalPages}`}</div>
+          <div className="home-muted text-sm">{`${page} of ${totalPages}`}</div>
           <div
-            className="flex w-8 items-center justify-center rounded-lg border border-[#dddff0] p-2 text-[#676c93] hover:bg-[#f1f2ff]"
+            className="home-muted flex w-8 cursor-pointer items-center justify-center rounded-lg border home-border p-2 hover:bg-home-panel"
             onClick={() =>
               setPage((prev) => (prev < totalPages ? prev + 1 : prev))
             }

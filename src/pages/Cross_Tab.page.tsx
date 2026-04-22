@@ -27,7 +27,7 @@ const Cross_Tab_Page = () => {
   }, [searchTerm, BannersAll, dispatch]);
 
   return (
-    <div className="min-h-screen px-3">
+    <div className="crosstab-page-bg min-h-screen px-3 py-3 md:px-4">
       <CrosstabHeader
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}

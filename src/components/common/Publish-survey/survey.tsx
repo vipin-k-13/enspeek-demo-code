@@ -7,12 +7,13 @@ import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import PublishSurveyHeader from "./PublishSurveyHeader";
 import ActivateSurvey from "./ActivateSurvey";
-import { cn, handleCopy } from "../../../utils";
+import { cn, handleCopy, handleLinkClick } from "../../../utils";
 import { queryClient } from "../../../App";
 import { setStudyInfo } from "../../../store/CrosstabStudySlice";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Quota from "./Quota";
 import { useOverQuotaReport } from "./SurveyApi";
+import { LuCheck, LuCopy, LuExternalLink } from "react-icons/lu";
 
 export default function PublishSurvey() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -98,47 +99,84 @@ export default function PublishSurvey() {
   }
 
   return (
-    <div>
-      <div className="bg-white h-full">
-        <div className="flex flex-col h-full">
-          <div className="w-full flex flex-col">
+    <div className="questionnaire-page-bg h-full">
+      <div className="h-full">
+        <div className="flex h-full flex-col">
+          <div className="flex w-full flex-col">
             <PublishSurveyHeader
               studyName={studyInfo.studyname}
               launch={studyInfo.launch}
               isSurveyActive={!!studyInfo.livelink}
             />
-            <div className="w-full mx-auto py-16 px-4 text-center h-full">
+            <div className="mx-auto flex h-full w-full max-w-[760px] flex-col gap-6 px-4 py-6 md:px-6 md:py-8">
               {studyInfo.livelink ? (
                 <>
-                  <p className="text-base text-blue-800 mb-4">
-                    Survey is active, data collection is enabled.
-                    <br />
-                    Use the live link below to run the survey.
-                  </p>
-                  <p
-                    data-test-id="SURVEY_LINK"
-                    className="break-words text-2xl font-semibold text-blue-700 cursor-pointer"
-                    onClick={() => handleCopy(studyInfo.livelink)}
-                  >
-                    {studyInfo.livelink || "Generating link..."}
-                  </p>
+                  <div className="relative overflow-hidden rounded-[24px] bg-[var(--color-questionnaire-multi)] px-6 py-6 text-white shadow-sm">
+                    <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:18px_18px]" />
+                    <div className="relative flex items-center gap-4">
+                      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[20px] bg-white/10 backdrop-blur-sm">
+                        <LuCheck className="h-9 w-9" />
+                      </div>
+                      <div>
+                        <h2 className="text-[26px] font-bold leading-tight">
+                          Survey is Live!
+                        </h2>
+                        <p className="mt-1 text-lg text-white/90">
+                          Your survey is collecting responses
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <section className="questionnaire-card rounded-[24px] border home-border-soft px-6 py-6 shadow-sm">
+                    <h3 className="questionnaire-heading text-[16px] font-bold">
+                      Survey Link
+                    </h3>
+                    <div className="questionnaire-input mt-5 flex flex-col gap-4 rounded-[20px] px-4 py-5 md:flex-row md:items-center md:justify-between">
+                      <p
+                        data-test-id="SURVEY_LINK"
+                        className="home-highlight break-all text-[15px] font-medium questionnaire-clickable"
+                        onClick={() => handleCopy(studyInfo.livelink)}
+                      >
+                        {studyInfo.livelink || "Generating link..."}
+                      </p>
+                      <div className="flex items-center gap-4 self-end md:self-auto">
+                        <button
+                          type="button"
+                          aria-label="Copy survey link"
+                          className="questionnaire-clickable home-highlight transition hover:opacity-80"
+                          onClick={() => handleCopy(studyInfo.livelink)}
+                        >
+                          <LuCopy className="h-6 w-6" />
+                        </button>
+                        <button
+                          type="button"
+                          aria-label="Open survey link"
+                          className="questionnaire-clickable home-highlight transition hover:opacity-80"
+                          onClick={() => handleLinkClick(studyInfo.livelink)}
+                        >
+                          <LuExternalLink className="h-6 w-6" />
+                        </button>
+                      </div>
+                    </div>
+                  </section>
                 </>
               ) : (
-                <>
-                  <p className="text-base text-gray-800 mb-8">
-                    Survey is not active yet, click the activate button below to
-                    enable data collection.
+                <div className="questionnaire-card rounded-[24px] border home-border-soft px-6 py-8 text-center shadow-sm">
+                  <p className="questionnaire-heading text-base md:text-lg">
+                    Survey is not active yet. Activate it to enable data
+                    collection and generate the live link.
                   </p>
                   <button
                     data-test-id="ACTIVATE"
                     onClick={() => {
                       setIsOpen(true);
                     }}
-                    className="px-4 py-2 bg-[#0a3158] text-white cursor-pointer focus:outline-none font-medium rounded hover:bg-[#0a3158]/90"
+                    className="questionnaire-action-btn mt-6 rounded-2xl bg-login-primary px-5 py-3 text-white transition hover:bg-login-primary-hover"
                   >
                     Activate {studyInfo.studyname} Study
                   </button>
-                </>
+                </div>
               )}
               <Quota
                 complete={quotaData?.completes || 0}

@@ -31,21 +31,23 @@ const DeleteModel: React.FC<DeleteModelProps> = ({
 
   return (
     <DynamicModel
-      Title={`Delete Question: ${label}`}
+      Title="Delete Question"
       ButtonText="Delete"
       isOpen={isOpen}
       onClick={handleClick}
       onClose={onClose}
-      className="max-w-lg"
+      className="max-w-lg rounded-[24px]"
     >
-      <p>Are you sure want to delete?</p>
-      <p className="mt-3">
-        Type <strong>delete</strong> In the input box
+      <p className="questionnaire-label text-lg">
+        Are you sure you want to delete this question? This action cannot be undone.
+      </p>
+      <p className="mt-5 questionnaire-heading">
+        Type <strong className="text-red-500">delete</strong> to confirm
       </p>
       <input
-        className="border border-gray-300 focus:outline-none px-3 items-center rounded-md w-full py-1 mt-3 "
+        className="questionnaire-input mt-3 w-full rounded-[20px] border border-red-300 px-4 py-3 focus:outline-none"
         data-test-id="DELETE_QUESTIONNAIRE_MODEL"
-        placeholder="eg. delete"
+        placeholder="Type 'delete' here..."
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={(e)=>handleKeyPress(e, handleClick)}

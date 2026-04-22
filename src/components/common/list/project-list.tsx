@@ -8,7 +8,7 @@ import Error from "../../global/Error";
 import { cn } from "../../../utils";
 import ChatWindow from "../chat-window/chat";
 import ChatTextArea from "../../global/chattextares";
-import { LuBotMessageSquare } from "react-icons/lu";
+import { LuBotMessageSquare, LuSparkles } from "react-icons/lu";
 
 export default function ProjectListing() {
   const dispatch = useDispatch<AppDispatch>();
@@ -41,15 +41,15 @@ export default function ProjectListing() {
   }
 
   return (
-    <div className="w-full h-full bg-[#f4f5ff] p-4 flex justify-center relative">
+    <div className="home-page-bg relative flex h-full w-full justify-center overflow-hidden px-4 py-5 md:px-6 md:py-7">
       {messages.length > 0 ? (
-        <div className="w-full md:max-w-2xl">
+        <div className="w-full max-w-5xl">
           <ChatWindow />
         </div>
       ) : (
         <div
           className={cn(
-            "w-full md:max-w-4xl flex flex-col gap-10 transition-all duration-300 ease-in-out"
+            "flex w-full max-w-4xl flex-col gap-10 pt-3 transition-all duration-300 ease-in-out md:gap-12"
           )}
         >
           <div
@@ -57,21 +57,28 @@ export default function ProjectListing() {
               "transition-all duration-300 ease-in-out text-center"
             )}
           >
-            <p className="text-center text-[40px] font-semibold leading-tight text-[#232542]">
+            <p className="home-title text-center text-[28px] font-semibold leading-tight md:text-[42px]">
               Good evening, {user.firstName || "there"}
             </p>
-            <p className="mt-2 text-[#8f93b0]">I can help you activate study...</p>
+            <p className="home-highlight mt-3 text-[16px] md:text-[18px]">
+              I can help you <span className="font-medium text-login-primary">activate study...</span>
+            </p>
           </div>
           <div className={cn("transition-all duration-300 ease-in-out")}>
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[#d9f4ff] to-[#b3d7ff] shadow-[0_8px_24px_rgba(79,86,230,0.16)]">
-              <LuBotMessageSquare className="h-9 w-9 text-[#2b5fbf]" />
+            <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-[20px] bg-gradient-to-br from-login-primary to-action shadow-lg">
+              <LuBotMessageSquare className="h-9 w-9 text-white" />
+              <LuSparkles className="absolute -right-4 -top-4 h-5 w-5 text-amber-400" />
+              <LuSparkles className="absolute -left-4 bottom-0 h-4 w-4 text-violet-500" />
             </div>
             <div className="mt-6 text-center">
-              <p className="text-[30px] font-semibold text-[#2a2d4a]">
+              <p className="home-heading text-[24px] font-semibold md:text-[28px]">
                 Start a conversation with your AI assistant
               </p>
-              <p className="mt-2 text-[#8f93b0]">
-                Ask me anything... like "Generate questions about ..."
+              <p className="home-highlight mt-3 text-[18px] md:text-[22px]">
+                Ask me anything...{" "}
+                <span className="font-medium text-login-primary">
+                  "Generate questions about "
+                </span>
               </p>
             </div>
           </div>

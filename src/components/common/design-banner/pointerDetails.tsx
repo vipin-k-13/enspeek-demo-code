@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { setBannerPointer } from "../../../store/CrossTabDataSlice";
 import BannerLogic from "../../global/BannerLogic";
-import { FaTrash } from "react-icons/fa";
+import { LuTrash2 } from "react-icons/lu";
 import { MdDeleteForever } from "react-icons/md";
 import { Skeleton } from "../../global/skeleton";
 
@@ -125,11 +125,11 @@ const PointDetails: React.FC<pointDetailsProps> = ({
         <Skeleton className="w-full h-[30vh] space-y-4" />
       ) : (
         activePoint && (
-          <div className="p-4 space-y-4 bg-white shadow-lg rounded-b-md">
-            <div className="flex justify-between items-center">
-              <div className="flex space-x-8">
+          <div className="crosstab-surface space-y-5 p-5">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div className="flex flex-col gap-4 md:flex-row md:space-x-8">
                 <div>
-                  <label className="block text-action mb-2">
+                  <label className="crosstab-title mb-2 block text-sm font-semibold">
                     Banner Point Name
                   </label>
                   <input
@@ -139,15 +139,15 @@ const PointDetails: React.FC<pointDetailsProps> = ({
                     onChange={(e) =>
                       updateBannerPoint(activeTab!, "title", e.target.value)
                     }
-                    className="w-fit border border-gray-300 px-3 py-2 rounded focus:outline-none"
+                    className="questionnaire-input questionnaire-heading w-fit rounded-[16px] border questionnaire-border px-4 py-3 focus:outline-none"
                   />
                 </div>
 
                 {groups.length > 0 && (
                   <div>
-                    <label className="block text-action mb-2">Group Name</label>
+                    <label className="crosstab-title mb-2 block text-sm font-semibold">Group Name</label>
                     <select
-                      className="border w-48 border-gray-300 rounded px-3 py-2 focus:outline-none"
+                      className="questionnaire-input questionnaire-heading w-48 rounded-[16px] border questionnaire-border px-4 py-3 focus:outline-none"
                       value={activePoint.bannerGroup}
                       onChange={(e) =>
                         updateBannerPoint(
@@ -171,16 +171,16 @@ const PointDetails: React.FC<pointDetailsProps> = ({
               {BannerPointer.length > 1 && (
                 <button
                   onClick={() => deleteBannerPoint(activeTab!)}
-                  className="bg-white px-3 py-1 rounded-md border border-red-300 text-red-600 flex items-center cursor-pointer hover:bg-red-50 transition-colors"
+                  className="report-toolbar-btn inline-flex items-center gap-2 rounded-2xl border border-[var(--color-questionnaire-stop)] px-4 py-2 text-[var(--color-questionnaire-stop)] hover:bg-[var(--color-questionnaire-stop-bg)]"
                 >
-                  <FaTrash className="mr-2" />
+                  <LuTrash2 className="h-4 w-4" />
                   Delete
                 </button>
               )}
             </div>
 
             <div>
-              <label className="block text-action mb-2">
+              <label className="crosstab-title mb-3 block text-sm font-semibold">
                 Banner Point Logic
               </label>
               {currentServerPoint?.logic?.length > 0 &&
@@ -196,14 +196,14 @@ const PointDetails: React.FC<pointDetailsProps> = ({
                   return (
                     <div
                       key={index}
-                      className="flex text-red-500 items-center gap-4 my-3"
+                      className="my-3 flex items-center gap-4 text-[var(--color-questionnaire-stop)]"
                     >
                       <span>
-                        <span className="text-black">{index + 1}.</span>{" "}
+                        <span className="crosstab-title">{index + 1}.</span>{" "}
                         {item.pointLogic}
                       </span>
                       <MdDeleteForever
-                        className="h-5 w-5"
+                        className="questionnaire-clickable h-5 w-5"
                         onClick={() => handleDeleteLogic(item.pointLogic)}
                       />
                     </div>

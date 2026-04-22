@@ -26,12 +26,22 @@ const isForceShowChat = forceShowChatRoutes.some(route =>
   return (
     <div className="h-screen flex flex-col">
       <Header />
-      <div className="flex flex-1 overflow-auto items-center relative">
+      <div
+        className={cn(
+          "relative flex flex-1 overflow-auto",
+          isHome
+            ? "flex-col items-stretch md:flex-row"
+            : "flex-col items-stretch xl:flex-row xl:items-center"
+        )}
+      >
         {!isHome ? <Sidebar /> : <HomeSidebar />}
         <div
           className={cn(
-            `p-2 transition-all duration-300 h-[92vh] overflow-hidden `,
-            (isHome || Boolean(!isHome && !hasQuestionnaire)) ? "w-[100%]" : "w-[70%]"
+            "p-2 transition-all duration-300 overflow-hidden",
+            isHome ? "h-auto min-h-[60vh] w-full md:h-[92vh]" : "h-[92vh]",
+            isHome || Boolean(!isHome && !hasQuestionnaire)
+              ? "w-full"
+              : "w-full xl:w-[70%]"
           )}
         >
           <Outlet />
@@ -40,7 +50,7 @@ const isForceShowChat = forceShowChatRoutes.some(route =>
         </div>
         {/* {(Boolean(!isHome && hasQuestionnaire) || Boolean(!isHome && isAddingQuestion) )&& ( */}
         {((!isHome && hasQuestionnaire) ||  (!isHome && isAddingQuestion) || (!isHome && isForceShowChat)) && (
-          <div className="w-[30%] h-full" id="otherChat">
+          <div className="h-[46vh] w-full border-t home-border xl:h-full xl:w-[30%] xl:border-l xl:border-t-0" id="otherChat">
             <ChatWindow />
           </div>
         )}

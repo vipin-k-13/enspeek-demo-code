@@ -1,9 +1,13 @@
 import React from "react";
-import { FaHome, FaList, FaTable } from "react-icons/fa";
-import { FaGears } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router";
-import { HiMiniClipboardDocumentList } from "react-icons/hi2";
+import {
+  LuClipboardList,
+  LuHouse,
+  LuListTodo,
+  LuSettings2,
+  LuTable2,
+} from "react-icons/lu";
 import type { AppDispatch, RootState } from "../../store/store";
 import { cn } from "../../utils";
 import { resetStudyInfo } from "../../store/CrosstabStudySlice";
@@ -11,25 +15,25 @@ import { resetStudyInfo } from "../../store/CrosstabStudySlice";
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const { pathname, state } = useLocation();
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<AppDispatch>();
 
   const study = useSelector((state: RootState) => state.study);
 
   const icons = [
-    { path: "/", icon: <FaHome />, title: "Home" },
+    { path: "/", icon: <LuHouse className="h-5 w-5" />, title: "Home" },
   ];
 
   if (study.studyID) {
     icons.push({
       path: "/questionnaire",
-      icon: <FaList />,
+      icon: <LuListTodo className="h-5 w-5" />,
       title: "Questionnaire",
     });
 
     if (Number(study.hasQuestionnaire) === 1) {
       icons.push({
         path: "/publish-survey",
-        icon: <FaGears />,
+        icon: <LuSettings2 className="h-5 w-5" />,
         title: "Publish Survey",
       });
     }
@@ -37,33 +41,38 @@ const Sidebar: React.FC = () => {
     if (Number(study.launch) === 1) {
       icons.push({
         path: "/report",
-        icon: <HiMiniClipboardDocumentList />,
+        icon: <LuClipboardList className="h-5 w-5" />,
         title: "Report",
       });
-      icons.push({ path: "/crosstab", icon: <FaTable />, title: "Crosstab" });
+      icons.push({
+        path: "/crosstab",
+        icon: <LuTable2 className="h-5 w-5" />,
+        title: "Crosstab",
+      });
     }
   }
 
   return (
-    <div className="h-full w-[60px] border-r-[1px] border-gray-200 py-4">
-      <div className="flex flex-col gap-4 w-full">
+    <aside className="questionnaire-sidebar-rail">
+      <div className="questionnaire-sidebar-stack">
         {icons.map(({ path, icon, title }) => {
           const isActive =
             path === "/"
               ? pathname === "/"
               : pathname === path || pathname.startsWith(path + "/");
           return (
-            <div
+            <button
+              type="button"
               key={path}
               data-test-id={title}
               className={cn(
-                "sidebar_icons cursor-pointer hover:bg-primary hover:text-white",
-                isActive && "bg-primary text-white"
+                "questionnaire-sidebar-item",
+                isActive && "questionnaire-sidebar-item-active"
               )}
               title={title}
               onClick={() => {
-                if(path == "/"){
-                  dispatch(resetStudyInfo())
+                if (path == "/") {
+                  dispatch(resetStudyInfo());
                 }
                 navigate(path, {
                   state: path !== "/" ? { studyID: state?.studyID } : null,
@@ -71,11 +80,11 @@ const Sidebar: React.FC = () => {
               }}
             >
               {icon}
-            </div>
+            </button>
           );
         })}
       </div>
-    </div>
+    </aside>
   );
 };
 

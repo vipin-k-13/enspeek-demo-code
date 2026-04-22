@@ -1,4 +1,4 @@
-import { FaPlusCircle } from "react-icons/fa";
+import { LuPlus } from "react-icons/lu";
 import DefaultBanner from "./DefaultBanner";
 import AddBannerModal from "./BannerModal";
 import {
@@ -76,8 +76,8 @@ export default function Crosstab() {
   if (isBannerListError) return <Error showHome />;
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="h-[78vh] overflow-y-auto w-full">
+    <div className="crosstab-surface min-h-[78vh] overflow-hidden">
+      <div className="h-[78vh] w-full overflow-y-auto px-3 py-3 md:px-4">
         {Banners.length ? (
           Banners.map((Banner: any) => {
             const matchedBanner = BannerListData.find(
@@ -101,17 +101,16 @@ export default function Crosstab() {
           })
         ) : BannerListData && BannerListData.length && !Banners.length ? (
           <div className="flex flex-col items-center justify-center mt-24">
-            No data found
+            <p className="crosstab-muted text-base">No data found</p>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center mt-24">
-            <p className="text-gray-700 mb-4">No banner list found.</p>
+            <p className="crosstab-title mb-4 text-base font-medium">No banner list found.</p>
             <button
-              className="bg-primary hover:opacity-90 text-white cursor-pointer
-               font-semibold px-5 py-2 rounded-md flex items-center space-x-2"
+              className="report-toolbar-btn inline-flex items-center gap-2 rounded-2xl bg-login-primary px-5 py-3 text-white hover:bg-login-primary-hover"
               onClick={() => dispatch(setIsAddBannerModalOpen(true))}
             >
-              <FaPlusCircle />
+              <LuPlus />
               <span>Add New Banner</span>
             </button>
           </div>

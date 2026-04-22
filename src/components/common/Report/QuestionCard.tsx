@@ -1,5 +1,5 @@
 import React from "react";
-import { FaFilePowerpoint } from "react-icons/fa";
+import { LuPresentation } from "react-icons/lu";
 import { usePptDownloadHook, useProcessHook } from "./ReportMutations";
 import { useLocation } from "react-router";
 import Button from "../../ui/Button";
@@ -21,16 +21,16 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ title, children, qId, study
     },
   });
   return (
-    <div data-test-id={`${qId}_REPORTCARD`} className="bg-white border border-gray-200 rounded-lg w-full h-auto mb-4">
-      <div className="flex items-center justify-between p-2 border-b border-gray-100 bg-gray-200/80">
-        <h3 className="font-medium text-gray-600">{title}</h3>
+    <div data-test-id={`${qId}_REPORTCARD`} className="report-card w-full h-auto overflow-hidden">
+      <div className="report-card-header flex items-center justify-between px-5 py-4">
+        <h3 className="report-title text-[16px] font-semibold">{title}</h3>
         <Button
-          className="text-yellow-500 cursor-pointer"
+          className="report-toolbar-btn bg-[var(--color-brand-primary-softest)] text-login-primary hover:bg-[var(--color-brand-primary-soft)] hover:text-white"
           onClick={() => {
             DownloadPpt(qId);
           }}
         >
-          <FaFilePowerpoint />
+          <LuPresentation />
         </Button>
       </div>
       <div className="p-6">{children}</div>

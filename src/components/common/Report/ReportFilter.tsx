@@ -16,13 +16,12 @@ const ReportFilter: React.FC<ReportFilterProps> = ({
   const filter = useSelector((state: RootState) => state.filter);
 
   return (
-    <div className="absolute top-2 right-2 bg-white border border-gray-300 rounded-md w-80 z-50">
-      <div className="relative bg-primary text-white font-bold text-center py-2 rounded-t-md">
+    <div className="report-card absolute top-2 right-2 z-50 w-80 overflow-hidden">
+      <div className="relative bg-login-primary text-center py-3 text-sm font-bold text-white">
         FILTER
         <button
           onClick={onClose}
-          className="absolute left-2 top-1/2 -translate-y-1/2 bg-gray-50
-                    text-action rounded-full w-4 h-4 flex items-center justify-center text-xs cursor-pointer"
+          className="questionnaire-clickable absolute left-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-login-primary"
         >
           <IoMdClose />
         </button>
@@ -38,11 +37,11 @@ const ReportFilter: React.FC<ReportFilterProps> = ({
                     id={`${seq}`}
                     checked={true}
                     onChange={() => {}}
-                    className="h-3 w-3 text-primary border-gray-300 rounded"
+                    className="h-3 w-3 rounded border home-border text-login-primary"
                   />
                   <label
                     htmlFor={`${seq}`}
-                    className="ml-2 text-sm text-gray-700"
+                    className="home-text ml-2 text-sm"
                   >
                     test
                   </label>
@@ -52,16 +51,16 @@ const ReportFilter: React.FC<ReportFilterProps> = ({
           ))}
         </SimpleAccordion>
       </div>
-      <div className="flex justify-between py-2 px-4">
+      <div className="flex justify-between px-4 py-3">
         <button
           onClick={onClose}
-          className="border border-green-500 text-green-500 px-4 py-1 cursor-pointer rounded hover:bg-orange-50"
+          className="report-toolbar-btn rounded-xl border border-[var(--color-questionnaire-multi)] px-4 py-2 text-[var(--color-questionnaire-multi)] hover:bg-[var(--color-questionnaire-open-bg)]"
         >
           Apply
         </button>
         <button
           onClick={onClear}
-          className="border border-orange-500 text-orange-500 px-4 py-1 cursor-pointer rounded hover:bg-orange-50"
+          className="report-toolbar-btn rounded-xl border border-[var(--color-study-progress)] px-4 py-2 text-[var(--color-study-progress)] hover:bg-[var(--color-home-panel-soft)]"
         >
           Clear
         </button>

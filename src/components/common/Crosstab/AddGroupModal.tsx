@@ -24,7 +24,7 @@ export default function AddGroupModal() {
       className="max-w-lg"
     >
       <Input
-        className="border border-gray-300"
+        className="questionnaire-input questionnaire-heading border questionnaire-border"
         placeholder="Enter group name"
         value={groupInput}
         onChange={(e) => dispatch(setGroupInput(e.target.value))}

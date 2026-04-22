@@ -48,34 +48,34 @@ export default function QuestionsList() {
 
   return (
     <div>
-      <p className="my-2 text-gray-700 font-medium">
+      <p className="crosstab-title my-3 text-base font-semibold">
         Please add questions to table list
       </p>
-      <div className="border border-gray-200 rounded bg-white px-3 py-1 max-h-[70vh] overflow-auto">
-        <div className="flex items-center px-4 py-2 font-semibold">
+      <div className="crosstab-surface max-h-[70vh] overflow-auto px-3 py-3">
+        <div className="crosstab-soft-panel flex items-center px-4 py-3 font-semibold">
           <div>
             <input
               data-test-id="CHECKBOX"
               type="checkbox"
               checked={allSelected}
               onChange={(e) => toggleSelectAll(e.target.checked)}
-              className="cursor-pointer"
+              className="questionnaire-clickable"
             />
           </div>
-          <div className="ml-4">Select All Questions</div>
+          <div className="crosstab-title ml-4">Select All Questions</div>
         </div>
 
         {QListData.map((question: any, i: number) => (
-          <div key={i} className="flex items-center px-4 py-2 bg-gray-50 mb-2">
+          <div key={i} className="crosstab-soft-panel mb-2 flex items-center px-4 py-3">
             <div className="mr-8 ">
               <input
                 type="checkbox"
                 checked={selectedQuestions.includes(question.qID)}
                 onChange={() => toggleSelect(question.qID)}
-                className="cursor-pointer"
+                className="questionnaire-clickable"
               />
             </div>
-            <div>{question.qLabel}</div>
+            <div className="home-text">{question.qLabel}</div>
           </div>
         ))}
       </div>

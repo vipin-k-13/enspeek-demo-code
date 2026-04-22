@@ -57,15 +57,15 @@ export default function Report() {
   });
 
   return (
-    <div>
+    <div className="report-page-bg h-full">
       <ReportHeader
         Title={StudyInfo.studyname}
         Type={StudyInfo.whichquestionnaire}
         showTableView={showTableView}
         setShowTableView={setShowTableView}
       />
-      <div className="w-full bg-white p-3 h-[81vh] overflow-auto">
-        <div className="">
+      <div className="h-[81vh] w-full overflow-auto p-3 md:p-4">
+        <div className="space-y-4">
           {ViewList[0].groupList.seq.map((q: any) => {
             if (!fliterReportData.includes(q)) return null;
             return (

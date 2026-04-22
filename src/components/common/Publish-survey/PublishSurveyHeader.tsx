@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FC } from "react";
-import { FaFacebookSquare, FaUsers, FaWhatsappSquare } from "react-icons/fa";
+import { FaFacebookF, FaUsers, FaWhatsapp } from "react-icons/fa";
 import SampleCollectionModel from "./SampleCollectionModel";
 import { setIsHistoryModalOpen } from "../../../store/CrosstabSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,7 @@ import {
 } from "../../../store/CrosstabSlice";
 import FacebookModal from "./FacebookModal";
 import WhatsaapModal from "./WhatsaapModal";
+import { LuArrowRight } from "react-icons/lu";
 
 interface PublishSurveyHeaderProps {
   studyName?: string;
@@ -65,34 +66,38 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
 
   return (
     <>
-      <div className="flex items-center justify-end">
-        <div className="flex gap-2">
+      <div className="mx-auto flex w-full max-w-[700px] flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-wrap items-center gap-3">
           {isSurveyActive && (
-            <div className="flex gap-2 justify-between items-center">
+            <div className="flex flex-wrap items-center gap-3">
               <button
                 data-test-id="FACEBOOK_SURVEY"
-                className="bg-primary text-white px-1 py-1 rounded flex items-center cursor-pointer hover:bg-primary/90"
+                className="questionnaire-action-btn inline-flex items-center gap-2 rounded-full bg-[var(--color-brand-info)] px-5 py-3 text-sm text-white shadow-sm transition hover:brightness-95"
                 onClick={() => {
                   dispatch(setIsFbModalOpen(true));
                 }}
               >
-                <FaFacebookSquare className="text-2xl" />
+                <FaFacebookF className="text-base" />
+                <span>Share on Facebook</span>
               </button>
               <button
-                className="bg-green-500 text-white px-1 py-1 rounded flex items-center cursor-pointer hover:bg-green-500/80"
+                className="questionnaire-action-btn inline-flex items-center gap-2 rounded-full bg-[var(--color-study-activated)] px-5 py-3 text-sm text-white shadow-sm transition hover:brightness-95"
                 data-test-id="WHATSAPP_SURVEY"
                 onClick={() => {
                   dispatch(setIsWhatsappModalOpen(true));
                 }}
               >
-                <FaWhatsappSquare className="text-2xl" />
+                <FaWhatsapp className="text-base" />
+                <span>Share on WhatsApp</span>
               </button>
             </div>
           )}
+        </div>
+        <div className="flex flex-wrap items-center justify-end gap-3">
           {isSurveyActive && launch !== 1 && (
             <button
               data-test-id="INITIATE"
-              className="px-3 py-1 gap-2 flex items-center text-lg bg-primary text-white rounded hover:bg-primary/90 cursor-pointer focue:outline-none"
+              className="questionnaire-action-btn inline-flex items-center gap-2 rounded-full bg-login-primary px-5 py-3 text-sm text-white shadow-sm transition hover:bg-login-primary-hover"
               onClick={() => {
                 setIsOpenInitiate(true);
               }}
@@ -102,7 +107,7 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
           )}
           {isSurveyActive && launch === 1 && studyInfo.closed === 1 && (
             <button
-              className="px-3 py-1 gap-2 flex items-center text-lg bg-primary text-white rounded hover:bg-primary/90 cursor-pointer focue:outline-none"
+              className="questionnaire-action-btn inline-flex items-center gap-2 rounded-full bg-login-primary px-5 py-3 text-sm text-white shadow-sm transition hover:bg-login-primary-hover"
               onClick={() => {
                 setIsOpenInitiate(true);
               }}
@@ -114,12 +119,12 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
             <>
               <button
                 data-test-id="NEXT_TO_REPORT"
-                className="px-3 py-1 gap-2 flex items-center text-lg bg-primary text-white rounded hover:bg-primary/90 cursor-pointer focue:outline-none"
+                className="questionnaire-action-btn inline-flex items-center gap-2 rounded-full bg-login-primary px-6 py-3 text-sm text-white shadow-sm transition hover:bg-login-primary-hover"
                 onClick={() => {
                   navigate("/report", { state: { studyID: state.studyID } });
                 }}
               >
-                Next
+                Next <LuArrowRight className="h-4 w-4" />
               </button>
             </>
           )}

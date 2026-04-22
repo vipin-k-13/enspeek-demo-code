@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import DynamicModel from "../../global/DynamicModel";
-import { FaArrowsUpDownLeftRight, FaTrash } from "react-icons/fa6";
+import { LuArrowUpDown, LuTrash2 } from "react-icons/lu";
 import { toast } from "sonner";
 import BannerLogic from "../../global/BannerLogic";
 import { useEditTableListQuestion, useOpList } from "../Crosstab/CrossTab.Api";
@@ -135,18 +135,18 @@ export default function EditTableModal({
               logics.some((logic: any) => logic.pointLogic === item.pointLogic)
             ) && (
               <div>
-                <p className="text-action">Banner Point Logic</p>
+                <p className="crosstab-title text-sm font-semibold">Banner Point Logic</p>
                 {opListData.logic.map((item: any, index: number) => (
                   <div
                     key={index}
-                    className="flex text-red-500 items-center gap-4 mt-2"
+                    className="mt-2 flex items-center gap-4 text-[var(--color-questionnaire-stop)]"
                   >
                     <span>
-                      <span className="text-black">{index + 1}.</span>{" "}
+                      <span className="crosstab-title">{index + 1}.</span>{" "}
                       {item.pointLogic}
                     </span>
                     <MdDeleteForever
-                      className="h-5 w-5"
+                      className="questionnaire-clickable h-5 w-5"
                       onClick={() =>
                         setLogics((prev) =>
                           prev.filter(
@@ -160,67 +160,67 @@ export default function EditTableModal({
               </div>
             )}
           <div className="space-y-2">
-            <label className="text-sm font-medium">* Table Logic</label>
+            <label className="crosstab-title text-sm font-semibold">* Table Logic</label>
             <div className="flex items-center gap-2">
               <BannerLogic
                 setLogicFunc={(e) => setLogics(e)}
               />
             </div>
           </div>
-          <div className="border border-gray-300">
+          <div className="crosstab-surface overflow-hidden">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b border-gray-300">
-                  <th className="w-12 text-left px-2 py-2 border-r border-gray-300">
+                <tr className="home-panel-soft-bg border-b home-border-soft">
+                  <th className="w-12 border-r home-border-soft px-3 py-3 text-left crosstab-title">
                     Re-order
                   </th>
-                  <th className="w-16 text-left px-2 py-2 border-r border-gray-300">
+                  <th className="w-16 border-r home-border-soft px-3 py-3 text-left crosstab-title">
                     Show
                   </th>
-                  <th className="w-24 text-left px-2 py-2 border-r border-gray-300">
+                  <th className="w-24 border-r home-border-soft px-3 py-3 text-left crosstab-title">
                     Row ID
                   </th>
-                  <th className="text-left px-2 py-2 border-r border-gray-300">
+                  <th className="border-r home-border-soft px-3 py-3 text-left crosstab-title">
                     Row Title
                   </th>
-                  <th className="w-32 px-2 py-2"></th>
-                  <th className="w-12 px-2 py-2"></th>
+                  <th className="w-32 px-3 py-3"></th>
+                  <th className="w-12 px-3 py-3"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y home-border-soft">
                 {rows.map((row) => (
                   <tr key={row.id}>
-                    <td className="px-2 py-2 border-r border-gray-300 align-middle text-center">
-                      <button className="cursor-all-scroll">
-                        <FaArrowsUpDownLeftRight />
+                    <td className="border-r home-border-soft px-3 py-3 align-middle text-center">
+                      <button className="crosstab-muted cursor-all-scroll">
+                        <LuArrowUpDown />
                       </button>
                     </td>
-                    <td className="px-2 py-2 border-r border-gray-300 align-middle text-center">
+                    <td className="border-r home-border-soft px-3 py-3 align-middle text-center">
                       <input
                         type="checkbox"
-                        className="form-checkbox cursor-pointer"
+                        className="form-checkbox questionnaire-clickable"
                         checked={Boolean(row.op_show)}
                         onChange={(e) =>
                           handleSelectOption(row.id, e.target.checked)
                         }
                       />
                     </td>
-                    <td className="px-2 py-2 border-r border-gray-300 align-middle">
+                    <td className="crosstab-title border-r home-border-soft px-3 py-3 align-middle">
                       {row.id}
                     </td>
-                    <td className="px-2 py-2 border-r border-gray-300">
+                    <td className="border-r home-border-soft px-3 py-3">
                       <input
                         type="text"
                         value={row.optionText}
                         onChange={(e) =>
                           handleRowTitleChange(row.id, e.target.value)
                         }
-                        className="w-full border border-gray-300 rounded-md p-2"
+                        className="questionnaire-input questionnaire-heading w-full rounded-[14px] border questionnaire-border p-2.5"
                       />
                     </td>
-                    <td className="px-2 py-2 border-r border-gray-300">
+                    <td className="border-r home-border-soft px-3 py-3">
                       {row.id === "" ? (
-                        <select className="w-full border border-gray-300 focus:outline-none rounded-md p-2">
+                        <select className="questionnaire-input questionnaire-heading w-full rounded-[14px] border questionnaire-border p-2.5 focus:outline-none">
                           <option value="">Select</option>
                           <option value="option1">Net</option>
                           <option value="option2">Mean</option>
@@ -229,12 +229,12 @@ export default function EditTableModal({
                         </select>
                       ) : null}
                     </td>
-                    <td className="px-2 py-2">
+                    <td className="px-3 py-3">
                       <button
                         onClick={() => handleDeleteRow(row.id)}
-                        className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50 border border-transparent rounded"
+                        className="questionnaire-clickable h-8 w-8 rounded-full border border-transparent text-[var(--color-questionnaire-stop)] hover:bg-[var(--color-questionnaire-stop-bg)]"
                       >
-                        <FaTrash className="h-4 w-4 cursor-pointer" />
+                        <LuTrash2 className="h-4 w-4" />
                       </button>
                     </td>
                   </tr>

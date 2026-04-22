@@ -20,7 +20,7 @@ const BannerDesign_page = () => {
   const [activeTab, setActiveTab] = useState<number>(0);
 
   return (
-    <div className="min-h-screen px-3">
+    <div className="crosstab-page-bg min-h-screen px-3 py-3 md:px-4">
       <DesignBanner_Header />
       <div>
         <TabButtons
@@ -37,13 +37,13 @@ const BannerDesign_page = () => {
         />
 
         <div className="mt-4">
-          <h3 className="text-sm mb-2">Banner Preview</h3>
+          <h3 className="crosstab-title mb-3 text-sm font-semibold">Banner Preview</h3>
           {!isBannerPointerListPending && (
-            <div className="flex flex-wrap border border-gray-300">
+            <div className="crosstab-surface flex flex-wrap p-2">
               {BannerPointer.map((point, index) => (
                 <div
                   key={index}
-                  className="flex-1 border border-gray-200 bg-white p-2 min-w-[150px] text-sm"
+                  className="crosstab-soft-panel crosstab-title min-w-[150px] flex-1 p-3 text-sm"
                 >
                   {point.title}
                 </div>

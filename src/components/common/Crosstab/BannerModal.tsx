@@ -110,13 +110,14 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
           )}
         </div>
         <div>
-          <p className="mb-1">Select View Type</p>
+          <p className="crosstab-title mb-2 text-sm font-semibold">Select View Type</p>
           <div className="flex space-x-8">
-            <label className="flex items-center space-x-2">
+            <label className="home-text flex items-center space-x-2">
               <input
                 type="checkbox"
                 checked={percentage}
                 onChange={(e) => setPercentage(e.target.checked)}
+                className="questionnaire-clickable"
               />
               <span>Percentage</span>
             </label>
@@ -124,8 +125,8 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
         </div>
 
         <div>
-          <p className="mb-3">
-            Overall Banner Filter <span className="text-gray-500">(optional)</span>
+          <p className="crosstab-title mb-3 text-sm font-semibold">
+            Overall Banner Filter <span className="crosstab-muted">(optional)</span>
           </p>
           <div className="flex items-center space-x-8">
             <BannerLogic storeComponent="NewBanner"/>

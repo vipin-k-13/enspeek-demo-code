@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+import { FaSignOutAlt } from "react-icons/fa";
+import { LuChevronDown } from "react-icons/lu";
 import { Link } from "react-router";
 import ICON from "../../assets/icons/icon.png";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,36 +52,40 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="sticky top-0 z-40 flex items-center justify-between border-b border-[#e9eaf5] bg-white px-4 py-2 text-2xl">
-      <div className="flex items-center">
+    <div className="home-surface sticky top-0 z-40 flex h-[62px] items-center justify-between border-b home-border px-6">
+      <div className="flex items-center gap-2">
         <Link to={"/"}>
-          <img src={ICON} alt="Insights Curry" className="h-8 w-auto" />
+          <img src={ICON} alt="Enspeek" className="h-9 w-auto" />
         </Link>
-        <div className="ml-2 text-[24px] font-bold text-login-primary">
+        <div className="text-[18px] font-semibold text-login-primary">
           Enspeek
         </div>
         {name !== "" && (
           <>
-            <div className="text-lg font-medium text-blue-900 mx-3">|</div>
-            <div className="font-semibold text-[20px] text-blue-900">
+            <div className="home-muted mx-2 text-sm font-medium">|</div>
+            <div className="home-heading max-w-[340px] truncate text-[16px] font-semibold">
               {name}
             </div>
           </>
         )}
       </div>
-      <div className="relative items-center" ref={dropdownRef}>
-        <div className="flex items-center gap-2">
+      <div className="relative flex items-center" ref={dropdownRef}>
+        <div
+          className="flex cursor-pointer items-center gap-3"
+          onClick={toggleDropdown}
+        >
           {firstName && (
-            <span className="text-sm font-medium text-[#2f3251] capitalize">
+            <span className="home-heading text-[14px] font-semibold capitalize">
               {firstName}
             </span>
           )}
-          <FaUserCircle
+          <div
             data-test-id="PROFILE"
-            className="cursor-pointer text-login-primary"
-            onClick={toggleDropdown}
-            size={28}
-          />
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-login-primary text-sm font-semibold text-white"
+          >
+            {(firstName || "U").slice(0, 2).toUpperCase()}
+          </div>
+          <LuChevronDown className="home-muted" size={18} />
         </div>
         {dropdownOpen && (
           <div className="absolute right-0 top-full mt-2">

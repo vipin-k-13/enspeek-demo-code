@@ -150,12 +150,12 @@ export default function BannerSettings({
           </div>
         </div>
         <div>
-          <label className="block font-medium mb-1">Select View Type</label>
+          <label className="crosstab-title mb-2 block text-sm font-semibold">Select View Type</label>
           <div className="flex items-center gap-4">
-            <label className="inline-flex items-center">
+            <label className="home-text inline-flex items-center">
               <input
                 type="checkbox"
-                className="form-checkbox cursor-pointer"
+                className="form-checkbox questionnaire-clickable"
                 checked={Boolean(value.percent)}
                 onChange={(e) =>
                   setValue((prev) => ({
@@ -169,35 +169,35 @@ export default function BannerSettings({
           </div>
         </div>
         <div>
-          <label className="block font-medium mb-1">
+          <label className="crosstab-title mb-2 block text-sm font-semibold">
             Overall Banner Filter (optional)
           </label>
           <BannerLogic setLogicFunc={setBannerLogic} />
         </div>
-        <div className="p-4 shadow-md border border-gray-200 rounded">
-          <label className="block font-medium mb-1">Banner Preview</label>
+        <div className="crosstab-surface p-4">
+          <label className="crosstab-title mb-2 block text-sm font-semibold">Banner Preview</label>
           <div className="flex">
             {BannerPointer.map((info) => (
               <div
                 key={info.pointID}
-                className="border-2 border-gray-300 w-full p-1"
+                className="crosstab-soft-panel crosstab-title w-full px-3 py-2 text-sm"
               >
                 {info.title}
               </div>
             ))}
           </div>
         </div>
-        <div className="p-4 shadow-md border border-gray-200 rounded">
-          <h3 className="font-semibold mb-3">Question list</h3>
+        <div className="crosstab-surface p-4">
+          <h3 className="crosstab-title mb-3 text-base font-semibold">Question list</h3>
           <div>
-            <div className="flex items-center px-4 py-2 bg-white">
+            <div className="crosstab-soft-panel flex items-center px-4 py-3">
               <input
                 type="checkbox"
-                className="mr-3 cursor-pointer"
+                className="questionnaire-clickable mr-3"
                 checked={isAllSelected}
                 onChange={toggleAll}
               />
-              <span className="font-medium">Select All Questions</span>
+              <span className="crosstab-title font-medium">Select All Questions</span>
             </div>
 
             {isQListDataPending ? (
@@ -206,16 +206,16 @@ export default function BannerSettings({
               QListData.map((question: any, idx: number) => (
                 <div
                   key={idx}
-                  className="flex items-center px-4 py-2 bg-gray-50 mb-2 last:mb-0"
+                  className="crosstab-soft-panel mb-2 flex items-center px-4 py-3 last:mb-0"
                 >
                   <input
                     type="checkbox"
                     data-test-id={`Q_${idx}`}
-                    className="mr-3 cursor-pointer"
+                    className="questionnaire-clickable mr-3"
                     checked={selectedQuestions.includes(question.qID)}
                     onChange={() => toggleQuestion(question.qID)}
                   />
-                  <span>{question.qLabel}</span>
+                  <span className="home-text">{question.qLabel}</span>
                 </div>
               ))
             )}

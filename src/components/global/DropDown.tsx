@@ -15,7 +15,7 @@ const DropDown: React.FC<DropDownProps> = ({ className, Data, showCheckbox = fal
   return (
     <div
       className={cn(
-        "absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded z-50 shadow-md",
+        "home-dropdown absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-2xl border p-1.5 shadow-xl",
         className
       )}
       role="menu"
@@ -25,7 +25,12 @@ const DropDown: React.FC<DropDownProps> = ({ className, Data, showCheckbox = fal
           <li
             key={i}
             data-test-id={Title}
-            className={cn("px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2", (Title === "Add New Filters" || Title === "Share Study") && "pointer-events-none opacity-35")}
+            className={cn(
+              "home-dropdown-item flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-[14px] font-medium transition-colors",
+              Title === "Delete" && "text-rose-500 hover:bg-rose-50",
+              (Title === "Add New Filters" || Title === "Share Study") &&
+                "pointer-events-none opacity-35"
+            )}
             onClick={!showCheckbox ? onClick : undefined}
             tabIndex={0}
           >
@@ -38,7 +43,7 @@ const DropDown: React.FC<DropDownProps> = ({ className, Data, showCheckbox = fal
                 onClick={(e) => e.stopPropagation()}
               />
             )}
-            {Icon && <Icon />}
+            {Icon && <Icon className="shrink-0" />}
             <span>{Title}</span>
           </li>
         ))}

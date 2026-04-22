@@ -13,6 +13,8 @@ import { cn } from "../../../utils";
 import { setQType } from "../../../store/TriggerSlice";
 import { setChatOpen } from "../../../store/ChatSlice";
 import { useRI } from "./Api";
+import { formatQuestionTypeLabel, getQuestionTypeTheme } from "../../../utils/questionnaireTheme";
+import { LuChevronDown, LuGripVertical } from "react-icons/lu";
 
 interface QuestionnaireForm {
   onSubmit: (e: string) => void;
@@ -37,7 +39,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
   const { qTypeList } = useSelector((state: RootState) => state.trigger);
   const dispatch = useDispatch<AppDispatch>();
 
-  const {}=useRI(studyID)
+  const {} = useRI(studyID);
 
   const [label, setLabel] = React.useState<string>(
     data?.qLabel ? data.qLabel : ""
@@ -57,6 +59,8 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
   );
   const user = useSelector((state: RootState) => state.user);
   const isSelectableType = data?.qType ? data?.qType : qType;
+  const activeType = data?.qType || qType;
+  const qTypeTheme = getQuestionTypeTheme(activeType);
 
   const createOption = () => {
     if (options.length + optionCount > 50) {
@@ -252,212 +256,237 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
     isSelectableType !== "stop";
 
   return (
-    <div className="bg-white w-full h-full z-50 mb-4 p-4">
-      <div
-        className={cn(
-          "flex items-center mb-2 border-b border-gray-300 pb-2 space-x-2",
-          data ? "justify-between" : "justify-between"
-        )}
-      >
-        {!data && (
-          <span className="bg-gray-200 flex items-center p-2 text-sm rounded font-semibold">
-            {qType}
-          </span>
-        )}
+    <div className="questionnaire-page-bg z-50 mb-4 h-full w-full p-2 md:p-6">
+      <div className="questionnaire-card questionnaire-border-strong questionnaire-card-edit overflow-hidden rounded-[26px] border-2 border-dashed">
+        <div className="border-b questionnaire-border px-4 py-4 md:px-5">
+          <div className="flex flex-wrap items-start justify-between gap-4 lg:flex-nowrap">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="questionnaire-muted hidden md:inline-flex">
+                <LuGripVertical className="h-5 w-5" />
+              </span>
+              <span className="question-type-multi rounded-full px-4 py-1 text-sm font-semibold">
+                {data?.qID || `CQ${id || ""}`}
+              </span>
+              <div className="min-w-0">
+                <h2 className="questionnaire-heading truncate text-lg font-semibold md:text-[20px]">
+                  {qtext || label || data?.qText || "Question"}
+                </h2>
+              </div>
+            </div>
 
-        {data && <div className="text-xl font-semibold">{data.qLabel}</div>}
-        <div className="flex gap-2">
-          {data && (
-            <span className="bg-gray-200 flex items-center p-2 text-sm rounded font-semibold">
-              {data.qType}
-            </span>
-          )}
-          <Button
-            className="bg-primary text-white capitalize hover:bg-primary/90"
-            onClick={data ? handleUpdate : handleClick}
-          >
-            {data ? "update" : "submit"}
-          </Button>
-          <Button
-            className="border-red-400 text-red-400 hover:bg-gray-100 capitalize"
-            varinat="outline"
-            onClick={onClose}
-          >
-            Close
-          </Button>
-        </div>
-      </div>
-
-      <div className="h-[80vh] overflow-y-auto pr-3">
-        {!data && (
-          <div className="flex gap-4 mb-4 items-center">
-            <QuestionsInput
-              className="w-1/5"
-              value={id}
-              onChange={(e) => {
-                setId(e.target.value);
-                if (errors.id && e.target.value.trim() !== "") {
-                  setErrors((prev) => ({ ...prev, id: false }));
-                }
-              }}
-              min={0}
-              placeholder="Enter QID"
-              lable="QID"
-              require
-              error={errors.id}
-            />
-
-            <QuestionsInput
-              className="w-3/5"
-              lable="Question label"
-              value={label}
-              onChange={(e) => {
-                setLabel(e.target.value);
-                if (errors.label && e.target.value.trim() !== "") {
-                  setErrors((prev) => ({ ...prev, label: false }));
-                }
-              }}
-              placeholder="Enter question label ..."
-              require
-              error={errors.label}
-            />
-            <div className="w-1/5 flex flex-col">
-              <label
-                htmlFor="qType"
-                className="text-sm font-medium text-gray-400 mb-1"
-              >
-                Qtype
-              </label>
-              <select
-                id="qType"
-                value={qType}
-                onChange={(e) => dispatch(setQType(e.target.value))}
+            <div className="flex w-full flex-wrap items-center justify-end gap-3 lg:w-auto">
+              <span
                 className={cn(
-                  "w-full px-3 py-2 border rounded-md focus:outline-none border-gray-300"
+                  "rounded-full px-3 py-1 text-sm font-medium",
+                  qTypeTheme.badgeClass
                 )}
               >
-                {qTypeList.filter(item=> item.code !== "stop").map((item) => (
-                  <option key={item.code} value={item.code}>
-                    {item.show}
-                  </option>
-                ))}
-              </select>
+                {formatQuestionTypeLabel(activeType)}
+              </span>
+              <Button
+                className="questionnaire-save-btn questionnaire-action-btn rounded-2xl px-6 py-2 capitalize shadow-none"
+                onClick={data ? handleUpdate : handleClick}
+              >
+                {data ? "Save" : "Submit"}
+              </Button>
+              <button
+                type="button"
+                className="questionnaire-label questionnaire-clickable px-1 text-base"
+                onClick={onClose}
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                aria-label="Close edit question"
+                className="questionnaire-muted questionnaire-clickable inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[var(--color-home-panel-soft)]"
+                onClick={onClose}
+              >
+                <LuChevronDown className="h-5 w-5" />
+              </button>
             </div>
           </div>
-        )}
-        
-        <QuestionsInput
-          className="w-full mb-4"
-          value={qtext}
-          lable="Question text"
-          onChange={(e) => {
-            setQtext(e.target.value);
-            if (errors.qtext && e.target.value.trim() !== "") {
-              setErrors((prev) => ({ ...prev, qtext: false }));
-            }
-          }}
-          placeholder="Enter your question"
-          require
-          error={errors.qtext}
-        />
-        <QuestionsInput
-          className="w-full mb-4"
-          value={qtext2}
-          lable="Question text 2"
-          onChange={(e) => setQtext2(e.target.value)}
-          placeholder="Enter your question"
-        />
-        <div className="mb-4">
-          <QuestionsInput
-            value={qInstruction}
-            onChange={(e) => setQinstruction(e.target.value)}
-            lable="Respondent Instruction"
-            placeholder={
-              isSelectableType === "stop"
-                ? "Stop the survey"
-                : "(Please select one.)"
-            }
-          />
         </div>
-        {isSelectableType === "stop" && (
-          <div className="flex gap-6">
-            <label className="text-gray-400">Select stop condition</label>
-            <select className="text-action border border-amber-300 px-3 py-1 focus:outline-none rounded">
-              <option>Terminated</option>
-              <option>Completed</option>
-            </select>
-          </div>
-        )}
-        {show && (
-          <>
-            <div className="flex gap-4 items-end mb-4">
+
+        <div className="max-h-[calc(100vh-15rem)] overflow-y-auto px-4 py-5 pr-2 md:px-5 md:pr-3">
+          {!data && (
+            <div className="mb-6 grid gap-4 md:grid-cols-[1fr_2fr_1fr]">
               <QuestionsInput
-                className="w-1/4"
-                type="number"
-                min={0}
-                max={50}
-                value={optionCount || options.length}
+                className="w-full"
+                value={id}
                 onChange={(e) => {
-                  const val = Number(e.target.value);
-                  if (val > 50 - options.length) {
-                    toast.error(`You can add maximum 50 options.`);
-                    setOptionCount(50 - options.length);
-                  } else {
-                    setOptionCount(val);
+                  setId(e.target.value);
+                  if (errors.id && e.target.value.trim() !== "") {
+                    setErrors((prev) => ({ ...prev, id: false }));
                   }
                 }}
-                placeholder="Enter number of options"
-                lable="Add Number of Row Options"
+                min={0}
+                placeholder="Enter QID"
+                lable="QID"
+                require
+                error={errors.id}
               />
 
-              <Button
-                className="bg-primary text-white text-sm hover:bg-primary/90"
-                size="lg"
-                onClick={createOption}
-                disabled={isPending}
-              >
-                Create
-              </Button>
-              {isSelectableType === "multiple-select" && (
-                <>
-                  <QuestionsInput
-                    className="w-32"
-                    type="number"
-                    min={1}
-                    value={minSelection}
-                    onChange={(e) => checkMin(Number(e.target.value))}
-                    lable="Min Selection"
-                    placeholder="Minimum"
-                  />
-                  <QuestionsInput
-                    className="w-32"
-                    type="number"
-                    min={1}
-                    value={maxSelection}
-                    onChange={(e) => checkMax(Number(e.target.value))}
-                    lable="Max Selection"
-                    placeholder="Maximum"
-                  />
-                </>
-              )}
+              <QuestionsInput
+                className="w-full"
+                lable="Question label"
+                value={label}
+                onChange={(e) => {
+                  setLabel(e.target.value);
+                  if (errors.label && e.target.value.trim() !== "") {
+                    setErrors((prev) => ({ ...prev, label: false }));
+                  }
+                }}
+                placeholder="Enter question label ..."
+                require
+                error={errors.label}
+              />
+              <div className="flex w-full flex-col">
+                <label
+                  htmlFor="qType"
+                  className="questionnaire-label mb-2 text-sm font-medium"
+                >
+                  Question Type
+                </label>
+                <select
+                  id="qType"
+                  value={qType}
+                  onChange={(e) => dispatch(setQType(e.target.value))}
+                  className={cn(
+                    "questionnaire-input questionnaire-heading questionnaire-clickable questionnaire-border w-full rounded-[18px] border px-4 py-3.5 focus:outline-none"
+                  )}
+                >
+                  {qTypeList.filter((item) => item.code !== "stop").map((item) => (
+                    <option key={item.code} value={item.code}>
+                      {item.show}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
+          )}
+        
+          <QuestionsInput
+            className="mb-4 w-full"
+            value={qtext}
+            lable="Question Text"
+            onChange={(e) => {
+              setQtext(e.target.value);
+              if (errors.qtext && e.target.value.trim() !== "") {
+                setErrors((prev) => ({ ...prev, qtext: false }));
+              }
+            }}
+            placeholder="Enter your question"
+            require
+            error={errors.qtext}
+          />
+          <QuestionsInput
+            className="mb-4 w-full"
+            value={qtext2}
+            lable="Question Text 2 (Optional)"
+            onChange={(e) => setQtext2(e.target.value)}
+            placeholder="Additional context..."
+          />
+          <div className="mb-4">
+            <QuestionsInput
+              value={qInstruction}
+              onChange={(e) => setQinstruction(e.target.value)}
+              lable="Respondent Instruction"
+              placeholder={
+                isSelectableType === "stop"
+                  ? "Stop the survey"
+                  : "(Please select one.)"
+              }
+            />
+          </div>
+          {isSelectableType === "stop" && (
+            <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
+              <label className="questionnaire-label">Select stop condition</label>
+              <select className="questionnaire-input questionnaire-border rounded-[16px] border px-4 py-2 focus:outline-none">
+                <option>Terminated</option>
+                <option>Completed</option>
+              </select>
+            </div>
+          )}
+          {show && (
+            <>
+              <div className="mb-5 flex flex-wrap items-end gap-3 lg:gap-4">
+                <div className="flex flex-wrap items-end gap-3">
+                  <span className="questionnaire-label pb-3 text-base font-medium">
+                    Add options:
+                  </span>
+                  <input
+                    type="number"
+                    min={0}
+                    max={50}
+                    value={optionCount || options.length}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      if (val > 50 - options.length) {
+                        toast.error(`You can add maximum 50 options.`);
+                        setOptionCount(50 - options.length);
+                      } else {
+                        setOptionCount(val);
+                      }
+                    }}
+                    placeholder="0"
+                    className="questionnaire-input questionnaire-heading questionnaire-clickable questionnaire-border h-[46px] w-[82px] rounded-[16px] border px-4 text-center text-base focus:outline-none"
+                  />
+                  <Button
+                  className="questionnaire-action-btn rounded-2xl bg-login-primary px-6 py-3 text-sm text-white shadow-none hover:bg-login-primary-hover"
+                  size="lg"
+                  onClick={createOption}
+                  disabled={isPending}
+                  >
+                    Create
+                  </Button>
+                </div>
+                {isSelectableType === "multiple-select" && (
+                  <div className="flex flex-wrap items-end gap-3">
+                    <QuestionsInput
+                      className="w-full md:w-32"
+                      type="number"
+                      min={1}
+                      value={minSelection}
+                      onChange={(e) => checkMin(Number(e.target.value))}
+                      lable="Min Selection"
+                      placeholder="Minimum"
+                    />
+                    <QuestionsInput
+                      className="w-full md:w-32"
+                      type="number"
+                      min={1}
+                      value={maxSelection}
+                      onChange={(e) => checkMax(Number(e.target.value))}
+                      lable="Max Selection"
+                      placeholder="Maximum"
+                    />
+                  </div>
+                )}
+              </div>
 
-            <div className="space-y-2">
-              {options.map((option, index) => (
-                <RowOptions
-                  key={index}
-                  optionKey={`${index + 1}`}
-                  Value={option.optionText}
-                  onChange={(e) => optionsValueChange(index, e)}
-                  onDelete={() => DeleteRow(index)}
-                  select={option.other}
-                  onSelect={(val) => updateSpecify(index, val)}
-                  error={optionErrors[index]}
-                />
-              ))}
-            </div>
-          </>
-        )}
+              <div className="mt-4">
+                <h3 className="questionnaire-label mb-3 text-base font-medium">
+                  Answer Options
+                </h3>
+                <div className="space-y-3">
+                  {options.map((option, index) => (
+                    <RowOptions
+                      key={index}
+                      optionKey={`${index + 1}`}
+                      Value={option.optionText}
+                      onChange={(e) => optionsValueChange(index, e)}
+                      onDelete={() => DeleteRow(index)}
+                      select={option.other}
+                      onSelect={(val) => updateSpecify(index, val)}
+                      error={optionErrors[index]}
+                    />
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

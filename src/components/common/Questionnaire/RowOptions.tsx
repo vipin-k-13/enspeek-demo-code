@@ -1,6 +1,6 @@
 import React from "react";
 import Input from "../../ui/Input";
-import { MdDelete } from "react-icons/md";
+import { LuTrash2 } from "react-icons/lu";
 
 interface RowOptions {
   optionKey:string;
@@ -14,14 +14,20 @@ interface RowOptions {
 
 const RowOptions:React.FC<RowOptions> = ({optionKey, Value, onChange, onDelete, error = false}) => {
   return (
-    <div className="flex items-center mb-2 gap-6">
-      <label htmlFor={`row`} className="text-blue-600 w-6">
+    <div className="flex items-center gap-3">
+      <label htmlFor={`row`} className="questionnaire-label w-10 shrink-0 text-base font-medium">
         R{optionKey}
       </label>
-      <Input value={Value} onChange={(e)=>onChange(e.target.value)} className={`focus-visible:ring-0 ${
-          error ? "border-red-500" : "border-gray-300"
+      <Input value={Value} onChange={(e)=>onChange(e.target.value)} className={`questionnaire-input questionnaire-heading questionnaire-clickable rounded-[18px] border-0 px-5 py-3.5 text-base focus-visible:ring-0 ${
+          error ? "ring-1 ring-red-400" : ""
         }`} required />
-      <MdDelete size={28} onClick={onDelete} className="text-red-400 hover:text-red-600" />
+      <button
+        type="button"
+        onClick={onDelete}
+        className="questionnaire-delete inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-[var(--color-home-panel-soft)]"
+      >
+        <LuTrash2 size={18} />
+      </button>
     </div>
   );
 };

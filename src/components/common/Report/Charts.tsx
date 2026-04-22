@@ -7,7 +7,7 @@ import "highcharts/modules/offline-exporting";
 function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-12">
-      <p className="text-gray-600 font-medium">No respondent left</p>
+      <p className="report-muted font-medium">No respondent left</p>
     </div>
   );
 }
@@ -41,18 +41,18 @@ export default function SingleSelectChart({
       categories: categories,
       labels: {
         autoRotation: [-0, -0],
-        style: { fontSize: "10px", color: "#6b7280" },
+        style: { fontSize: "10px", color: "#8f92c8" },
       },
-      lineColor: "#e5e7eb",
-      tickColor: "#e5e7eb",
+      lineColor: "#e7e4fb",
+      tickColor: "#e7e4fb",
     },
     yAxis: {
       title: {
         text: "",
-        style: { fontSize: "12px", color: "#6b7280" },
+        style: { fontSize: "12px", color: "#8f92c8" },
       },
-      labels: { style: { fontSize: "12px", color: "#6b7280" } },
-      gridLineColor: "#f3f4f6",
+      labels: { style: { fontSize: "12px", color: "#8f92c8" } },
+      gridLineColor: "#f0eefc",
     },
     plotOptions: {
       column: {
@@ -66,7 +66,7 @@ export default function SingleSelectChart({
           style: {
             fontSize: "11px",
             fontWeight: "600",
-            color: "#374151",
+            color: "#252b59",
           },
         },
       },
@@ -83,7 +83,7 @@ export default function SingleSelectChart({
                         )}</b>`;
       },
       backgroundColor: "#ffffff",
-      borderColor: "#e5e7eb",
+      borderColor: "#e7e4fb",
       borderRadius: 8,
       shadow: true,
     },
@@ -106,7 +106,7 @@ export default function SingleSelectChart({
   return (
     <div className="mt-4">
       <HighchartsReact highcharts={Highcharts} options={options} />
-      <div className="mt-4 space-y-1 text-sm text-gray-500">
+      <div className="report-muted mt-4 space-y-1 text-sm">
         <p>{baseText}</p>
         <p>{questionText}</p>
       </div>

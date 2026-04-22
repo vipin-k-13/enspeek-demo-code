@@ -19,7 +19,7 @@ const CrosstabInput: React.FC<CrosstabInputProps> = ({
 }) => {
   return (
     <div className={cn(className)}>
-      <label className='font-medium'>
+      <label className='crosstab-title text-sm font-semibold'>
         {label} {required && <span className='text-red-500'>*</span>}
       </label>
       <div className="relative mt-2">
@@ -28,8 +28,8 @@ const CrosstabInput: React.FC<CrosstabInputProps> = ({
           value={value}
           onChange={onChange}
           className={cn(
-            "w-full px-3 py-2 border rounded-md focus:outline-none",
-            error ? "border-red-500 pr-10" : "border-gray-300"
+            "questionnaire-input questionnaire-heading w-full rounded-[16px] border px-4 py-3 focus:outline-none",
+            error ? "border-red-500 pr-10" : "questionnaire-border"
           )}
         />
       </div>

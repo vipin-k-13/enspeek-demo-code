@@ -164,13 +164,23 @@ export default function QuestionList() {
   }
 
   return (
-    <div className="flex flex-col bg-white border-gray-200 relative h-full">
-      <header className="flex justify-end items-center px-4">
+    <div className="questionnaire-page-bg relative flex h-full flex-col">
+      <header className="questionnaire-card questionnaire-border flex flex-col gap-3 border-b px-5 py-4 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="questionnaire-heading truncate text-[18px] font-semibold md:text-[28px]">
+              {StudyInfo?.studyname || StudyInfo?.studyName || "Questionnaire"}
+            </h1>
+            <span className="questionnaire-label text-sm md:text-base">
+              {`${submitItems.length} questions`}
+            </span>
+          </div>
+        </div>
         <div className="flex gap-2 justify-between items-center">
           {submitItems.length > 0 && (
             <button
               data-test-id="NEXTTOSURVEY"
-              className="bg-primary text-white px-4 py-1 rounded flex items-center cursor-pointer hover:bg-primary/90"
+              className="questionnaire-action-btn inline-flex items-center gap-2 rounded-2xl bg-login-primary px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
               onClick={() => {
                 navigate("/publish-survey", {
                   state: { studyID: studyID },
@@ -189,7 +199,7 @@ export default function QuestionList() {
       ) : (
         <div className="flex flex-1">
           <div
-            className="flex-1 relative flex items-start justify-center"
+            className="flex-1 relative flex items-start justify-center overflow-hidden"
             onDragOver={isDragDisabled ? undefined : handleDragOver}
             onDrop={isDragDisabled ? undefined : handleDrop}
           >

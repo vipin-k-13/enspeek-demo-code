@@ -1,4 +1,4 @@
-import { FaFilePowerpoint } from "react-icons/fa";
+import { LuTable2 } from "react-icons/lu";
 import Button from "../../ui/Button";
 import { useLocation } from "react-router";
 import { useProcessHook, useTableDownload } from "./ReportMutations";
@@ -39,35 +39,35 @@ export default function TableForm({
     <div
       data-test-id={`${questionId}_TABLE`}
       key={questionId}
-      className="w-full bg-white border border-gray-300 rounded-lg overflow-hidden mb-4"
+      className="report-card w-full overflow-hidden"
     >
-      <div className="flex items-center justify-between p-2 bg-gray-50 border-b border-gray-300">
-        <h2 className="text-lg font-medium text-gray-900">{title}</h2>
+      <div className="report-card-header flex items-center justify-between px-5 py-4">
+        <h2 className="report-title text-[16px] font-semibold">{title}</h2>
         <Button
-          className="text-yellow-500 cursor-pointer"
+          className="report-toolbar-btn bg-[var(--color-brand-primary-softest)] text-login-primary hover:bg-[var(--color-brand-primary-soft)] hover:text-white"
           onClick={() => {
             DownloadTable(questionId);
           }}
         >
-          <FaFilePowerpoint />
+          <LuTable2 />
         </Button>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-100 text-gray-700 text-left">
+            <tr className="home-panel-soft-bg report-muted text-left">
               <th className="px-6 py-3"></th>
               {headers.map((h, i) => (
-                <th key={i} className="px-6 py-3 text-center">
+                <th key={i} className="px-6 py-3 text-center font-semibold">
                   {h}
                 </th>
               ))}
             </tr>
-            <tr className="bg-white text-gray-600">
-              <td className="px-6 py-2 text-gray-900 font-medium">Base</td>
+            <tr className="bg-white report-muted">
+              <td className="report-title px-6 py-3 font-semibold">Base</td>
               {baseRow.map((item, idx) => (
-                <td key={idx} className="px-6 py-2 text-center font-medium">
+                <td key={idx} className="report-title px-6 py-3 text-center font-semibold">
                   {item}
                 </td>
               ))}
@@ -78,11 +78,11 @@ export default function TableForm({
             {rows.map((row, rowIndex) => (
               <tr
                 key={rowIndex}
-                className={rowIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                className={rowIndex % 2 === 0 ? "home-panel-soft-bg" : "bg-white"}
               >
-                <td className="px-6 py-3 text-gray-900">{row.rowLabel}</td>
+                <td className="report-title px-6 py-3">{row.rowLabel}</td>
                 {row.values.map((val, idx) => (
-                  <td key={idx} className="px-6 py-3 text-center text-gray-800">
+                  <td key={idx} className="home-text px-6 py-3 text-center">
                     {val}
                   </td>
                 ))}
@@ -92,7 +92,7 @@ export default function TableForm({
         </table>
       </div>
 
-      <div className="px-6 py-3 space-y-1 text-gray-500">
+      <div className="report-muted px-6 py-4 space-y-1">
         <p className="text-sm">{baseText}</p>
         <p className="text-sm">{questionText}</p>
       </div>

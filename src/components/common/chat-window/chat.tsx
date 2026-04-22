@@ -13,12 +13,13 @@ import QuestionCard from "../Report/QuestionCard";
 import TableAndChartModal from "../Report/TableAndChartModal";
 import TableModal from "../Crosstab/TableModal";
 import { toast } from "sonner";
+import { PRIMARY_CHART_COLOR } from "../../../utils/chartColors";
 
 const ChatWindow: React.FC = () => {
   const { messages, isTyping, pending } = useSelector(
     (state: RootState) => state.chat
   );
-  const { firstName, lastName } = useSelector((state: RootState) => state.user);
+  const { firstName } = useSelector((state: RootState) => state.user);
   const { pathname } = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -65,33 +66,52 @@ const ChatWindow: React.FC = () => {
     <div className="h-full w-full max-w-full z-50">
       <div
         className={cn(
-          "overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-4",
-          pathname === "/" ? "h-[71vh] bg-[#f4f5ff]" : "h-[73vh] bg-white"
+          "overflow-y-auto p-4 md:p-6",
+          pathname === "/" ? "home-page-bg h-[72vh]" : "home-surface h-[73vh]"
         )}
       >
         {messages.map((msg, index) => (
           <div
             key={index}
             data-test-id={`${msg.sender}-${index}`}
-            className={`mb-5 ${
-              msg.sender === "user" ? "text-right" : "text-left"
-            }`}
+            className={cn(
+              "mb-6 flex w-full",
+              msg.sender === "user" ? "justify-end" : "justify-start"
+            )}
           >
             <div
-              className={
-                msg.sdata || msg.crosstab
-                  ? ""
-                  : `inline-block px-4 py-2 text-sm rounded-2xl shadow-sm text-left ${
-                      msg.sender === "user"
-                        ? "bg-gradient-to-r from-login-primary to-login-bg-end text-white max-w-[70%]"
-                        : "bg-white text-[#252842] border border-[#e6e9f6] max-w-full"
-                    }`
-              }
+              className={cn(
+                "flex max-w-full items-start gap-3",
+                msg.sender === "user" && "flex-row-reverse"
+              )}
             >
-              {" "}
+              <div
+                className={cn(
+                  "mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold",
+                  msg.sender === "user"
+                    ? "home-avatar-user"
+                    : "home-avatar-ai"
+                )}
+              >
+                {msg.sender === "user"
+                  ? (firstName || "U").slice(0, 2).toUpperCase()
+                  : "AI"}
+              </div>
+              <div
+                className={
+                  msg.sdata || msg.crosstab
+                    ? "max-w-[min(100%,860px)]"
+                    : cn(
+                        "inline-block max-w-[min(100%,820px)] rounded-[22px] px-5 py-4 text-left text-sm shadow-sm",
+                        msg.sender === "user"
+                          ? "bg-gradient-to-r from-login-primary to-login-bg-end text-white"
+                          : "home-surface home-text border home-border"
+                      )
+                }
+              >
               {(!msg.questions || msg.questions.add) && !msg.sdata && (
                 <div
-                  className="break-words"
+                  className="break-words text-[15px] leading-7"
                   dangerouslySetInnerHTML={{ __html: msg.text }}
                 />
               )}
@@ -99,7 +119,7 @@ const ChatWindow: React.FC = () => {
                 msg.questions.length === 0 &&
                 !msg.sdata && (
                   <div
-                    className="break-words"
+                    className="break-words text-[15px] leading-7"
                     dangerouslySetInnerHTML={{ __html: msg.text }}
                   />
                 )}
@@ -155,12 +175,12 @@ const ChatWindow: React.FC = () => {
                     "object";
 
                   const chartData = isCrosstab
-                    ? questionData._colorder.map((colId: any) => ({
-                        name: questionData._coloptions?.[colId] ?? colId,
-                        color: "#3F72AF",
-                        data: questionData._roworder.map((rowId: any) => {
-                          return {
-                            name: questionData._rowoptions?.[rowId],
+                      ? questionData._colorder.map((colId: any) => ({
+                          name: questionData._coloptions?.[colId] ?? colId,
+                          color: PRIMARY_CHART_COLOR,
+                          data: questionData._roworder.map((rowId: any) => {
+                            return {
+                              name: questionData._rowoptions?.[rowId],
                             y: questionData.data?.[colId]?.[rowId] ?? 0,
                           };
                         }),
@@ -168,7 +188,7 @@ const ChatWindow: React.FC = () => {
                     : [
                         {
                           name: "Responses",
-                          color: "#3F72AF",
+                          color: PRIMARY_CHART_COLOR,
                           data: questionData._roworder.map((rowId: any) => ({
                             name: questionData._rowoptions?.[rowId],
                             y: questionData.data?.[rowId] ?? 0,
@@ -357,12 +377,8 @@ const ChatWindow: React.FC = () => {
                   </div>
                 )}
               </>
+              </div>
             </div>
-            {msg.sender === "user" ? (
-              <p className="text-[10px] mt-1 text-right text-[#7e83a5]">{`${firstName} ${lastName}`}</p>
-            ) : (
-              <p className="text-[10px] mt-1 text-[#7e83a5]">AI</p>
-            )}
           </div>
         ))}
 

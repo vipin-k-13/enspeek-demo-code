@@ -1,4 +1,4 @@
-import { FaPlusCircle } from "react-icons/fa";
+import { LuCircle, LuPlus } from "react-icons/lu";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setBannerPointer } from "../../../store/CrossTabDataSlice";
@@ -38,31 +38,32 @@ const TabButtons: React.FC<TabButtonsProps> = ({
     dispatch(setBannerPointer([...BannerPointer, newPoint]));
     setActiveTab(BannerPointer.length);
   };
+
   return (
-    <div className="flex justify-between items-center mt-4">
-      <div className="flex space-x-2">
+    <div className="crosstab-surface mt-4 flex flex-col gap-3 px-4 py-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-wrap gap-2">
         {BannerPointer.map((point, index) => (
           <button
             key={point.title}
             onClick={() => setActiveTab(index)}
-            className={`border-b-4 py-2 rounded-t-md px-3 transition-colors 
-                    ${
-                      activeTab === index
-                        ? "bg-white border-blue-500 text-action"
-                        : "bg-gray-100 border-transparent text-gray-400 hover:bg-gray-200"
-                    }`}
+            className={`report-toolbar-btn inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 transition-colors ${
+              activeTab === index
+                ? "bg-[var(--color-brand-primary-softest)] text-login-primary"
+                : "bg-white text-[var(--color-text-supporting)] hover:bg-[var(--color-home-panel-soft)]"
+            }`}
             disabled={isBannerPointerListPending}
           >
-            ● {point.title}
+            <LuCircle className="h-3 w-3 fill-current" />
+            {point.title}
           </button>
         ))}
       </div>
       <button
         onClick={addBannerPoint}
-        className="bg-white px-3 py-1 rounded cursor-pointer flex items-center"
+        className="report-toolbar-btn inline-flex items-center gap-2 rounded-2xl bg-login-primary px-4 py-2.5 text-white hover:bg-login-primary-hover"
         disabled={isBannerPointerListPending}
       >
-        <FaPlusCircle className="mr-1" />
+        <LuPlus className="h-4 w-4" />
         Add point
       </button>
     </div>

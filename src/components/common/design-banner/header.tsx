@@ -61,13 +61,13 @@ const DesignBanner_Header = () => {
   };
 
   return (
-    <div className="justify-between items-center rounded grid grid-cols-2">
+    <div className="crosstab-surface mb-4 flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
       <div className="text-sm">
-        <span className="text-gray-700 font-semibold">{bannerName} : </span>
+        <span className="crosstab-title font-semibold">{bannerName} : </span>
         <Link
           to="/crosstab"
           state={{ studyID: location.state.studyID }}
-          className="text-gray-600 hover:text-action"
+          className="crosstab-muted hover:text-login-primary"
         >
           Banner List
         </Link>
@@ -80,8 +80,8 @@ const DesignBanner_Header = () => {
           }}
           className={
             location.pathname === "/crosstab/edit-banner"
-              ? "text-action font-semibold"
-              : "text-gray-600"
+              ? "questionnaire-label font-semibold"
+              : "crosstab-muted"
           }
         >
           Design Banner
@@ -90,7 +90,7 @@ const DesignBanner_Header = () => {
       <div className="flex justify-end">
         <Button
           data-test-id="SUBMIT"
-          className="bg-primary text-white"
+          className="report-toolbar-btn bg-login-primary text-white hover:bg-login-primary-hover"
           onClick={onSubmitHandle}
           disabled={isAddBannerPointerPending}
         >

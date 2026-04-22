@@ -24,9 +24,9 @@ const ChatTextArea = () => {
   const { message, isTyping, messages, isChatOpen, pending } = useSelector(
     (state: RootState) => state.chat
   );
-  // const { hasQuestionnaire } = useSelector((state: RootState) => state.study);
   const { pathname } = useLocation();
   const dispatch = useDispatch<AppDispatch>();
+  const isHome = pathname === "/";
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch(setMessage(e.target.value));
@@ -94,26 +94,24 @@ const ChatTextArea = () => {
 
       <div
         className={cn(
-          "flex flex-col rounded-[20px] shadow-[0_8px_24px_rgba(79,86,230,0.15)] transition-all duration-300 ease-in-out bg-white border border-[#e6e8f7] cursor-text absolute bottom-4 z-50 w-[86%] max-w-2xl transform left-1/2 -translate-x-1/2",
+          "home-surface absolute bottom-6 left-1/2 z-50 flex w-[min(92%,580px)] -translate-x-1/2 cursor-text flex-col rounded-[26px] border home-border-strong shadow-xl transition-all duration-300 ease-in-out",
           isChatOpen
             ? "opacity-100 translate-y-0 scale-100"
             : "opacity-0 translate-y-8 scale-95 pointer-events-none",
-          // pathname === "/"
-          //   ? "left-5/8"
-          //   : Boolean(!hasQuestionnaire)
-          //   ? "left-[52%]"
-          //   : "left-1/2"
+          !isHome && "w-[min(92%,760px)]"
         )}
       >
         <div
-          className="overflow-y-auto flex items-center gap-2 p-2"
+          className="flex items-center gap-3 overflow-visible p-3"
           style={{ maxHeight: "400px" }}
         >
           <NewDropdown
             position="top-left"
+            searchable
+            searchPlaceholder="Search commands..."
             trigger={
               <Tooltip content="Quick Commands" position="top">
-                <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#eef0ff] text-[#5962eb] transition-colors hover:bg-[#e6e9ff] cursor-pointer">
+                <button className="home-dropdown-icon-wrap flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors hover:opacity-90 cursor-pointer">
                   <CiCircleList className="w-5 h-5" />
                 </button>
               </Tooltip>
@@ -129,9 +127,9 @@ const ChatTextArea = () => {
             value={message}
             onChange={handleInputChange}
             onKeyDown={(e) => handleKeyPress(e, handleSubmit)}
-            placeholder="Ask something..."
+            placeholder="Ask me anything..."
             className={cn(
-              "w-full resize-none border-0 bg-transparent p-2 text-foreground placeholder:text-[#b1b5ce] focus:ring-0 focus-visible:outline-none",
+              "home-chat-placeholder home-text min-h-8 w-full resize-none border-0 bg-transparent py-2 pr-2 text-[16px] focus:ring-0 focus-visible:outline-none",
               "min-h-8"
             )}
           />
@@ -141,7 +139,7 @@ const ChatTextArea = () => {
                 disabled={isTyping}
                 data-test-id="SEND"
                 onClick={handleSubmit}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-login-primary to-login-bg-end text-sm font-medium transition-all hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:bg-gray-300 cursor-pointer"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-r from-login-primary to-login-bg-end text-sm font-medium transition-all hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:bg-gray-300 cursor-pointer shadow-[0_10px_24px_rgba(85,90,230,0.28)]"
               >
                 <IoMdSend className="h-5 w-5 text-white" />
                 <span className="sr-only">Send message</span>
@@ -151,8 +149,8 @@ const ChatTextArea = () => {
         </div>
         <div
           className={cn(
-            "rounded-b-[20px] border-t border-[#eceeff] bg-[#fafbff] px-3 py-2",
-            pathname === "/" ? "hidden" : "block"
+            "home-panel-soft-bg rounded-b-[26px] border-t home-border-soft px-4 py-2.5",
+            isHome ? "hidden" : "block"
           )}
         >
           <div className="flex items-center gap-3">

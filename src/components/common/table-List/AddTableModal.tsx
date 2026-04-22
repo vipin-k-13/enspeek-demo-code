@@ -132,7 +132,7 @@ export default function AddCustomTableModal({
           />
         </div>
         <div>
-          <label className="text-sm font-medium">Table Logic</label>
+          <label className="crosstab-title text-sm font-semibold">Table Logic</label>
           <BannerLogic setLogicFunc={(e)=>setTableLogic(e)} />
         </div>
         <AddCustomTableListModal rows={rows} setRows={setRows}/>

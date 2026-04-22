@@ -1,6 +1,6 @@
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
-import { FaPlus, FaTrash } from "react-icons/fa6";
+import { LuPlus, LuTrash2 } from "react-icons/lu";
 import BannerLogic from "../../global/BannerLogic";
 
 interface ControlItem {
@@ -50,36 +50,36 @@ export default function AddCustomTableListModal({ rows, setRows }: Props) {
   };
 
   return (
-    <div className="border border-gray-300">
-      <div className="flex justify-end py-2 px-4 border-b border-gray-300">
+    <div className="crosstab-surface overflow-hidden">
+      <div className="home-panel-soft-bg flex justify-end border-b home-border-soft px-4 py-3">
         <Button
           varinat="outline"
           onClick={handleCreateRow}
-          className="ml-4 text-action border-action hover:bg-action hover:text-white"
+          className="report-toolbar-btn ml-4 border border-login-primary text-login-primary hover:bg-login-primary hover:text-white"
         >
-          <FaPlus className="mr-1" />
+          <LuPlus className="mr-1" />
           Create Row
         </Button>
       </div>
       <table className="w-full table-auto border-collapse">
         <thead>
-          <tr className="border-b border-gray-300">
-            <th className="text-left px-4 py-2 w-24 border-r border-gray-300">
+          <tr className="border-b home-border-soft">
+            <th className="w-24 border-r home-border-soft px-4 py-3 text-left crosstab-title">
               Row ID
             </th>
-            <th className="text-left px-4 py-2 border-r border-gray-300">
+            <th className="border-r home-border-soft px-4 py-3 text-left crosstab-title">
               Row Title
             </th>
-            <th className="text-center px-4 py-2 w-12"></th>
+            <th className="w-12 px-4 py-3"></th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200">
+        <tbody className="divide-y home-border-soft">
           {rows.map((row, rowIndex) => (
             <tr key={row.id}>
-              <td className="px-4 py-2 border-r border-gray-300 align-middle">
+              <td className="crosstab-title border-r home-border-soft px-4 py-3 align-middle">
                 <div className="text-sm font-medium">{row.id}</div>
               </td>
-              <td className="px-4 py-2 align-middle border-r border-gray-300 ">
+              <td className="border-r home-border-soft px-4 py-3 align-middle">
                 <div className="space-y-2">
                   <Input
                     placeholder="Enter option text"
@@ -87,7 +87,7 @@ export default function AddCustomTableListModal({ rows, setRows }: Props) {
                     onChange={(e) =>
                       handleRowChange(rowIndex, "title", e.target.value)
                     }
-                    className="w-full border border-gray-300 focus:outline-none"
+                    className="questionnaire-input questionnaire-heading w-full border questionnaire-border focus:outline-none"
                   />
                   <div className="space-y-2">
                     {row.controls.map((_, index) => (
@@ -97,12 +97,12 @@ export default function AddCustomTableListModal({ rows, setRows }: Props) {
                 </div>
               </td>
               {rows.length > 1 && (
-                <td className="px-4 py-2 text-center align-middle">
+                <td className="px-4 py-3 text-center align-middle">
                   <button
                     onClick={() => handleDeleteRow(rowIndex)}
-                    className="p-1 hover:bg-gray-100 rounded-full"
+                    className="questionnaire-clickable rounded-full p-2 hover:bg-[var(--color-questionnaire-stop-bg)]"
                   >
-                    <FaTrash className="text-red-500 hover:text-red-600" />
+                    <LuTrash2 className="text-[var(--color-questionnaire-stop)]" />
                   </button>
                 </td>
               )}

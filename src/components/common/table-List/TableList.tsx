@@ -1,4 +1,4 @@
-import { FaSyncAlt, FaDownload, FaEdit } from "react-icons/fa";
+import { LuDownload, LuLoaderCircle, LuPencilLine, LuRefreshCw } from "react-icons/lu";
 import { useDispatch } from "react-redux";
 import {
   setIsEditModal,
@@ -7,7 +7,6 @@ import {
 } from "../../../store/CrosstabSlice";
 import { useLocation } from "react-router";
 import { useProcessHook } from "../Report/ReportMutations";
-import { LuLoaderCircle } from "react-icons/lu";
 import { useBannerPointerList, useDownloadtable, useTableOutput } from "../Crosstab/CrossTab.Api";
 
 interface TableListProp {
@@ -65,24 +64,24 @@ const dataSource = isStatic ? sdata : tableOutputData;
 
   return (
     <div className="mt-4" data-test-id={`TABLE_${qID}`}>
-      <div className="bg-white border border-gray-200 rounded shadow-md p-3">
-        <div className="flex justify-between bg-white items-center px-3 py-1">
+      <div className="report-card p-3">
+        <div className="flex flex-col justify-between gap-3 bg-white px-3 py-1 md:flex-row md:items-center">
           <div>
-            <h2 className="font-semibold text-gray-800">{Title}</h2>
-            <p className="text-gray-500 text-sm">{Description}</p>
+            <h2 className="crosstab-title font-semibold">{Title}</h2>
+            <p className="crosstab-muted text-sm">{Description}</p>
           </div>
-          <div className="flex space-x-3">
+          <div className="flex flex-wrap items-center gap-3">
             {!isStatic && (
             <button
-              className="p-1 hover:text-gray-600 transition-colors cursor-pointer"
+              className="questionnaire-clickable crosstab-muted rounded-full p-2 transition-colors hover:bg-[var(--color-brand-primary-softest)] hover:text-login-primary"
               aria-label="Refresh"
               onClick={() => TableOutputData()}
             >
-              <FaSyncAlt size={18} />
+              <LuRefreshCw size={18} />
             </button>
              )}
             <button
-              className="p-1 text-yellow-500 hover:text-yellow-600 transition-colors cursor-pointer"
+              className="questionnaire-clickable rounded-full p-2 text-[var(--color-study-progress)] transition-colors hover:bg-[var(--color-home-panel-soft)]"
               aria-label="Download"
               onClick={() =>
                 downloadTableMutate({
@@ -91,49 +90,49 @@ const dataSource = isStatic ? sdata : tableOutputData;
                 })
               }
             >
-              <FaDownload size={18} />
+              <LuDownload size={18} />
             </button>
              {!isStatic && (
             <button
-              className="p-1 text-action hover:text-action/80 transition-colors cursor-pointer"
+              className="questionnaire-clickable rounded-full p-2 text-login-primary transition-colors hover:bg-[var(--color-brand-primary-softest)]"
               aria-label="Edit"
               onClick={onEditHandle}
             >
-              <FaEdit size={18} />
+              <LuPencilLine size={18} />
             </button>  
              )}         
           </div>
         </div>
-        <div className="overflow-x-auto mx-auto border border-gray-300 my-4">
+        <div className="crosstab-soft-panel my-4 overflow-x-auto mx-auto">
           {isTableOutputRefetching ? (
             <div className="flex p-4 justify-center">
               <LuLoaderCircle size={34} className="animate-spin text-action" />
             </div>
           ) : (
-            <table className="w-full divide-y divide-gray-200">
+            <table className="w-full divide-y home-border-soft">
               <thead>
-                <tr className="bg-gray-200/50">
-                  <th className="px-6 py-3 text-left text-gray-500"></th>
+                <tr className="home-panel-soft-bg">
+                  <th className="px-6 py-3 text-left crosstab-muted"></th>
                   {bannerPointerListData.map((header: BannerPoint) => (
                     <th
                       key={header.pointID}
-                      className="px-6 py-3 text-center text-gray-500 border-l border-gray-300"
+                      className="px-6 py-3 text-center crosstab-muted border-l home-border-soft"
                     >
                       <div>{header.title}</div>
-                      <div className="text-red-500">{header.alpha}</div>
+                      <div className="text-[var(--color-questionnaire-stop)]">{header.alpha}</div>
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y home-border-soft">
                 <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-700">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold crosstab-title">
                     Base
                   </td>
                   {bannerPointerListData.map((seq: BannerPoint) => (
                     <td
                       key={seq.pointID}
-                      className="px-6 py-4 whitespace-nowrap text-center text-sm font-bold border-l border-gray-300"
+                      className="px-6 py-4 whitespace-nowrap text-center text-sm font-bold crosstab-title border-l home-border-soft"
                     >
                       {
                         dataSource.base[
@@ -145,7 +144,7 @@ const dataSource = isStatic ? sdata : tableOutputData;
                 </tr>
                 {dataSource._row_order.map((seq: any) => (
                   <tr key={seq}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm crosstab-title">
                       {
                         dataSource._rows[
                           seq as keyof typeof dataSource._rows
@@ -160,7 +159,7 @@ const dataSource = isStatic ? sdata : tableOutputData;
                       return (
                         <td
                           key={seqData.pointID}
-                          className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700 border-l border-gray-300"
+                          className="px-6 py-4 whitespace-nowrap text-center text-sm home-text border-l home-border-soft"
                         >
                           {value[seqData.pointID as keyof typeof value]}
                         </td>

@@ -1,4 +1,4 @@
-import { FaDownload, FaPlusCircle } from "react-icons/fa";
+import { LuDownload, LuPlus, LuSearch } from "react-icons/lu";
 import { Link, useLocation } from "react-router";
 import Button from "../../ui/Button";
 import { useDispatch } from "react-redux";
@@ -24,15 +24,15 @@ export default function CrosstabHeader({
   const {} = useStudyInfo(location.state.studyID);
 
   return (
-    <div className="justify-between items-center rounded grid grid-cols-2">
-      <div>
+    <div className="crosstab-surface mb-4 flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
+      <div className="min-w-0">
         <div className="text-sm">
           <Link
             to="/crosstab"
             className={
               location.pathname.replace(/\/$/, "") === "/crosstab"
-                ? "text-action font-semibold"
-                : ""
+                ? "questionnaire-label font-semibold"
+                : "crosstab-muted"
             }
           >
             Banner List
@@ -40,30 +40,30 @@ export default function CrosstabHeader({
         </div>
       </div>
       <div className="flex justify-end">
-        <div className="flex gap-3 items-center">
-          <div className="flex gap-3">
+        <div className="flex flex-wrap items-center gap-3">
             <Button
               data-test-id="CREATE_BANNER"
-              className="text-white bg-primary"
+              className="report-toolbar-btn bg-login-primary px-4 py-2.5 text-white hover:bg-login-primary-hover"
               onClick={() => dispatch(setIsAddBannerModalOpen(true))}
             >
-              <FaPlusCircle />
+              <LuPlus />
               Banner
             </Button>
-            <Input
-              placeholder="Search banner..."
-              className="focus:outline-none border border-gray-400"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <div className="crosstab-soft-panel flex min-w-[220px] items-center px-3 py-2">
+              <LuSearch className="crosstab-muted h-4 w-4" />
+              <Input
+                placeholder="Search banner..."
+                className="home-text border-0 bg-transparent px-2 py-0 focus:outline-none focus-visible:ring-0"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
             <Button
-              className="border border-gray-400 focus:outline-none text-gray-400
-                        hover:text-white hover:bg-gray-400"
+              className="report-toolbar-btn border home-border-soft bg-white text-[var(--color-brand-info)] hover:bg-[var(--color-brand-primary-softest)]"
               onClick={() => setIsDownloadModalOpen(true)}
             >
-              <FaDownload />
+              <LuDownload />
             </Button>
-          </div>
           <HistoryModal
             open={isDownloadModalOpen}
             onOpenChange={setIsDownloadModalOpen}

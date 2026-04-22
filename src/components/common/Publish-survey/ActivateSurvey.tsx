@@ -35,17 +35,17 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
       onClose={onClose}
       className="max-w-lg"
     >
-      <p className="text-sm text-gray-700 mb-3">
-        Please confirm if you want to activate Testing11 Study?
+      <p className="questionnaire-label mb-3 text-base">
+        Please confirm if you want to activate {studyInfo.studyname}?
       </p>
-      <p className="text-sm text-gray-700 mb-2">
+      <p className="questionnaire-heading mb-3 text-sm">
         Type <strong>activate</strong> in the input box to confirm.
       </p>
       <input
         type="text"
         data-test-id="ACTIVATE_INPUT"
         placeholder="eg. activate"
-        className="w-full border border-gray-300 focus:outline-none rounded-md px-3 py-2 text-sm mt-1"
+        className="questionnaire-input questionnaire-heading questionnaire-border mt-1 w-full rounded-[16px] border px-4 py-3 text-sm focus:outline-none"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={(e)=>handleKeyPress(e, handleActivateSurvey)}

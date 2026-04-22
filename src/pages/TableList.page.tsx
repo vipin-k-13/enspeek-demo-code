@@ -5,7 +5,7 @@ import { useLocation } from "react-router";
 import { useProcessHook } from "../components/common/Report/ReportMutations";
 import { useDownloadtable } from "../components/common/Crosstab/CrossTab.Api";
 import { setIsDownloadDropdownOpen, setIsHistoryModalOpen } from "../store/CrosstabSlice";
-import { FaDownload, FaFileExcel } from "react-icons/fa";
+import { LuDownload, LuFileSpreadsheet } from "react-icons/lu";
 import Header from "../components/common/table-List/Header";
 import CrossTabTable from "../components/common/table-List/CrossTabTable";
 
@@ -32,7 +32,7 @@ const TableList_page = () => {
     const dropDownData = [
       {
         Title: "Download All",
-        Icon: FaFileExcel,
+        Icon: LuFileSpreadsheet,
         onClick: () => {
           dispatch(setIsDownloadDropdownOpen(false));
           if (tableIDList.length) {
@@ -45,7 +45,7 @@ const TableList_page = () => {
       },
       {
         Title: "Download History",
-        Icon: FaDownload,
+        Icon: LuDownload,
         onClick: () => {
           dispatch(setIsDownloadDropdownOpen(false));
           dispatch(setIsHistoryModalOpen(true));
@@ -53,7 +53,7 @@ const TableList_page = () => {
       },
     ];
 
-  return <div className="min-h-screen px-3">
+  return <div className="crosstab-page-bg min-h-screen px-3 py-3 md:px-4">
     <Header dropdownRef={dropdownRef} dropDownData={dropDownData}/>
     <CrossTabTable/>
   </div>;

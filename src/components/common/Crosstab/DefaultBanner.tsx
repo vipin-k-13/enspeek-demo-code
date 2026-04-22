@@ -1,6 +1,12 @@
 import { useState } from "react";
-import { FaEdit, FaDownload, FaTrash, FaTable } from "react-icons/fa";
-import { FaCopy, FaGears } from "react-icons/fa6";
+import {
+  LuCopy,
+  LuDownload,
+  LuFilePenLine,
+  LuSettings2,
+  LuTable2,
+  LuTrash2,
+} from "react-icons/lu";
 import DynamicModel from "../../global/DynamicModel";
 import Input from "../../ui/Input";
 import { toast } from "sonner";
@@ -69,13 +75,13 @@ export default function DefaultBanner({
   return (
     <>
       <div
-        className="bg-white rounded-lg shadow-sm border border-gray-200 mt-3"
+        className="report-card mt-3"
         data-test-id={Title}
       >
-        <div className="flex justify-between items-start px-3 py-2">
+        <div className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-start md:justify-between">
           <div>
             <h2
-              className={`text-xl font-semibold text-action ${
+              className={`crosstab-title text-xl font-semibold ${
                 Array.isArray(bannerPointerListData) &&
                 bannerPointerListData.length > 0
                   ? "cursor-pointer"
@@ -95,14 +101,14 @@ export default function DefaultBanner({
             >
               {Title}
             </h2>
-            <p className="text-gray-500 text-sm mt-1">{description}</p>
+            <p className="crosstab-muted mt-1 text-sm">{description}</p>
           </div>
-          <div className="flex space-x-3">
+          <div className="flex flex-wrap items-center gap-3">
             {Array.isArray(bannerPointerListData) &&
               bannerPointerListData.length > 0 && (
                 <>
                   <button
-                    className="p-1 hover:text-gray-600 cursor-pointer transition-colors"
+                    className="questionnaire-clickable crosstab-muted rounded-full p-2 transition-colors hover:bg-[var(--color-brand-primary-softest)] hover:text-login-primary"
                     aria-label="Grid View"
                     onClick={() => {
                       dispatch(setBannerName(Title));
@@ -111,26 +117,26 @@ export default function DefaultBanner({
                       });
                     }}
                   >
-                    <FaTable size={18} />
+                    <LuTable2 size={18} />
                   </button>
                   <button
                     data-test-id={`${Title}_COPY`}
-                    className="p-1 text-blue-400 hover:text-blue-500 cursor-pointer transition-colors"
+                    className="questionnaire-clickable rounded-full p-2 text-[var(--color-brand-info)] transition-colors hover:bg-[var(--color-brand-info-soft)]"
                     aria-label="Copy"
                     onClick={() => setIsCopyModalOpen(true)}
                   >
-                    <FaCopy size={18} />
+                    <LuCopy size={18} />
                   </button>
                   <button
                     data-test-id={`${Title}_SETTING`}
-                    className="p-1 text-green-600 hover:text-green-700 cursor-pointer transition-colors"
+                    className="questionnaire-clickable rounded-full p-2 text-[var(--color-questionnaire-multi)] transition-colors hover:bg-[var(--color-questionnaire-open-bg)]"
                     aria-label="Settings"
                     onClick={() => setIsSettingsOpen(true)}
                   >
-                    <FaGears size={18} />
+                    <LuSettings2 size={18} />
                   </button>
                   <button
-                    className="p-1 text-yellow-500 hover:text-yellow-600 cursor-pointer transition-colors"
+                    className="questionnaire-clickable rounded-full p-2 text-[var(--color-study-progress)] transition-colors hover:bg-[var(--color-home-panel-soft)]"
                     aria-label="Download"
                     onClick={() => {
                       downloadTableMutate({
@@ -139,12 +145,12 @@ export default function DefaultBanner({
                       });
                     }}
                   >
-                    <FaDownload size={18} />
+                    <LuDownload size={18} />
                   </button>
                 </>
               )}
             <button
-              className="p-1 text-action hover:text-action/80 cursor-pointer transition-colors"
+              className="questionnaire-clickable rounded-full p-2 text-login-primary transition-colors hover:bg-[var(--color-brand-primary-softest)]"
               aria-label="Edit"
               onClick={() => {
                 dispatch(setBannerName(Title));
@@ -153,41 +159,41 @@ export default function DefaultBanner({
                 });
               }}
             >
-              <FaEdit size={18} />
+              <LuFilePenLine size={18} />
             </button>
             <button
               data-test-id={`${Title}_DELETE`}
-              className="p-1 text-red-500 hover:text-red-600 cursor-pointer transition-colors"
+              className="questionnaire-clickable rounded-full p-2 text-[var(--color-questionnaire-stop)] transition-colors hover:bg-[var(--color-questionnaire-stop-bg)]"
               aria-label="Delete"
               onClick={() => {
                 setDeleteInputValue("");
                 setIsDeleteModalOpen(true);
               }}
             >
-              <FaTrash size={18} />
+              <LuTrash2 size={18} />
             </button>
           </div>
         </div>
 
-        <div className="px-3 py-1">
-          <div className="flex items-center justify-center">
+        <div className="px-4 py-1">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             {Array.isArray(bannerPointerListData) &&
             bannerPointerListData.length ? (
               bannerPointerListData.map((info) => (
                 <div
                   key={info.pointID}
-                  className="border-2 border-gray-300 w-full p-1"
+                  className="crosstab-soft-panel crosstab-title w-full px-3 py-2 text-sm font-medium"
                 >
                   {info.title}
                 </div>
               ))
             ) : (
-              <div className="p-2">No banner point added.</div>
+              <div className="crosstab-muted p-2">No banner point added.</div>
             )}
           </div>
         </div>
-        <div className="px-6 py-3">
-          <p className="text-sm italic text-gray-600">
+        <div className="px-6 py-4">
+          <p className="crosstab-muted text-sm italic">
             {`Modified By: ${OwnerName}`}
           </p>
         </div>
@@ -202,17 +208,17 @@ export default function DefaultBanner({
         }
         className="max-w-2xl"
         disable={isRelicateBannerPending}
-      >
-        <p>Please type banner name in the below box.</p>
+        >
+        <p className="crosstab-title">Please type banner name in the below box.</p>
         <Input
           value={copyTitle}
           placeholder="Default Banner (copy)"
-          className="my-3 focus:outline-none border border-gray-300"
+          className="questionnaire-input questionnaire-heading my-3 border questionnaire-border focus:outline-none"
           onChange={(e) => setCopyTitle(e.target.value)}
           disabled={isRelicateBannerPending}
         />
-        <p>
-          <span className="text-action">*</span> Please click on "Copy Banner"
+        <p className="crosstab-muted">
+          <span className="text-login-primary">*</span> Please click on "Copy Banner"
           button and wait for some time till the banner is copied.
         </p>
       </DynamicModel>
@@ -231,14 +237,14 @@ export default function DefaultBanner({
         className="max-w-lg"
         disable={isDeleteBannerPending}
       >
-        <p>{`Are you sure want to delete ${Title}?`}</p>
-        <p className="my-3">Type delete in the input box</p>
+        <p className="crosstab-title">{`Are you sure want to delete ${Title}?`}</p>
+        <p className="crosstab-muted my-3">Type delete in the input box</p>
         <Input
           data-test-id="BANNER_DELETE"
           placeholder="eg. delete"
           value={deleteInputValue}
           onChange={(e) => setDeleteInputValue(e.target.value)}
-          className="my-3 focus:outline-none border border-gray-300"
+          className="questionnaire-input questionnaire-heading my-3 border questionnaire-border focus:outline-none"
           disabled={isDeleteBannerPending}
         />
       </DynamicModel>

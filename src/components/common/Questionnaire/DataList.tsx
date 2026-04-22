@@ -132,7 +132,7 @@ const DataList: FC<DataListProps> = ({
   // }, [MainDiv.current]);
 
   return (
-    <div className="w-full p-4 h-[82vh] overflow-y-auto">
+    <div className="h-[82vh] w-full overflow-y-auto p-3 md:p-6">
       {(isPending || DeleteIsPending) && (
         <div className="flex items-center justify-center w-full h-full">
           <AiOutlineLoading3Quarters
@@ -141,7 +141,7 @@ const DataList: FC<DataListProps> = ({
           />
         </div>
       )}
-      <Accordion className="space-y-2" ref={MainDiv}>
+      <Accordion className="space-y-4" ref={MainDiv}>
         {submittedItems.map((data, index) => (
           <div
             key={data.qID}
@@ -151,7 +151,7 @@ const DataList: FC<DataListProps> = ({
             }
             onDragOver={!isDragDisabled ? (e) => onDragOver(e) : undefined}
             onDrop={!isDragDisabled ? (e) => onDrop(e, index) : undefined}
-            className={cn(index === draggedIndex && "bg-white")}
+            className={cn(index === draggedIndex && "opacity-70")}
           >
             <QuestionAccordionItem
               Data={data}

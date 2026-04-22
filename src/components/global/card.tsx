@@ -20,6 +20,7 @@ import {
   LuTable2,
   LuTrash2,
 } from "react-icons/lu";
+import { getStudyStateTheme } from "../../utils/studyStateTheme";
 
 type StudyCardProps = {
   id: string;
@@ -49,14 +50,15 @@ export const StudyCard: React.FC<StudyCardProps> = ({
   const { Active } = useActive();
   const dispatch = useDispatch<AppDispatch>();
   const cleanStatus = (status || "").replace(/\|\s*\d+\s*questions?/i, "").trim();
-  const statusKey = cleanStatus.toLowerCase();
-  const stateColor = statusKey.includes("collect")
-    ? { text: "text-[#46ad7e]", badge: "bg-[#dff7ec] text-[#46ad7e]" }
-    : statusKey.includes("launch")
-      ? { text: "text-[#4f68d8]", badge: "bg-[#e6ebff] text-[#4f68d8]" }
-      : statusKey.includes("report")
-        ? { text: "text-[#7b58d6]", badge: "bg-[#eee7ff] text-[#7b58d6]" }
-        : { text: "text-[#6f7394]", badge: "bg-[#eef0ff] text-[#6f7394]" };
+  const questionMatch = (status || "").match(/(\d+)\s*questions?/i);
+  const questionCount = questionMatch?.[1];
+  const stateTheme = getStudyStateTheme(studystate || cleanStatus);
+  const initials = owner
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("");
 
   const dropdownItem = [
     {
@@ -118,31 +120,40 @@ export const StudyCard: React.FC<StudyCardProps> = ({
 
   return (
     <>
-      <div className="w-full cursor-pointer rounded-2xl border border-[#ececf8] bg-white px-3 py-3 shadow-[0_2px_8px_rgba(54,57,102,0.06)] transition-shadow duration-200 hover:shadow-[0_6px_16px_rgba(54,57,102,0.12)]">
+      <div className="home-surface group relative w-full cursor-pointer overflow-visible rounded-[22px] border home-border-soft px-4 py-4 shadow-md transition-shadow duration-200 hover:shadow-lg">
+        <div className={cn("absolute bottom-3 left-0 top-3 w-[3px] rounded-r-full opacity-0 transition-opacity duration-200 group-hover:opacity-100", stateTheme.accentClass)} />
         <div className="mb-2 flex items-start justify-between gap-2">
           <div className="flex items-start gap-2">
             <span
               className={cn(
-                "mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold uppercase",
-                stateColor.badge
+                "mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-full text-sm font-semibold uppercase shadow-sm",
+                stateTheme.avatarClass
               )}
             >
-              {`${owner.split(" ")[0][0]}${owner.split(" ")[1]?.[0] ?? ""}`}
+              {initials || "ST"}
             </span>
-            <div className="max-w-[11.5rem]">
+            <div className="max-w-[12rem]">
               <h3
                 data-test-id={name}
                 title={name}
-                className="line-clamp-2 overflow-hidden text-ellipsis text-[14px] leading-5 font-semibold text-[#2d3150]"
+                className="home-heading line-clamp-2 overflow-hidden text-ellipsis text-[15px] leading-5 font-semibold"
                 onClick={() =>
                   navigate("/questionnaire", { state: { studyID: id } })
                 }
               >
                 {name}
               </h3>
-              <p className={cn("mt-1 text-sm font-semibold", stateColor.text)}>
-                {studystate}
-              </p>
+              <div className="mt-1 flex flex-wrap items-center gap-2 text-sm">
+                <p className={cn("font-semibold", stateTheme.textClass)}>
+                  {studystate || cleanStatus || "Draft"}
+                </p>
+                {questionCount && (
+                  <>
+                    <span className="home-muted">|</span>
+                    <span className="home-highlight">{`${questionCount} questions`}</span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
           <NewDropdown
@@ -150,16 +161,18 @@ export const StudyCard: React.FC<StudyCardProps> = ({
             trigger={
               <div
                 data-test-id={`${name}_CLICK`}
-                className="peer/menu-button flex w-8 items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm text-[#8a8ead] outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:bg-[#eff1ff] hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0"
+                className="home-muted hover:bg-home-panel flex h-8 w-8 items-center justify-center rounded-full transition-colors"
               >
                 <HiOutlineDotsVertical />
               </div>
             }
             items={dropdownItem}
+            position="bottom-right"
+            searchable={false}
           />
         </div>
-        <div className="pl-10">
-          <p className="text-xs text-[#8a8fad]">{createAt}</p>
+        <div className="pl-14">
+          <p className="home-subtle text-[12px]">{createAt}</p>
         </div>
       </div>
     </>

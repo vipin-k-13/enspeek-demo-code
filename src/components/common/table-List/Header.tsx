@@ -3,13 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router";
 import type { RootState } from "../../../store/store";
 import Button from "../../ui/Button";
-import { FaGears } from "react-icons/fa6";
+import { LuArrowRight, LuDownload, LuSave, LuSettings2 } from "react-icons/lu";
 import {
   setIsBannerSettingsOpen,
   setIsDownloadDropdownOpen,
   setSelectedQuestions,
 } from "../../../store/CrosstabSlice";
-import { FaDownload, FaSave } from "react-icons/fa";
 import DropDown from "../../global/DropDown";
 import { toast } from "sonner";
 import { useTableListAdd } from "../Crosstab/CrossTab.Api";
@@ -60,14 +59,14 @@ const Header: React.FC<CrosstabHeaderProps> = ({
   }, [location.state?.bannerID]);
 
   return (
-    <div className="justify-between items-center rounded grid grid-cols-2 w-full">
-      <div>
-        <span className="text-gray-700 font-semibold">{bannerName} :</span>
+    <div className="crosstab-surface mb-4 flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
+      <div className="min-w-0">
+        <span className="crosstab-title font-semibold">{bannerName} :</span>
         <span> </span>
         <Link
           to="/crosstab"
           state={{ studyID: location.state.studyID }}
-          className="text-gray-600 hover:text-action"
+          className="crosstab-muted hover:text-login-primary"
         >
           Banner List
         </Link>
@@ -80,8 +79,8 @@ const Header: React.FC<CrosstabHeaderProps> = ({
           }}
           className={
             location.pathname === "/crosstab/edit-banner"
-              ? "text-action font-semibold"
-              : "text-gray-600"
+              ? "questionnaire-label font-semibold"
+              : "crosstab-muted"
           }
         >
           Design Banner
@@ -95,42 +94,42 @@ const Header: React.FC<CrosstabHeaderProps> = ({
           }}
           className={
             location.pathname === "/crosstab/table-list"
-              ? "text-action font-semibold"
-              : "text-gray-600"
+              ? "questionnaire-label font-semibold"
+              : "crosstab-muted"
           }
         >
           Crosstab
         </Link>
       </div>
-      <div className="flex justify-end gap-2">
+      <div className="flex flex-wrap justify-end gap-2">
         {tableData.length > 0 ? (
           <>
             <Button
-              className="bg-gray-500 text-white py-2"
+              className="report-toolbar-btn bg-[var(--color-questionnaire-multi)] py-2 text-white hover:opacity-90"
               onClick={() => dispatch(setIsBannerSettingsOpen(true))}
             >
-              <FaGears />
+              <LuSettings2 />
             </Button>
             <div className="relative" ref={dropdownRef}>
               <Button
-                className="bg-yellow-500 text-white py-2"
+                className="report-toolbar-btn bg-[var(--color-study-progress)] py-2 text-white hover:opacity-90"
                 onClick={() =>
                   dispatch(setIsDownloadDropdownOpen(!isDownloadDropdownOpen))
                 }
               >
-                <FaDownload />
+                <LuDownload />
               </Button>
               {isDownloadDropdownOpen && (
                 <div className="absolute right-0 mt-1 z-50">
                   <DropDown Data={dropDownData} />
                 </div>
-              )}
+                )}
             </div>
-            <div className="border border-gray-300 flex rounded py-1 px-3 focus:outline-none">
+            <div className="crosstab-soft-panel flex items-center rounded-[16px] px-3 py-2">
               <select
                 value={selectedBanner}
                 onChange={(e) => setSelectedBanner(e.target.value)}
-                className="pr-2 focus:outline-none"
+                className="home-text bg-transparent pr-2 focus:outline-none"
               >
                 {BannersAll.map((banner) => (
                   <option key={banner.bannerid} value={banner.bannerid}>
@@ -147,16 +146,16 @@ const Header: React.FC<CrosstabHeaderProps> = ({
                     },
                   })
                 }
-                className="ml-2 border border-action px-2 text-sm rounded cursor-pointer text-action flex items-center justify-center"
+                className="report-toolbar-btn ml-2 inline-flex items-center justify-center rounded-xl border border-login-primary px-3 py-1 text-sm text-login-primary hover:bg-login-primary hover:text-white"
               >
-                Go
+                Go <LuArrowRight className="ml-1 h-3.5 w-3.5" />
               </span>
             </div>
           </>
         ) : (
           <Button
             data-test-id="SAVE_QUESTION"
-            className="border border-action rounded-md text-action hover:text-white hover:bg-primary"
+            className="report-toolbar-btn border border-login-primary rounded-2xl text-login-primary hover:bg-login-primary hover:text-white"
             onClick={() => {
               if (selectedQuestions.length === 0) {
                 toast.error(
@@ -168,7 +167,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
               dispatch(setSelectedQuestions(selectedQuestions));
             }}
           >
-            <FaSave /> Save Question
+            <LuSave /> Save Question
           </Button>
         )}
       </div>
