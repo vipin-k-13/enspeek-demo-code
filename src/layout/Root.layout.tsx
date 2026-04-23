@@ -37,7 +37,7 @@ const isForceShowChat = forceShowChatRoutes.some(route =>
         {!isHome ? <Sidebar /> : <HomeSidebar />}
         <div
           className={cn(
-            "p-2 transition-all duration-300 overflow-hidden",
+            "transition-all duration-300 overflow-hidden",
             isHome ? "h-auto min-h-[60vh] w-full md:h-[92vh]" : "h-[92vh]",
             isHome || Boolean(!isHome && !hasQuestionnaire)
               ? "w-full"
