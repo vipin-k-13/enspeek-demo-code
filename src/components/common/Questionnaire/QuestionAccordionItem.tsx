@@ -23,7 +23,6 @@ import {
   getQuestionTypeTheme,
 } from "../../../utils/questionnaireTheme";
 import { useAccordionContext } from "../../ui/Accrodion/Accordion";
-import Button from "../../ui/Button";
 
 interface QuestionAccordionItem {
   Data: Question;
@@ -40,7 +39,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
   setEditData,
   openLogicModal,
 }) => {
-  const { isExpanded, toggleItem } = useAccordionContext();
+  const { isExpanded } = useAccordionContext();
   const { launch, output } = useSelector((state: RootState) => state.study);
   const disableActions = launch === 1 && output === 1;
   const logic2Skip = useSelector(
@@ -77,17 +76,25 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
               </p>
             </div>
             <div className="hidden items-center gap-3 md:flex">
-              <button
-                type="button"
+              <span
+                role="button"
+                tabIndex={0}
                 className="questionnaire-label questionnaire-clickable inline-flex items-center gap-2 text-sm"
                 onClick={(e) => {
                   e.stopPropagation();
                   openLogicModal();
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openLogicModal();
+                  }
+                }}
               >
                 <LuGitBranchPlus className="h-4 w-4" />
                 <span>Add/Edit Logic</span>
-              </button>
+              </span>
               <span
                 className={cn(
                   "rounded-full px-3 py-1 text-sm font-medium",

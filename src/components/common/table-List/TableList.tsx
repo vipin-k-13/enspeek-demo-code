@@ -8,6 +8,7 @@ import {
 import { useLocation } from "react-router";
 import { useProcessHook } from "../Report/ReportMutations";
 import { useBannerPointerList, useDownloadtable, useTableOutput } from "../Crosstab/CrossTab.Api";
+import IconActionButton from "../../ui/IconActionButton";
 
 interface TableListProp {
   Id: string;
@@ -72,16 +73,15 @@ const dataSource = isStatic ? sdata : tableOutputData;
           </div>
           <div className="flex flex-wrap items-center gap-3">
             {!isStatic && (
-            <button
-              className="questionnaire-clickable crosstab-muted rounded-full p-2 transition-colors hover:bg-[var(--color-brand-primary-softest)] hover:text-login-primary"
+            <IconActionButton
               aria-label="Refresh"
               onClick={() => TableOutputData()}
             >
               <LuRefreshCw size={18} />
-            </button>
+            </IconActionButton>
              )}
-            <button
-              className="questionnaire-clickable rounded-full p-2 text-[var(--color-study-progress)] transition-colors hover:bg-[var(--color-home-panel-soft)]"
+            <IconActionButton
+              tone="warning"
               aria-label="Download"
               onClick={() =>
                 downloadTableMutate({
@@ -91,15 +91,15 @@ const dataSource = isStatic ? sdata : tableOutputData;
               }
             >
               <LuDownload size={18} />
-            </button>
+            </IconActionButton>
              {!isStatic && (
-            <button
-              className="questionnaire-clickable rounded-full p-2 text-login-primary transition-colors hover:bg-[var(--color-brand-primary-softest)]"
+            <IconActionButton
+              tone="primary"
               aria-label="Edit"
               onClick={onEditHandle}
             >
               <LuPencilLine size={18} />
-            </button>  
+            </IconActionButton>  
              )}         
           </div>
         </div>

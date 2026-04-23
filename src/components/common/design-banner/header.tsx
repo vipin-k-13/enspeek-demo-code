@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import type { RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../ui/Button";
@@ -7,6 +7,8 @@ import { resetLogicData } from "../../../store/CrossTabDataSlice";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { cn } from "../../../utils";
 import { useAddBannerPointer } from "./designBanner_Api";
+import { SurfaceCard } from "../../ui/SurfaceCard";
+import PageBreadcrumbs from "../../ui/PageBreadcrumbs";
 
 const DesignBanner_Header = () => {
   const location = useLocation();
@@ -61,32 +63,26 @@ const DesignBanner_Header = () => {
   };
 
   return (
-    <div className="crosstab-surface mb-4 flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
-      <div className="text-sm">
-        <span className="crosstab-title font-semibold">{bannerName} : </span>
-        <Link
-          to="/crosstab"
-          state={{ studyID: location.state.studyID }}
-          className="crosstab-muted hover:text-login-primary"
-        >
-          Banner List
-        </Link>
-        <span> / </span>
-        <Link
-          to="/crosstab/edit-banner"
-          state={{
-            studyID: location.state.studyID,
-            bannerID: location.state?.bannerID,
-          }}
-          className={
-            location.pathname === "/crosstab/edit-banner"
-              ? "questionnaire-label font-semibold"
-              : "crosstab-muted"
-          }
-        >
-          Design Banner
-        </Link>
-      </div>
+    <SurfaceCard variant="toolbar" className="mb-4 flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
+      <PageBreadcrumbs
+        prefix={`${bannerName} :`}
+        items={[
+          {
+            label: "Banner List",
+            to: "/crosstab",
+            state: { studyID: location.state.studyID },
+          },
+          {
+            label: "Design Banner",
+            to: "/crosstab/edit-banner",
+            state: {
+              studyID: location.state.studyID,
+              bannerID: location.state?.bannerID,
+            },
+            active: location.pathname === "/crosstab/edit-banner",
+          },
+        ]}
+      />
       <div className="flex justify-end">
         <Button
           data-test-id="SUBMIT"
@@ -104,7 +100,7 @@ const DesignBanner_Header = () => {
           )}
         </Button>
       </div>
-    </div>
+    </SurfaceCard>
   );
 };
 

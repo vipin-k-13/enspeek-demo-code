@@ -1,6 +1,6 @@
 import React, { useState, type RefObject } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import type { RootState } from "../../../store/store";
 import Button from "../../ui/Button";
 import { LuArrowRight, LuDownload, LuSave, LuSettings2 } from "react-icons/lu";
@@ -12,6 +12,8 @@ import {
 import DropDown from "../../global/DropDown";
 import { toast } from "sonner";
 import { useTableListAdd } from "../Crosstab/CrossTab.Api";
+import { SurfaceCard } from "../../ui/SurfaceCard";
+import PageBreadcrumbs from "../../ui/PageBreadcrumbs";
 
 interface CrosstabHeaderProps {
   dropdownRef: RefObject<HTMLDivElement | null>;
@@ -59,47 +61,36 @@ const Header: React.FC<CrosstabHeaderProps> = ({
   }, [location.state?.bannerID]);
 
   return (
-    <div className="crosstab-surface mb-4 flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
+    <SurfaceCard variant="toolbar" className="mb-4 flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
       <div className="min-w-0">
-        <span className="crosstab-title font-semibold">{bannerName} :</span>
-        <span> </span>
-        <Link
-          to="/crosstab"
-          state={{ studyID: location.state.studyID }}
-          className="crosstab-muted hover:text-login-primary"
-        >
-          Banner List
-        </Link>
-        <span> / </span>
-        <Link
-          to="/crosstab/edit-banner"
-          state={{
-            studyID: location.state.studyID,
-            bannerID: location.state?.bannerID,
-          }}
-          className={
-            location.pathname === "/crosstab/edit-banner"
-              ? "questionnaire-label font-semibold"
-              : "crosstab-muted"
-          }
-        >
-          Design Banner
-        </Link>
-        <span> / </span>
-        <Link
-          to="/crosstab/table-list"
-          state={{
-            studyID: location.state.studyID,
-            bannerID: location.state?.bannerID,
-          }}
-          className={
-            location.pathname === "/crosstab/table-list"
-              ? "questionnaire-label font-semibold"
-              : "crosstab-muted"
-          }
-        >
-          Crosstab
-        </Link>
+        <PageBreadcrumbs
+          prefix={`${bannerName} :`}
+          items={[
+            {
+              label: "Banner List",
+              to: "/crosstab",
+              state: { studyID: location.state.studyID },
+            },
+            {
+              label: "Design Banner",
+              to: "/crosstab/edit-banner",
+              state: {
+                studyID: location.state.studyID,
+                bannerID: location.state?.bannerID,
+              },
+              active: location.pathname === "/crosstab/edit-banner",
+            },
+            {
+              label: "Crosstab",
+              to: "/crosstab/table-list",
+              state: {
+                studyID: location.state.studyID,
+                bannerID: location.state?.bannerID,
+              },
+              active: location.pathname === "/crosstab/table-list",
+            },
+          ]}
+        />
       </div>
       <div className="flex flex-wrap justify-end gap-2">
         {tableData.length > 0 ? (
@@ -171,7 +162,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
           </Button>
         )}
       </div>
-    </div>
+    </SurfaceCard>
   );
 };
 

@@ -1,5 +1,5 @@
 import { LuDownload, LuPlus, LuSearch } from "react-icons/lu";
-import { Link, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import Button from "../../ui/Button";
 import { useDispatch } from "react-redux";
 import { setIsAddBannerModalOpen } from "../../../store/CrosstabSlice";
@@ -7,6 +7,8 @@ import { useState } from "react";
 import { useStudyInfo } from "./CrossTab.Api";
 import Input from "../../ui/Input";
 import HistoryModal from "../Report/HistoryModal";
+import { SurfaceCard } from "../../ui/SurfaceCard";
+import PageBreadcrumbs from "../../ui/PageBreadcrumbs";
 
 interface CrosstabHeaderProps {
   searchTerm: string;
@@ -24,20 +26,17 @@ export default function CrosstabHeader({
   const {} = useStudyInfo(location.state.studyID);
 
   return (
-    <div className="crosstab-surface mb-4 flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
+    <SurfaceCard variant="toolbar" className="mb-4 flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
       <div className="min-w-0">
-        <div className="text-sm">
-          <Link
-            to="/crosstab"
-            className={
-              location.pathname.replace(/\/$/, "") === "/crosstab"
-                ? "questionnaire-label font-semibold"
-                : "crosstab-muted"
-            }
-          >
-            Banner List
-          </Link>
-        </div>
+        <PageBreadcrumbs
+          items={[
+            {
+              label: "Banner List",
+              to: "/crosstab",
+              active: location.pathname.replace(/\/$/, "") === "/crosstab",
+            },
+          ]}
+        />
       </div>
       <div className="flex justify-end">
         <div className="flex flex-wrap items-center gap-3">
@@ -70,6 +69,6 @@ export default function CrosstabHeader({
           />
         </div>
       </div>
-    </div>
+    </SurfaceCard>
   );
 }

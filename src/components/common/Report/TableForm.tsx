@@ -2,6 +2,11 @@ import { LuTable2 } from "react-icons/lu";
 import Button from "../../ui/Button";
 import { useLocation } from "react-router";
 import { useProcessHook, useTableDownload } from "./ReportMutations";
+import {
+  SurfaceCard,
+  SurfaceCardHeader,
+  SurfaceCardTitle,
+} from "../../ui/SurfaceCard";
 
 interface TableFormProps {
   questionId: string;
@@ -36,13 +41,13 @@ export default function TableForm({
     },
   });
   return (
-    <div
+    <SurfaceCard
       data-test-id={`${questionId}_TABLE`}
       key={questionId}
       className="report-card w-full overflow-hidden"
     >
-      <div className="report-card-header flex items-center justify-between px-5 py-4">
-        <h2 className="report-title text-[16px] font-semibold">{title}</h2>
+      <SurfaceCardHeader>
+        <SurfaceCardTitle>{title}</SurfaceCardTitle>
         <Button
           className="report-toolbar-btn bg-[var(--color-brand-primary-softest)] text-login-primary hover:bg-[var(--color-brand-primary-soft)] hover:text-white"
           onClick={() => {
@@ -51,7 +56,7 @@ export default function TableForm({
         >
           <LuTable2 />
         </Button>
-      </div>
+      </SurfaceCardHeader>
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
@@ -96,6 +101,6 @@ export default function TableForm({
         <p className="text-sm">{baseText}</p>
         <p className="text-sm">{questionText}</p>
       </div>
-    </div>
+    </SurfaceCard>
   );
 }

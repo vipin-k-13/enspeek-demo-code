@@ -14,7 +14,6 @@ const DeleteModel: React.FC<DeleteModelProps> = ({
   onClick,
   isOpen,
   onClose,
-  label
 }) => {
   const [inputValue, setInputValue] = React.useState<string>("");
 

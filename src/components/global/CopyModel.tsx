@@ -13,7 +13,6 @@ const CopyModel: React.FC<CopyModelProps> = ({
   isOpen,
   onClick,
   onClose,
-  label,
 }) => {
   const [QID, setQID] = React.useState<string>("");
   const [QLabel, setQlabel] = React.useState<string>("");

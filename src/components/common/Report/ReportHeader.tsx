@@ -1,5 +1,6 @@
 import React from 'react'
 import ActionButton from './Action-button'
+import { SurfaceCard } from '../../ui/SurfaceCard'
 
 type ReportHeaderProps = {
   Title:string,
@@ -15,7 +16,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
   setShowTableView,
 }) => {
   return (
-    <div className="report-toolbar-card mx-3 mt-3 flex flex-col gap-4 px-5 py-4 md:mx-4 md:flex-row md:items-center md:justify-between">
+    <SurfaceCard variant="toolbar" className="mx-3 mt-3 flex flex-col gap-4 px-5 py-4 md:mx-4 md:flex-row md:items-center md:justify-between">
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="report-title truncate text-[18px] font-semibold md:text-[28px]">
@@ -32,7 +33,7 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
         showTableView={showTableView}
         setShowTableView={setShowTableView}
       />
-    </div>
+    </SurfaceCard>
   )
 }
 

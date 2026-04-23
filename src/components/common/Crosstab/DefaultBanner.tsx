@@ -22,6 +22,7 @@ import { useProcessHook } from "../Report/ReportMutations";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../../store/store";
 import { setBannerName } from "../../../store/CrosstabSlice";
+import IconActionButton from "../../ui/IconActionButton";
 
 interface DefaultBannerProps {
   Id: string;
@@ -107,36 +108,35 @@ export default function DefaultBanner({
             {Array.isArray(bannerPointerListData) &&
               bannerPointerListData.length > 0 && (
                 <>
-                  <button
-                    className="questionnaire-clickable crosstab-muted rounded-full p-2 transition-colors hover:bg-[var(--color-brand-primary-softest)] hover:text-login-primary"
+                  <IconActionButton
                     aria-label="Grid View"
                     onClick={() => {
                       dispatch(setBannerName(Title));
                       navigate("/crosstab/table-list", {
                         state: { studyID: state.studyID, bannerID: Id },
-                      });
+                        });
                     }}
                   >
                     <LuTable2 size={18} />
-                  </button>
-                  <button
+                  </IconActionButton>
+                  <IconActionButton
                     data-test-id={`${Title}_COPY`}
-                    className="questionnaire-clickable rounded-full p-2 text-[var(--color-brand-info)] transition-colors hover:bg-[var(--color-brand-info-soft)]"
+                    tone="info"
                     aria-label="Copy"
                     onClick={() => setIsCopyModalOpen(true)}
                   >
                     <LuCopy size={18} />
-                  </button>
-                  <button
+                  </IconActionButton>
+                  <IconActionButton
                     data-test-id={`${Title}_SETTING`}
-                    className="questionnaire-clickable rounded-full p-2 text-[var(--color-questionnaire-multi)] transition-colors hover:bg-[var(--color-questionnaire-open-bg)]"
+                    tone="success"
                     aria-label="Settings"
                     onClick={() => setIsSettingsOpen(true)}
                   >
                     <LuSettings2 size={18} />
-                  </button>
-                  <button
-                    className="questionnaire-clickable rounded-full p-2 text-[var(--color-study-progress)] transition-colors hover:bg-[var(--color-home-panel-soft)]"
+                  </IconActionButton>
+                  <IconActionButton
+                    tone="warning"
                     aria-label="Download"
                     onClick={() => {
                       downloadTableMutate({
@@ -146,11 +146,11 @@ export default function DefaultBanner({
                     }}
                   >
                     <LuDownload size={18} />
-                  </button>
+                  </IconActionButton>
                 </>
               )}
-            <button
-              className="questionnaire-clickable rounded-full p-2 text-login-primary transition-colors hover:bg-[var(--color-brand-primary-softest)]"
+            <IconActionButton
+              tone="primary"
               aria-label="Edit"
               onClick={() => {
                 dispatch(setBannerName(Title));
@@ -160,10 +160,10 @@ export default function DefaultBanner({
               }}
             >
               <LuFilePenLine size={18} />
-            </button>
-            <button
+            </IconActionButton>
+            <IconActionButton
               data-test-id={`${Title}_DELETE`}
-              className="questionnaire-clickable rounded-full p-2 text-[var(--color-questionnaire-stop)] transition-colors hover:bg-[var(--color-questionnaire-stop-bg)]"
+              tone="danger"
               aria-label="Delete"
               onClick={() => {
                 setDeleteInputValue("");
@@ -171,7 +171,7 @@ export default function DefaultBanner({
               }}
             >
               <LuTrash2 size={18} />
-            </button>
+            </IconActionButton>
           </div>
         </div>
 
