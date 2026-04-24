@@ -23,6 +23,7 @@ import { MdArrowForwardIos } from "react-icons/md";
 import ChatWindow from "../chat-window/chat";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ChatTextArea from "../../global/chattextares";
+import { LuBotMessageSquare, LuSparkles } from "react-icons/lu";
 
 export default function QuestionList() {
   const navigate = useNavigate();
@@ -53,7 +54,9 @@ export default function QuestionList() {
   const location = useLocation();
   const studyID = location.state?.studyID;
   const user = useSelector((state: RootState) => state.user);
+  const { messages } = useSelector((state: RootState) => state.chat);
   const { isAddingQuestion } = useSelector((state: RootState) => state.trigger);
+  const hasMessages = messages.length > 0;
 
   const {
     data: StudyInfo,
@@ -164,42 +167,70 @@ export default function QuestionList() {
   }
 
   return (
-    <div className="questionnaire-page-bg relative flex h-full flex-col">
-      <header className="questionnaire-card questionnaire-border flex flex-col gap-3 border-b px-5 py-4 md:flex-row md:items-center md:justify-between">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="questionnaire-heading truncate text-[18px] font-semibold md:text-[28px]">
-              {StudyInfo?.studyname || StudyInfo?.studyName || "Questionnaire"}
-            </h1>
-            <span className="questionnaire-label text-sm md:text-base">
-              {`${submitItems.length} questions`}
-            </span>
+    <div className="questionnaire-page-bg relative flex h-full min-h-0 flex-col overflow-hidden">
+      {(submitItems.length > 0 || isAddingQuestion) && (
+        <header className="questionnaire-card questionnaire-border flex border-b px-5 py-4 md:px-6">
+          <div className="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="min-w-0 md:flex md:min-h-[42px] md:items-center">
+              <div className="flex flex-wrap items-center gap-3">
+                {submitItems.length > 0 && (
+                  <div className="questionnaire-question-count inline-flex min-h-[34px] items-center gap-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="questionnaire-question-count-value text-sm font-semibold md:text-base">
+                        {submitItems.length}
+                      </span>
+                      <span className="questionnaire-question-count-label text-[11px] font-semibold uppercase tracking-[0.16em]">
+                        Questions
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center justify-between gap-2 md:min-h-[42px]">
+              {submitItems.length > 0 && (
+                <button
+                  data-test-id="NEXTTOSURVEY"
+                  className="questionnaire-action-btn inline-flex items-center gap-2 rounded-2xl bg-login-primary px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
+                  onClick={() => {
+                    navigate("/publish-survey", {
+                      state: { studyID: studyID },
+                    });
+                  }}
+                >
+                  Next <MdArrowForwardIos />
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="flex gap-2 justify-between items-center">
-          {submitItems.length > 0 && (
-            <button
-              data-test-id="NEXTTOSURVEY"
-              className="questionnaire-action-btn inline-flex items-center gap-2 rounded-2xl bg-login-primary px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
-              onClick={() => {
-                navigate("/publish-survey", {
-                  state: { studyID: studyID },
-                });
-              }}
-            >
-              Next <MdArrowForwardIos />
-            </button>
-          )}
-        </div>
-      </header>
+        </header>
+      )}
       {!hasQuestionnaire && !isAddingQuestion ? (
-        <div className="w-full md:max-w-2xl mx-auto">
-          <ChatWindow />
-        </div>
+        hasMessages ? (
+          <div className="mx-auto h-full w-full max-w-5xl">
+            <ChatWindow surface="page" />
+          </div>
+        ) : (
+          <div className="flex flex-1 justify-center overflow-y-auto px-6 pb-52 pt-8 md:px-8 md:pb-56 md:pt-10">
+            <div className="mx-auto flex w-full max-w-4xl flex-col items-center text-center">
+              <div className="relative flex h-20 w-20 items-center justify-center rounded-[20px] bg-gradient-to-br from-login-primary to-action shadow-lg">
+                <LuBotMessageSquare className="h-9 w-9 text-white" />
+                <LuSparkles className="absolute -right-4 -top-4 h-5 w-5 text-amber-400" />
+                <LuSparkles className="absolute -left-4 bottom-0 h-4 w-4 text-violet-500" />
+              </div>
+              <h2 className="questionnaire-heading mt-8 text-[clamp(1.9rem,3.8vw,3rem)] font-semibold leading-tight">
+                Start building your questionnaire
+              </h2>
+              <p className="home-highlight mt-3 max-w-2xl text-[clamp(1rem,1.8vw,1.2rem)] leading-7">
+                Ask Enspeek AI to generate questions or create your first question manually.
+              </p>
+            </div>
+          </div>
+        )
       ) : (
-        <div className="flex flex-1">
+        <div className="flex flex-1 min-h-0">
           <div
-            className="flex-1 relative flex items-start justify-center overflow-hidden"
+            className="relative flex h-full min-h-0 flex-1 items-start justify-center overflow-y-auto overflow-x-hidden"
             onDragOver={isDragDisabled ? undefined : handleDragOver}
             onDrop={isDragDisabled ? undefined : handleDrop}
           >

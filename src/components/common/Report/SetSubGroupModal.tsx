@@ -3,6 +3,7 @@ import DynamicModel from "../../global/DynamicModel";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { setSelected } from "../../../store/FiltersSlice";
+import ModalInstruction from "../../ui/ModalInstruction";
 
 interface SetSubgroupModalProps {
   options: Record<string, any>[];
@@ -22,7 +23,7 @@ const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
     <DynamicModel
       isOpen={true}
       onClose={onClose}
-      Title="Study Name"
+      Title="Choose Subgroup"
       ButtonText="Save"
       onClick={() => {
         dispatch(setSelected(select))
@@ -30,12 +31,15 @@ const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
       }}
       className="max-w-lg"
     >
+      <ModalInstruction>
+        Choose the subgroup variable you want to apply in the report view.
+      </ModalInstruction>
       <div className="max-h-[60vh] px-4">
         <div className="space-y-2">
           {options.map((option, index) => (
             <label
               key={index}
-              className="flex items-center space-x-2 cursor-pointer"
+              className="flex cursor-pointer items-center space-x-3 rounded-[16px] bg-white px-4 py-3 shadow-sm"
             >
               <input
                 type="radio"
@@ -45,7 +49,7 @@ const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
                 onChange={() => setSelect(option.qID)}
                 className="accent-blue-600"
               />
-              <span>{option.label}</span>
+              <span className="home-text text-sm font-medium">{option.label}</span>
             </label>
           ))}
         </div>

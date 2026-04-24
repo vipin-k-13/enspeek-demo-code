@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
+import { createPortal } from "react-dom";
 
 export interface DropdownItem {
   id: string;
@@ -31,13 +32,17 @@ const NewDropdown: React.FC<DropdownProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [resolvedPosition, setResolvedPosition] = useState(position);
+  const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        !dropdownRef.current.contains(target) &&
+        (!menuRef.current || !menuRef.current.contains(target))
       ) {
         setIsOpen(false);
       }
@@ -67,8 +72,17 @@ const NewDropdown: React.FC<DropdownProps> = ({
   }, [isOpen]);
 
   useEffect(() => {
+    if (isOpen && searchable) {
+      requestAnimationFrame(() => {
+        searchInputRef.current?.focus();
+      });
+    }
+  }, [isOpen, searchable]);
+
+  useEffect(() => {
     if (!isOpen) {
       setResolvedPosition(position);
+      setMenuStyle({});
       return;
     }
 
@@ -78,6 +92,8 @@ const NewDropdown: React.FC<DropdownProps> = ({
       const triggerRect = dropdownRef.current.getBoundingClientRect();
       const menuRect = menuRef.current.getBoundingClientRect();
       let nextPosition = position;
+      let top = 0;
+      let left = 0;
 
       if (
         position.startsWith("bottom") &&
@@ -95,13 +111,62 @@ const NewDropdown: React.FC<DropdownProps> = ({
         nextPosition = position.replace("top", "bottom") as typeof position;
       }
 
+      switch (nextPosition) {
+        case "top-left":
+          top = triggerRect.top - menuRect.height - 8;
+          left = triggerRect.left;
+          break;
+        case "top-right":
+          top = triggerRect.top - menuRect.height - 8;
+          left = triggerRect.right - menuRect.width;
+          break;
+        case "bottom-right":
+        case "right":
+          top = triggerRect.bottom + 8;
+          left = triggerRect.right - menuRect.width;
+          break;
+        case "left":
+        case "bottom-left":
+          top = triggerRect.bottom + 8;
+          left = triggerRect.left;
+          break;
+        case "top":
+          top = triggerRect.top - menuRect.height - 8;
+          left = triggerRect.left + (triggerRect.width - menuRect.width) / 2;
+          break;
+        case "bottom":
+        default:
+          top = triggerRect.bottom + 8;
+          left = triggerRect.left + (triggerRect.width - menuRect.width) / 2;
+          break;
+      }
+
+      if (left < 12) left = 12;
+      if (left + menuRect.width > window.innerWidth - 12) {
+        left = window.innerWidth - menuRect.width - 12;
+      }
+      if (top < 12) top = 12;
+      if (top + menuRect.height > window.innerHeight - 12) {
+        top = Math.max(12, window.innerHeight - menuRect.height - 12);
+      }
+
       setResolvedPosition(nextPosition);
+      setMenuStyle({
+        position: "fixed",
+        top: `${top}px`,
+        left: `${left}px`,
+        zIndex: 80,
+      });
     };
 
     updatePosition();
     window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
 
-    return () => window.removeEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
   }, [isOpen, position, items.length, searchTerm]);
 
   const handleItemClick = (item: DropdownItem) => {
@@ -116,53 +181,34 @@ const NewDropdown: React.FC<DropdownProps> = ({
 
   const getPositionClasses = () => {
     const baseClasses =
-      "home-dropdown absolute z-50 max-h-[25rem] w-72 overflow-y-auto rounded-[22px] border shadow-xl transition-all duration-200 ease-out";
+      "home-dropdown max-h-[25rem] w-72 overflow-y-auto rounded-[22px] border shadow-xl transition-all duration-200 ease-out";
     
     switch (resolvedPosition) {
-      case "top-left":
-        return `${baseClasses} bottom-full mb-2 left-0`;
-      case "top-right":
-        return `${baseClasses} bottom-full mb-2 right-0`;
-      case "bottom-left":
-        return `${baseClasses} top-full mt-2 left-0`;
-      case "bottom-right":
-        return `${baseClasses} top-full mt-2 right-0`;
-      case "left":
-        return `${baseClasses} top-full mt-2 left-0`;
-      case "right":
-        return `${baseClasses} top-full mt-2 right-0`;
-      case "top":
-        return `${baseClasses} bottom-full mb-2 left-1/2 transform -translate-x-1/2`;
-      case "bottom":
-        return `${baseClasses} top-full mt-2 left-1/2 transform -translate-x-1/2`;
       default:
-        return `${baseClasses} top-full mt-2 left-0`;
+        return baseClasses;
     }
   };
 
-  return (
-    <div className={`relative inline-block ${className}`} ref={dropdownRef}>
-      <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">
-        {trigger}
-      </div>
-
-      {isOpen && (
-        <div ref={menuRef} className={getPositionClasses()}>
-          {searchable && (
-            <div className="home-surface sticky top-0 z-10 px-3 pb-2 pt-3">
-              <div className="home-dropdown-search flex h-11 items-center gap-2 rounded-2xl border px-3">
-                <HiOutlineSearch className="home-muted h-4 w-4" />
-                <input
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder={searchPlaceholder}
-                  className="home-dropdown-search h-full w-full border-0 bg-transparent text-sm outline-none"
-                />
-              </div>
+  const menu = (
+    <>
+      <div ref={menuRef} className={getPositionClasses()} style={menuStyle}>
+        {searchable && (
+          <div className="home-surface sticky top-0 z-10 px-3 pb-2 pt-3">
+            <div className="home-dropdown-search flex h-11 items-center gap-2 rounded-2xl border px-3">
+              <HiOutlineSearch className="home-muted h-4 w-4" />
+              <input
+                ref={searchInputRef}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder={searchPlaceholder}
+                className="home-dropdown-search h-full w-full border-0 bg-transparent text-sm outline-none"
+              />
             </div>
-          )}
-          <div className="p-2.5" role="menu" aria-orientation="vertical">
-            {filteredItems.map((item) => (
+          </div>
+        )}
+        <div className="p-2.5" role="menu" aria-orientation="vertical">
+          {filteredItems.length > 0 ? (
+            filteredItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleItemClick(item)}
@@ -187,10 +233,22 @@ const NewDropdown: React.FC<DropdownProps> = ({
                   )}
                 </span>
               </button>
-            ))}
-          </div>
+            ))
+          ) : (
+            <div className="home-muted px-3 py-4 text-sm">No results found</div>
+          )}
         </div>
-      )}
+      </div>
+    </>
+  );
+
+  return (
+    <div className={`relative inline-block ${className}`} ref={dropdownRef}>
+      <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">
+        {trigger}
+      </div>
+
+      {isOpen && createPortal(menu, document.body)}
     </div>
   );
 };

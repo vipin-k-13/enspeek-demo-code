@@ -3,6 +3,7 @@ import DynamicModel from "../../global/DynamicModel";
 import QuestionCard from "../Report/QuestionCard";
 import SingleSelectChart from "../Report/Charts";
 import TableForm from "../Report/TableForm";
+import ModalInstruction from "../../ui/ModalInstruction";
 
 interface TableAndChartModalProps {
   isOpen: boolean;
@@ -113,6 +114,9 @@ const TableAndChartModal: React.FC<TableAndChartModalProps> = ({
       ButtonText=""
       onClick={onClose}
     >
+      <ModalInstruction>
+        Review the expanded {type === "chart" ? "chart" : "table"} view for this report question.
+      </ModalInstruction>
       {type === "chart" ? (
         <QuestionCard title={questionData.label} qId={qid}>
            {questionData.external === 1 && questionData.external_link ? (

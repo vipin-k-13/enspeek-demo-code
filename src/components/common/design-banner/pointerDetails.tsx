@@ -196,7 +196,7 @@ const PointDetails: React.FC<pointDetailsProps> = ({
                   return (
                     <div
                       key={index}
-                      className="my-3 flex items-center gap-4 text-[var(--color-questionnaire-stop)]"
+                      className="my-3 flex items-center gap-4 rounded-[16px] bg-white px-4 py-3 text-[var(--color-questionnaire-stop)] shadow-sm"
                     >
                       <span>
                         <span className="crosstab-title">{index + 1}.</span>{" "}

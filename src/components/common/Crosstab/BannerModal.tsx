@@ -6,6 +6,7 @@ import { setBannerName } from "../../../store/CrosstabSlice";
 import BannerLogic from "../../global/BannerLogic";
 import type { RootState } from "../../../store/store";
 import CrosstabInput from "../../global/CrosstabInput";
+import ModalInstruction from "../../ui/ModalInstruction";
 
 interface AddBannerModalProps {
   isOpen: boolean;
@@ -80,6 +81,9 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
       onClick={HandleClick}
       className="max-w-5xl"
     >
+      <ModalInstruction>
+        Add the banner details and optional overall filter, then continue to banner design.
+      </ModalInstruction>
       <div className="space-y-4">
         <div>
           <CrosstabInput

@@ -7,6 +7,24 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function getFullName(firstName?: string, lastName?: string) {
+  return [firstName, lastName].filter(Boolean).join(" ").trim();
+}
+
+export function getInitials(name?: string, fallback = "U") {
+  const parts = (name || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (parts.length === 0) return fallback.toUpperCase();
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toUpperCase();
+  }
+
+  return `${parts[0][0] ?? ""}${parts[parts.length - 1][0] ?? ""}`.toUpperCase();
+}
+
 export function searchUsers(users: UserProps[], query: string): UserProps[] {
   const lowerQuery = query.toLowerCase().trim();
 

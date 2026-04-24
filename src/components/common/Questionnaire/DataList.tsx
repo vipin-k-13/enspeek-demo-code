@@ -132,7 +132,7 @@ const DataList: FC<DataListProps> = ({
   // }, [MainDiv.current]);
 
   return (
-    <div className="h-[82vh] w-full overflow-y-auto p-3 md:p-6">
+    <div className="w-full px-3 py-4 md:px-6 md:py-6">
       {(isPending || DeleteIsPending) && (
         <div className="flex items-center justify-center w-full h-full">
           <AiOutlineLoading3Quarters
@@ -141,7 +141,11 @@ const DataList: FC<DataListProps> = ({
           />
         </div>
       )}
-      <Accordion className="space-y-4" ref={MainDiv}>
+      <Accordion
+        type="multiple"
+        className="w-full space-y-4"
+        ref={MainDiv}
+      >
         {submittedItems.map((data, index) => (
           <div
             key={data.qID}

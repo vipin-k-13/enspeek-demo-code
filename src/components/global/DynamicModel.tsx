@@ -31,15 +31,15 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} className={cn("w-full", className)}>
       <div tabIndex={-1}>
-        <div className="p-6">
-          <h3 className="questionnaire-heading text-[18px] font-semibold capitalize">
+        <div className="border-b questionnaire-border px-6 py-5">
+          <h3 className="questionnaire-heading text-[24px] font-semibold capitalize">
             {Title}
           </h3>
         </div>
-        <div className="h-full max-h-[70vh] w-full px-6 pb-4 overflow-auto">
+        <div className="max-h-[70vh] w-full overflow-auto px-6 py-5 questionnaire-page-bg">
           {children}
         </div>
-        <div className="flex flex-col-reverse items-center gap-3 px-6 pb-6 pt-2 sm:flex-row sm:justify-between">
+        <div className="flex flex-col-reverse items-center gap-3 border-t questionnaire-border bg-white px-6 py-4 sm:flex-row sm:justify-between">
           {(footerContent || ButtonText) &&(
             <div className="report-muted w-full text-left text-sm sm:w-auto">
               {footerContent}

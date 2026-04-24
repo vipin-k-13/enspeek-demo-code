@@ -62,9 +62,9 @@ export default function Crosstab() {
     dispatch(resetTableData());
   }, []);
 
- if (isBannerListLoading) {
+  if (isBannerListLoading) {
   return (
-    <div className="flex items-center justify-center w-full h-[78vh]">
+    <div className="flex h-full min-h-0 w-full items-center justify-center">
       <AiOutlineLoading3Quarters
         size={34}
         className={cn("animate-spin text-action")}
@@ -76,8 +76,10 @@ export default function Crosstab() {
   if (isBannerListError) return <Error showHome />;
 
   return (
-    <div className="crosstab-surface min-h-[78vh] overflow-hidden">
-      <div className="h-[78vh] w-full overflow-y-auto px-3 py-3 md:px-4">
+    <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pb-8 pt-3 md:px-4 md:pb-10 md:pt-4">
+      <div className="w-full">
+      <div className="crosstab-surface overflow-hidden">
+      <div className="w-full px-3 py-3 md:px-4">
         {Banners.length ? (
           Banners.map((Banner: any) => {
             const matchedBanner = BannerListData.find(
@@ -115,6 +117,8 @@ export default function Crosstab() {
             </button>
           </div>
         )}
+      </div>
+      </div>
       </div>
       <AddBannerModal
         onClose={() => dispatch(setIsAddBannerModalOpen(false))}

@@ -53,10 +53,16 @@ const TableList_page = () => {
       },
     ];
 
-  return <div className="crosstab-page-bg min-h-screen px-3 py-3 md:px-4">
-    <Header dropdownRef={dropdownRef} dropDownData={dropDownData}/>
-    <CrossTabTable/>
-  </div>;
+  return (
+    <div className="crosstab-page-bg flex h-full min-h-0 flex-col overflow-hidden">
+      <Header dropdownRef={dropdownRef} dropDownData={dropDownData} />
+      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pb-8 pt-3 md:px-4 md:pb-10 md:pt-4">
+        <div className="w-full">
+          <CrossTabTable />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default TableList_page;

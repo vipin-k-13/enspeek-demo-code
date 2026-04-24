@@ -3,6 +3,7 @@ import { setIsOpenGroup, setGroupInput, addGroup } from "../../../store/Crosstab
 import type { RootState } from "../../../store/store";
 import DynamicModel from "../../global/DynamicModel";
 import Input from "../../ui/Input";
+import ModalInstruction from "../../ui/ModalInstruction";
 
 export default function AddGroupModal() {
   const dispatch = useDispatch();
@@ -23,6 +24,9 @@ export default function AddGroupModal() {
       onClick={handleSetGroup}
       className="max-w-lg"
     >
+      <ModalInstruction>
+        Create a group name to organize related banner points more clearly.
+      </ModalInstruction>
       <Input
         className="questionnaire-input questionnaire-heading border questionnaire-border"
         placeholder="Enter group name"

@@ -6,6 +6,7 @@ import BannerLogic from "../../global/BannerLogic";
 import { useAddCustomTable } from "../Crosstab/CrossTab.Api";
 import { useLocation } from "react-router";
 import CrosstabInput from "../../global/CrosstabInput";
+import ModalInstruction from "../../ui/ModalInstruction";
 
 interface ControlItem {
   id: number;
@@ -112,6 +113,9 @@ export default function AddCustomTableModal({
       onClick={handleSubmit}
       className="max-w-6xl"
     >
+      <ModalInstruction>
+        Define the table label, text, logic, and rows before creating a custom table.
+      </ModalInstruction>
       <div className="space-y-4">
         <div>
           <CrosstabInput

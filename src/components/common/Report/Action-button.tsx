@@ -39,6 +39,7 @@ import {
 } from "../../../store/FiltersSlice";
 import { Link, useLocation } from "react-router";
 import { setSubgroupOn } from "../../../store/CrosstabSlice";
+import { Tooltip } from "../../ui/Tooltip";
 
 type ActionButtonProps = {
   showTableView: boolean;
@@ -216,81 +217,92 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 
   return (
     <div className="relative">
-      <div className="flex flex-wrap items-center gap-2 md:justify-end">
-        <Button
-          data-test-id="GROUP_TOGGLE"
-          className="report-toolbar-btn report-title border home-border-soft bg-white px-4 [&_svg]:size-5"
-          onClick={subGroupToggle}
-        >
-          {subgroupOn ? (
-            <LuToggleRight className="mr-1 text-login-primary" />
-          ) : (
-            <LuToggleLeft className="mr-1 report-muted" />
-          )}
-          Subgroups
-        </Button>
-        <div className="relative" ref={selectDropdownRef}>
+      <div className="flex min-h-[42px] flex-wrap items-center gap-2 md:justify-end">
+        <div className="flex items-center gap-2">
           <Button
-            data-test-id="SELECTOR"
-            onClick={() => setShowPointerDropdown((prev) => !prev)}
-            size="icon"
-            className="report-toolbar-btn bg-[var(--color-brand-primary-soft)] text-white hover:bg-login-primary"
+            data-test-id="GROUP_TOGGLE"
+            className="report-toolbar-btn report-title border home-border-soft bg-white px-4 [&_svg]:size-5"
+            onClick={subGroupToggle}
           >
-            <LuHand />
+            {subgroupOn ? (
+              <LuToggleRight className="mr-1 text-login-primary" />
+            ) : (
+              <LuToggleLeft className="mr-1 report-muted" />
+            )}
+            Subgroups
           </Button>
+          {subgroupOn && (
+            <Tooltip content="Configure subgroups" position="top">
+              <Button
+                data-test-id="GROUP_TOGGLE_ON"
+                size="icon"
+                className="report-toolbar-btn bg-[var(--color-study-progress)] text-white hover:opacity-90"
+                onClick={() => {
+                  setshowSubgroupModal(true);
+                }}
+              >
+                <LuListFilter />
+              </Button>
+            </Tooltip>
+          )}
+        </div>
+        <div className="relative" ref={selectDropdownRef}>
+          <Tooltip content="Select report questions" position="top">
+            <Button
+              data-test-id="SELECTOR"
+              onClick={() => setShowPointerDropdown((prev) => !prev)}
+              size="icon"
+              className="report-toolbar-btn bg-[var(--color-brand-primary-soft)] text-white hover:bg-login-primary"
+            >
+              <LuHand />
+            </Button>
+          </Tooltip>
           {showPointerDropdown && (
             <div className="absolute right-0 z-20 mt-2">
               <DropDown showCheckbox={true} Data={pointerDropdownData} />
             </div>
           )}
         </div>
-        {subgroupOn && (
-          <Button
-            data-test-id="GROUP_TOGGLE_ON"
-            size="icon"
-            className="report-toolbar-btn bg-[var(--color-study-progress)] text-white hover:opacity-90"
-            onClick={() => {
-              setshowSubgroupModal(true);
-            }}
-          >
-            <LuListFilter />
-          </Button>
-        )}
-        <Button
-          data-test-id="TABLE"
-          size="icon"
-          title={
-            showTableView
-              ? "Click to view data in chart"
-              : "Click to view data in table"
+        <Tooltip
+          content={
+            showTableView ? "View chart mode" : "View table mode"
           }
-          className="report-toolbar-btn report-title border home-border-soft bg-white"
-          onClick={() => setShowTableView((prev) => !prev)}
+          position="top"
         >
-          {showTableView ? <LuChartColumnBig /> : <LuTable2 />}
-        </Button>
-        <Button
-          size="icon"
-          title="Click to see filters"
-          className="report-toolbar-btn bg-[var(--color-brand-info)] text-white hover:opacity-90"
-          onClick={() => {
-            setShowFilter(true);
-          }}
-          disabled
-        >
-          <LuFilter />
-        </Button>
-        <div className="relative" ref={dropdownRef}>
           <Button
-            data-test-id="MORE_ACTIONS"
+            data-test-id="TABLE"
             size="icon"
-            className="report-toolbar-btn bg-[var(--color-questionnaire-multi)] text-white hover:opacity-90"
-            onClick={() => {
-              setShowMoreDropdown((prev) => !prev);
-            }}
+            className="report-toolbar-btn report-title border home-border-soft bg-white"
+            onClick={() => setShowTableView((prev) => !prev)}
           >
-            <LuEllipsis />
+            {showTableView ? <LuChartColumnBig /> : <LuTable2 />}
           </Button>
+        </Tooltip>
+        <Tooltip content="Filters" position="top">
+          <Button
+            size="icon"
+            className="report-toolbar-btn bg-[var(--color-brand-info)] text-white hover:opacity-90"
+            onClick={() => {
+              setShowFilter(true);
+            }}
+            disabled
+          >
+            <LuFilter />
+          </Button>
+        </Tooltip>
+        <div className="relative" ref={dropdownRef}>
+          <Tooltip content="More actions" position="top">
+            <Button
+              data-test-id="MORE_ACTIONS"
+              size="icon"
+              className="report-toolbar-btn bg-[var(--color-questionnaire-multi)] text-white hover:opacity-90"
+              onClick={() => {
+                setShowMoreDropdown((prev) => !prev);
+              }}
+            >
+              <LuEllipsis />
+            </Button>
+          </Tooltip>
           {showMoreDropdown && (
             <div className="absolute right-0 mt-2 z-10">
               <DropDown Data={MoreDropdownData} className="w-72 z-20" />
@@ -300,7 +312,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
         <Link
           to={"/crosstab"}
           state={{ studyID: state.studyID }}
-          className="report-toolbar-btn inline-flex items-center gap-2 rounded-2xl bg-login-primary px-5 py-2.5 text-sm text-white hover:bg-login-primary-hover"
+          className="report-toolbar-btn inline-flex h-10 items-center gap-2 rounded-2xl bg-login-primary px-5 text-sm font-bold text-white hover:bg-login-primary-hover"
         >
           Next <LuArrowRight className="h-4 w-4" />
         </Link>

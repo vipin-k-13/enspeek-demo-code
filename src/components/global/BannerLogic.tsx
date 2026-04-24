@@ -157,13 +157,13 @@ export default function BannerLogic({
   return (
     <div>
       {rows.map((row: any) => (
-        <div key={row.id} className="flex items-center gap-4 mb-4">
+        <div key={row.id} className="mb-4 flex flex-wrap items-center gap-3">
           {row.type === "condition" && (
-            <div className="">
+            <div>
               <select
                 value={row.connector || "AND"}
                 onChange={(e) => handleConnectorChange(row.id, e.target.value)}
-                className="text-red-500 px-3 py-2 focus:outline-none"
+                className="questionnaire-logic-select min-w-[120px] rounded-[16px] px-4 py-3 focus:outline-none"
               >
                 {connectors.map((connector) => (
                   <option key={connector} value={connector}>
@@ -177,7 +177,7 @@ export default function BannerLogic({
             value={row.variable || ""}
             data-test-id={`TAB_SELECTED_1`}
             onChange={(e) => handleVariableChange(row.id, e.target.value)}
-            className="px-3 py-2 w-48 text-red-500 focus:outline-none"
+            className="questionnaire-logic-select min-w-[220px] rounded-[16px] px-4 py-3 focus:outline-none"
           >
             <option value="">Select variables</option>
             {/* {varsData?.variables?.access?.length > 0 && (
@@ -210,7 +210,7 @@ export default function BannerLogic({
                 value={row.option || ""}
                 data-test-id={`TAB_SELECTED_2`}
                 onChange={(e) => handleOptionChange(row.id, e.target.value)}
-                className="px-3 py-2 w-32 text-red-500 focus:outline-none"
+                className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
               >
                 <option value="">Select option</option>
                 {optsData[row.variable].map((opt: any, index: number) => (
@@ -229,7 +229,7 @@ export default function BannerLogic({
               value={row.value || ""}
               data-test-id={`TAB_SELECTED_3`}
               onChange={(e) => handleValueChange(row.id, e.target.value)}
-              className="px-3 py-2 w-32 text-red-500 focus:outline-none"
+              className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
             >
               <option value="">Select value</option>
               {optsData[row.variable]
@@ -250,14 +250,14 @@ export default function BannerLogic({
               <>
                 <Button
                   onClick={resetAllValues}
-                  className="p-2 text-gray-500  rounded-lg border border-gray-300 focus:outline-none"
+                  className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none focus:outline-none"
                   title="Reset all"
                 >
                   <FaRotateLeft />
                 </Button>
                 <Button
                   onClick={addSimpleRow}
-                  className="p-2 text-primary border border-gray-300 rounded-lg focus:outline-none"
+                  className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-heading shadow-none focus:outline-none"
                   title="Add simple row"
                 >
                   <FaPlus />
@@ -268,14 +268,14 @@ export default function BannerLogic({
               <>
                 <button
                   onClick={() => resetRow(row.id)}
-                  className="p-2 text-gray-500 hover:bg-gray-50 cursor-pointer rounded-md transition-colors"
+                  className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none transition-colors"
                   title="Reset this row"
                 >
                   <FaRotateLeft />
                 </button>
                 <button
                   onClick={() => deleteRow(row.id)}
-                  className="p-2 text-red-500 hover:bg-red-50 cursor-pointer rounded-md transition-colors"
+                  className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none transition-colors"
                   title="Delete this row"
                 >
                   <FaTrash />
@@ -285,7 +285,7 @@ export default function BannerLogic({
             {row.type === "simple" && (
               <button
                 onClick={() => deleteRow(row.id)}
-                className="p-2 text-red-500 hover:bg-red-50 cursor-pointer rounded-md transition-colors"
+                className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none transition-colors"
                 title="Delete this row"
               >
                 <FaTrash />

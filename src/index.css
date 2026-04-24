@@ -21,8 +21,8 @@
   --color-brand-info: #3b82f6;
   --color-brand-info-soft: #e8f1ff;
   --color-brand-ai: #2b8aa5;
-  --color-scrollbar-thumb: #b8c7d8;
-  --color-scrollbar-thumb-hover: #a1afc2;
+  --color-scrollbar-thumb: #c9ced8;
+  --color-scrollbar-thumb-hover: #b6bcc8;
   --color-action: #3F72AF;
   --color-primary: #112D4E;
   --color-bg: var(--color-surface-base);
@@ -361,6 +361,63 @@ body{
 
 .questionnaire-card-edit {
   border-width: 2.5px;
+}
+
+.questionnaire-edit-frame {
+  border: 2.5px dashed color-mix(in srgb, var(--color-brand-primary) 58%, white 42%);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-brand-primary-softest) 78%, white 22%) 0%,
+      var(--color-questionnaire-card) 16%
+    );
+}
+
+.questionnaire-question-count {
+  color: var(--color-questionnaire-muted);
+}
+
+.questionnaire-question-count-value {
+  color: var(--color-questionnaire-heading);
+}
+
+.questionnaire-question-count-label {
+  color: var(--color-questionnaire-muted);
+}
+
+.questionnaire-chatbar-panel {
+  box-shadow:
+    0 14px 32px rgba(79, 86, 230, 0.08),
+    0 0 0 1px rgba(231, 228, 251, 0.9);
+}
+
+.questionnaire-logic-chip {
+  border: 1px solid var(--color-questionnaire-border);
+  background-color: white;
+}
+
+.questionnaire-logic-chip-muted {
+  color: var(--color-questionnaire-muted);
+}
+
+.questionnaire-logic-chip-danger {
+  border-color: color-mix(in srgb, var(--color-questionnaire-danger) 40%, white 60%);
+  background-color: color-mix(in srgb, var(--color-questionnaire-stop-bg) 72%, white 28%);
+  color: var(--color-questionnaire-danger);
+}
+
+.questionnaire-logic-select {
+  border: 1px solid var(--color-questionnaire-border);
+  background-color: white;
+  color: var(--color-questionnaire-heading);
+  font-weight: 600;
+  box-shadow: 0 10px 24px rgba(79, 86, 230, 0.04);
+}
+
+.questionnaire-logic-select-active {
+  background-color: var(--color-brand-primary-softest);
+  color: var(--color-brand-primary);
+  border-color: color-mix(in srgb, var(--color-brand-primary) 25%, white 75%);
 }
 
 .report-page-bg {

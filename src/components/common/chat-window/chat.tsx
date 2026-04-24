@@ -14,12 +14,17 @@ import TableAndChartModal from "../Report/TableAndChartModal";
 import TableModal from "../Crosstab/TableModal";
 import { toast } from "sonner";
 import { PRIMARY_CHART_COLOR } from "../../../utils/chartColors";
+import { Tooltip } from "../../ui/Tooltip";
+import { getFullName, getInitials } from "../../../utils";
+import { LuBotMessageSquare, LuSparkles } from "react-icons/lu";
 
-const ChatWindow: React.FC = () => {
+const ChatWindow: React.FC<{ surface?: "auto" | "page" | "card" }> = ({
+  surface = "auto",
+}) => {
   const { messages, isTyping, pending } = useSelector(
     (state: RootState) => state.chat
   );
-  const { firstName } = useSelector((state: RootState) => state.user);
+  const { firstName, lastName } = useSelector((state: RootState) => state.user);
   const { pathname } = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -37,6 +42,8 @@ const ChatWindow: React.FC = () => {
   const [isTableModalOpen, setIsTableModalOpen] = useState(false);
   const [selectedCrosstab, setSelectedCrosstab] = useState<number | null>(null);
   const [isCrosstabModalOpen, setIsCrosstabModalOpen] = useState(false);
+  const fullName = getFullName(firstName, lastName) || firstName || "User";
+  const userInitials = getInitials(fullName, "U");
   useEffect(() => {
     const defaultTabs: { [key: number]: "chart" | "table" } = {};
     messages.forEach((_, i) => {
@@ -63,13 +70,21 @@ const ChatWindow: React.FC = () => {
   }, [messages, isTyping]);
 
   return (
-    <div className="h-full w-full max-w-full z-50">
+    <div className="z-50 flex h-full min-h-0 w-full max-w-full flex-col">
       <div
         className={cn(
-          "overflow-y-auto p-4 md:p-6",
-          pathname === "/" ? "home-page-bg h-[72vh]" : "home-surface h-[73vh]"
+          "min-h-0 flex-1 overflow-y-auto",
+          surface === "page"
+            ? "home-page-bg"
+            : surface === "card"
+              ? "home-surface"
+              : pathname === "/"
+                ? "home-page-bg"
+                : "home-surface"
         )}
+        style={{ scrollbarGutter: "stable" }}
       >
+        <div className="px-4 pb-36 pt-4 md:px-6 md:pb-40 md:pt-6">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -85,18 +100,21 @@ const ChatWindow: React.FC = () => {
                 msg.sender === "user" && "flex-row-reverse"
               )}
             >
-              <div
-                className={cn(
-                  "mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold",
-                  msg.sender === "user"
-                    ? "home-avatar-user"
-                    : "home-avatar-ai"
-                )}
+              <Tooltip
+                content={msg.sender === "user" ? fullName : "Enspeek AI"}
+                position={msg.sender === "user" ? "left" : "right"}
               >
-                {msg.sender === "user"
-                  ? (firstName || "U").slice(0, 2).toUpperCase()
-                  : "AI"}
-              </div>
+                <div
+                  className={cn(
+                    "mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold",
+                    msg.sender === "user"
+                      ? "home-avatar-user"
+                      : "home-avatar-ai"
+                  )}
+                >
+                  {msg.sender === "user" ? userInitials : "AI"}
+                </div>
+              </Tooltip>
               <div
                 className={
                   msg.sdata || msg.crosstab
@@ -104,7 +122,7 @@ const ChatWindow: React.FC = () => {
                     : cn(
                         "inline-block max-w-[min(100%,820px)] rounded-[22px] px-5 py-4 text-left text-sm shadow-sm",
                         msg.sender === "user"
-                          ? "bg-gradient-to-r from-login-primary to-login-bg-end text-white"
+                          ? "bg-[var(--color-brand-info-soft)] text-[var(--color-text-strong)]"
                           : "home-surface home-text border home-border"
                       )
                 }
@@ -389,18 +407,26 @@ const ChatWindow: React.FC = () => {
             textColor="text-gray-600"
           />
         )}
-
         {messages.length === 0 && !isTyping && (
-          <div className="h-full flex flex-col items-center justify-center text-gray-400 space-y-2">
-            <div className="text-4xl">💬</div>
-            <div className="text-center">
-              <p className="font-medium">No messages yet</p>
-              <p className="text-sm">Start a conversation with AI!</p>
+          <div className="flex h-full min-h-[320px] flex-col items-center justify-center px-6 text-center">
+            <div className="relative flex h-18 w-18 items-center justify-center rounded-[20px] bg-gradient-to-br from-login-primary to-action shadow-lg">
+              <LuBotMessageSquare className="h-8 w-8 text-white" />
+              <LuSparkles className="absolute -right-3 -top-3 h-4 w-4 text-amber-400" />
+              <LuSparkles className="absolute -left-3 bottom-1 h-3.5 w-3.5 text-violet-500" />
+            </div>
+            <div className="mt-6">
+              <p className="questionnaire-heading text-lg font-semibold">
+                No conversation yet
+              </p>
+              <p className="home-highlight mt-2 text-sm leading-6">
+                Start chatting with Enspeek AI to refine, create, or organize your questions.
+              </p>
             </div>
           </div>
         )}
 
         <div ref={messagesEndRef} />
+        </div>
       </div>
 
       {isChartModalOpen && selectedChart !== null && (
@@ -442,3 +468,5 @@ const ChatWindow: React.FC = () => {
 };
 
 export default ChatWindow;
+
+

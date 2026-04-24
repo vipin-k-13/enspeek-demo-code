@@ -10,6 +10,7 @@ import { useClearHistoryHook, useProcessHook } from "./ReportMutations";
 import { queryClient } from "../../../App";
 import { useState } from "react";
 import { useLocation } from "react-router";
+import ModalInstruction from "../../ui/ModalInstruction";
 
 export default function HistoryModal({
   open,
@@ -72,6 +73,9 @@ export default function HistoryModal({
       onClose={() => onOpenChange(false)}
       className="max-w-xl"
     >
+      <ModalInstruction>
+        Review recent downloads for this study, or clear the history when you no longer need it.
+      </ModalInstruction>
       <div className="py-2 h-[20rem] overflow-y-auto no-scrollbar">
         {isPending ? (
           <LoaderSpinner />
@@ -81,24 +85,24 @@ export default function HistoryModal({
               data-test-id={`${item.req_name}_${index + 1}`}
               key={index}
               className={cn(
-                "flex items-center justify-between p-4 border border-gray-200",
-                item.status === 0 ? "bg-gray-100" : "",
+                "mb-3 flex items-center justify-between rounded-[18px] border home-border-soft p-4 shadow-sm",
+                item.status === 0 ? "home-panel-soft-bg" : "bg-white",
                 index === List.data.length - 1 && "pb-4"
               )}
             >
               <div className="flex-1">
-                <p className="text-sm">
+                <p className="home-text text-sm font-medium">
                   {index + 1}. {item.req_name}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="home-muted text-xs">
                   {new Date(`${item.time}`).toDateString()}
                 </p>
               </div>
               <div>
                 <FiDownload
                   className={cn(
-                    "h-6 w-6 text-amber-500 cursor-pointer",
-                    pid.includes(item.pid) && "text-amber-800"
+                    "h-6 w-6 cursor-pointer text-[var(--color-study-progress)]",
+                    pid.includes(item.pid) && "text-[var(--color-brand-primary)]"
                   )}
                   onClick={() => DownloadHandle(item.pid)}
                 />
@@ -106,7 +110,7 @@ export default function HistoryModal({
             </div>
           ))
         ) : (
-          <div className="w-full h-full flex justify-center items-center text-xl font-bold">
+          <div className="questionnaire-heading flex h-full w-full items-center justify-center text-lg font-semibold">
             No Data Found
           </div>
         )}

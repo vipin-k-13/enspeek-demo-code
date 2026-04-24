@@ -8,6 +8,7 @@ import { useLocation } from "react-router";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdDeleteForever } from "react-icons/md";
 import CrosstabInput from "../../global/CrosstabInput";
+import ModalInstruction from "../../ui/ModalInstruction";
 
 interface EditTableModalProps {
   qid: string;
@@ -112,6 +113,9 @@ export default function EditTableModal({
         </div>
       ) : (
         <div className="space-y-6">
+          <ModalInstruction>
+            Update the table details, logic, and row settings, then save the refreshed table configuration.
+          </ModalInstruction>
           <div className="space-y-2">
             <CrosstabInput
               label="Table Label"

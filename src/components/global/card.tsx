@@ -2,16 +2,18 @@ import React from "react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { useNavigate } from "react-router";
 import NewDropdown from "./NewDropDown";
-import { useActive, useArchive } from "../common/list/Api";
+import { useActive } from "../common/list/Api";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../store/store";
 import {
+  setArchiveModel,
   setCopyModel,
   setDeleteModel,
   setSelectedId,
   setSelectedStudyName,
 } from "../../store/TriggerSlice";
 import { cn } from "../../utils";
+import { getInitials } from "../../utils";
 import {
   LuArchive,
   LuChartColumn,
@@ -21,6 +23,7 @@ import {
   LuTrash2,
 } from "react-icons/lu";
 import { getStudyStateTheme } from "../../utils/studyStateTheme";
+import { Tooltip } from "../ui/Tooltip";
 
 type StudyCardProps = {
   id: string;
@@ -32,6 +35,7 @@ type StudyCardProps = {
   isArchived: number;
   launch: number;
   studystate: string;
+  activeTab: "myactive" | "allactive" | "isarchived";
 };
 
 export const StudyCard: React.FC<StudyCardProps> = ({
@@ -44,23 +48,19 @@ export const StudyCard: React.FC<StudyCardProps> = ({
   isArchived,
   launch,
   studystate,
+  activeTab,
 }) => {
   const navigate = useNavigate();
-  const { Archived } = useArchive();
   const { Active } = useActive();
   const dispatch = useDispatch<AppDispatch>();
   const cleanStatus = (status || "").replace(/\|\s*\d+\s*questions?/i, "").trim();
   const questionMatch = (status || "").match(/(\d+)\s*questions?/i);
   const questionCount = questionMatch?.[1];
   const stateTheme = getStudyStateTheme(studystate || cleanStatus);
-  const initials = owner
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("");
+  const initials = getInitials(owner, "ST");
+  const isOwner = Boolean(share);
 
-  const dropdownItem = [
+  const baseDropdownItems = [
     {
       id: "questionnaire",
       label: "Questionnaire",
@@ -80,17 +80,21 @@ export const StudyCard: React.FC<StudyCardProps> = ({
     Boolean(isArchived)
       ? {
           id: "active",
-          label: "Active",
+          label: "Unarchive",
           icon: <LuArchive className="h-4 w-4" />,
           onClick: () => Active(id),
-          disabled: !Boolean(share),
+          disabled: !isOwner,
         }
       : {
           id: "archived",
-          label: "Archived",
+          label: "Archive",
           icon: <LuArchive className="h-4 w-4" />,
-          onClick: () => Archived(id),
-          disabled: !Boolean(share),
+          onClick: () => {
+            dispatch(setSelectedId(id));
+            dispatch(setSelectedStudyName(name));
+            dispatch(setArchiveModel(true));
+          },
+          disabled: !isOwner,
         },
     {
       id: "delete",
@@ -98,9 +102,10 @@ export const StudyCard: React.FC<StudyCardProps> = ({
       icon: <LuTrash2 className="h-4 w-4" />,
       onClick: () => {
         dispatch(setSelectedId(id));
+        dispatch(setSelectedStudyName(name));
         dispatch(setDeleteModel(true));
       },
-      disabled: !Boolean(share),
+      disabled: !isOwner,
     },
     {
       id: "output",
@@ -118,21 +123,37 @@ export const StudyCard: React.FC<StudyCardProps> = ({
     },
   ];
 
+  const dropdownItem = baseDropdownItems.filter((item) => {
+    if (activeTab === "isarchived") {
+      return ["copy", "active", "delete"].includes(item.id);
+    }
+
+    if (activeTab === "allactive" && !isOwner) {
+      return !["archived", "delete"].includes(item.id);
+    }
+
+    return true;
+  });
+
+  const showMenu = !(activeTab === "isarchived" && !isOwner) && dropdownItem.length > 0;
+
   return (
     <>
       <div className="home-surface group relative w-full cursor-pointer overflow-visible rounded-[22px] border home-border-soft px-4 py-4 shadow-md transition-shadow duration-200 hover:shadow-lg">
         <div className={cn("absolute bottom-3 left-0 top-3 w-[3px] rounded-r-full opacity-0 transition-opacity duration-200 group-hover:opacity-100", stateTheme.accentClass)} />
         <div className="mb-2 flex items-start justify-between gap-2">
           <div className="flex items-start gap-2">
-            <span
-              className={cn(
-                "mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-full text-sm font-semibold uppercase shadow-sm",
-                stateTheme.avatarClass
-              )}
-            >
-              {initials || "ST"}
-            </span>
-            <div className="max-w-[12rem]">
+            <Tooltip content={owner || "Study Owner"} position="right">
+              <span
+                className={cn(
+                  "mt-0.5 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-semibold uppercase shadow-sm",
+                  stateTheme.avatarClass
+                )}
+              >
+                {initials}
+              </span>
+            </Tooltip>
+            <div className="min-w-0 flex-1">
               <h3
                 data-test-id={name}
                 title={name}
@@ -156,20 +177,22 @@ export const StudyCard: React.FC<StudyCardProps> = ({
               </div>
             </div>
           </div>
-          <NewDropdown
-            className="-mr-1"
-            trigger={
-              <div
-                data-test-id={`${name}_CLICK`}
-                className="home-muted hover:bg-home-panel flex h-8 w-8 items-center justify-center rounded-full transition-colors"
-              >
-                <HiOutlineDotsVertical />
-              </div>
-            }
-            items={dropdownItem}
-            position="bottom-right"
-            searchable={false}
-          />
+          {showMenu && (
+            <NewDropdown
+              className="-mr-1"
+              trigger={
+                <div
+                  data-test-id={`${name}_CLICK`}
+                  className="home-muted hover:bg-home-panel flex h-9 w-9 items-center justify-center rounded-full transition-colors"
+                >
+                  <HiOutlineDotsVertical className="h-5 w-5" />
+                </div>
+              }
+              items={dropdownItem}
+              position="bottom-right"
+              searchable={false}
+            />
+          )}
         </div>
         <div className="pl-14">
           <p className="home-subtle text-[12px]">{createAt}</p>

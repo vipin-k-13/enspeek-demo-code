@@ -1,6 +1,5 @@
 import React from 'react'
 import ActionButton from './Action-button'
-import { SurfaceCard } from '../../ui/SurfaceCard'
 
 type ReportHeaderProps = {
   Title:string,
@@ -16,24 +15,26 @@ const ReportHeader: React.FC<ReportHeaderProps> = ({
   setShowTableView,
 }) => {
   return (
-    <SurfaceCard variant="toolbar" className="mx-3 mt-3 flex flex-col gap-4 px-5 py-4 md:mx-4 md:flex-row md:items-center md:justify-between">
-      <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-2">
-          <h1 className="report-title truncate text-[18px] font-semibold md:text-[28px]">
+    <header className="questionnaire-card questionnaire-border flex border-b px-5 py-4 md:px-6">
+      <div className="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0 md:flex md:min-h-[42px] md:items-center">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="report-title truncate text-[18px] font-semibold leading-none md:text-[24px]">
             {Title || "Report"}
-          </h1>
-          {Type && (
-            <span className="questionnaire-label rounded-full bg-[var(--color-brand-primary-softest)] px-3 py-1 text-sm">
-              {Type}
-            </span>
-          )}
+            </h1>
+            {Type && (
+              <span className="question-type-default inline-flex min-h-[34px] items-center rounded-full px-3.5 py-1.5 text-sm font-semibold leading-none">
+                {Type}
+              </span>
+            )}
+          </div>
         </div>
-      </div>
-      <ActionButton
-        showTableView={showTableView}
-        setShowTableView={setShowTableView}
-      />
-    </SurfaceCard>
+        <ActionButton
+          showTableView={showTableView}
+          setShowTableView={setShowTableView}
+        />
+        </div>
+    </header>
   )
 }
 

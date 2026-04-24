@@ -7,6 +7,22 @@ import { queryClient } from "../../../App";
 import { setFilterStudys } from "../../../store/CrosstabStudySlice";
 import { setCopyModel, setDeleteModel } from "../../../store/TriggerSlice";
 
+const removeStudyFromList = (items: any[], studyId: string) =>
+  items.filter((prev) => (prev.studyid ?? prev.studyID) !== studyId);
+
+const refreshStudyList = async () => {
+  window.dispatchEvent(new CustomEvent("refresh-study-list"));
+  await queryClient.invalidateQueries({
+    queryKey: ["studyList"],
+    exact: false,
+  });
+  await queryClient.refetchQueries({
+    queryKey: ["studyList"],
+    exact: false,
+    type: "active",
+  });
+};
+
 export const useArchive = () => {
   const { apiToken } = useSelector((state: RootState) => state.user);
   const { FilterStudys } = useSelector((state: RootState) => state.study);
@@ -19,11 +35,11 @@ export const useArchive = () => {
       });
     },
     onMutate(variables) {
-      const newData = FilterStudys.filter((prev) => prev.studyID !== variables);
+      const newData = removeStudyFromList(FilterStudys, variables);
       dispatch(setFilterStudys(newData));
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["studyList"] });
+    onSuccess: async () => {
+      await refreshStudyList();
       toast.success("Study archived successfully");
     },
   });
@@ -44,11 +60,11 @@ export const useDelete = () => {
       });
     },
     onMutate(variables) {
-      const newData = FilterStudys.filter((prev) => prev.studyID !== variables);
+      const newData = removeStudyFromList(FilterStudys, variables);
       dispatch(setFilterStudys(newData));
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["studyList"] });
+    onSuccess: async () => {
+      await refreshStudyList();
       dispatch(setDeleteModel(false));
       toast.success("Study deleted successfully");
     },
@@ -77,8 +93,8 @@ export const useCopy = () => {
       const data = await res.response;
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["studyList"] });
+    onSuccess: async () => {
+      await refreshStudyList();
       dispatch(setCopyModel(false));
       toast.success("Study copied successfully");
     },
@@ -99,11 +115,11 @@ export const useActive = () => {
       });
     },
     onMutate: (variables) => {
-      const newData = FilterStudys.filter((prev) => prev.studyID !== variables);
+      const newData = removeStudyFromList(FilterStudys, variables);
       dispatch(setFilterStudys(newData));
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["studyList"] });
+    onSuccess: async () => {
+      await refreshStudyList();
       toast.success("Project activated successfully");
     },
   });

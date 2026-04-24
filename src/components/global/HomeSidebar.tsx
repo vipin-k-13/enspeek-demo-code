@@ -5,13 +5,13 @@ import { StudyCard } from "./card";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "../../services/apiService";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import { cn } from "../../utils";
 import { setFilterStudys, setStudys } from "../../store/CrosstabStudySlice";
 import Input from "../ui/Input";
 import { HiSearch } from "react-icons/hi";
 import DeleteModel from "../common/list/DeleteModel";
 import ListingCopyModel from "./ListingCopyModal";
+import ArchiveModel from "../common/list/ArchiveModel";
 
 const HomeSidebar: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
@@ -25,8 +25,9 @@ const HomeSidebar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
+  const [pageInput, setPageInput] = useState<string>("1");
   const dispatch = useDispatch<AppDispatch>();
-  const { data: studyList = {}, isLoading: isListLoading } = useQuery({
+  const { data: studyList = {}, isLoading: isListLoading, refetch } = useQuery({
     queryKey: ["studyList", activeTab],
     queryFn: async () => {
       try {
@@ -48,6 +49,17 @@ const HomeSidebar: React.FC = () => {
   });
 
   useEffect(() => {
+    const handleRefreshStudyList = () => {
+      refetch();
+    };
+
+    window.addEventListener("refresh-study-list", handleRefreshStudyList);
+    return () => {
+      window.removeEventListener("refresh-study-list", handleRefreshStudyList);
+    };
+  }, [refetch]);
+
+  useEffect(() => {
     const delayDebounce = setTimeout(() => {
       const filtered = searchTerm.trim()
         ? Studys.filter((banner) =>
@@ -63,7 +75,12 @@ const HomeSidebar: React.FC = () => {
 
   useEffect(() => {
     setPage(1);
+    setPageInput("1");
   }, [activeTab, searchTerm]);
+
+  useEffect(() => {
+    setPageInput(String(page));
+  }, [page]);
 
   useEffect(() => {
     const calculateLimit = () => {
@@ -96,6 +113,7 @@ const HomeSidebar: React.FC = () => {
   const currentItems = FilterStudys?.slice(start, start + limit) ?? [];
 
   const totalPages = FilterStudys ? Math.ceil(FilterStudys.length / limit) : 0;
+  const hasResults = FilterStudys?.length > 0;
   const activeCount =
     studyList?.count?.active ??
     Studys.filter((s: any) => !Boolean(s.isarchived)).length;
@@ -108,8 +126,16 @@ const HomeSidebar: React.FC = () => {
       (studyList.count.shared || 0)
     : Studys.length;
 
+  const handleGoToPage = () => {
+    const parsedPage = Number(pageInput);
+    if (!parsedPage) return;
+    const nextPage = Math.min(Math.max(parsedPage, 1), totalPages);
+    setPage(nextPage);
+    setPageInput(String(nextPage));
+  };
+
   return (
-    <div className="home-surface flex w-full shrink-0 flex-col border-r home-border md:h-full md:w-[320px]" ref={sidebarRef}>
+    <div className="home-surface flex h-full w-full shrink-0 flex-col border-r home-border md:w-[340px]" ref={sidebarRef}>
       <div className="border-b home-border-soft px-4 py-4">
         <div className="mb-4 flex items-center justify-between gap-3">
           <p className="home-heading text-[18px] font-semibold">My Studies</p>
@@ -117,7 +143,7 @@ const HomeSidebar: React.FC = () => {
         <div className="home-panel-bg grid grid-cols-3 gap-1 rounded-[18px] p-1 text-sm">
         <button
           className={cn(
-            "rounded-[14px] px-2 py-2 text-[13px] transition-colors",
+            "inline-flex h-10 cursor-pointer items-center justify-center rounded-[14px] px-2 py-2 text-center text-[13px] leading-none transition-colors",
             activeTab === "myactive"
               ? "bg-login-primary text-white font-semibold shadow-sm"
               : "home-muted hover:bg-white"
@@ -128,7 +154,7 @@ const HomeSidebar: React.FC = () => {
         </button>
         <button
           className={cn(
-            "rounded-[14px] px-2 py-2 text-[13px] transition-colors",
+            "inline-flex h-10 cursor-pointer items-center justify-center rounded-[14px] px-2 py-2 text-center text-[13px] leading-none transition-colors",
             activeTab === "allactive"
               ? "bg-login-primary text-white font-semibold shadow-sm"
               : "home-muted hover:bg-white"
@@ -139,7 +165,7 @@ const HomeSidebar: React.FC = () => {
         </button>
         <button
           className={cn(
-            "rounded-[14px] px-2 py-2 text-[13px] transition-colors",
+            "inline-flex h-10 cursor-pointer items-center justify-center rounded-[14px] px-2 py-2 text-center text-[13px] leading-none transition-colors",
             activeTab === "isarchived"
               ? "bg-login-primary text-white font-semibold shadow-sm"
               : "home-muted hover:bg-white"
@@ -161,7 +187,7 @@ const HomeSidebar: React.FC = () => {
         />
       </div>
       </div>
-      <div className="max-h-[40vh] flex-1 overflow-y-auto px-4 pb-3 md:max-h-none">
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-3">
       <div className="flex w-full flex-col items-center gap-3">
         {isListLoading ? (
           <div className="flex items-center justify-center w-full h-full">
@@ -170,7 +196,7 @@ const HomeSidebar: React.FC = () => {
               className={cn("animate-spin text-action")}
             />
           </div>
-        ) : studyList && studyList.data && studyList.data.length ? (
+        ) : hasResults ? (
           currentItems.map((item: any) => (
             <StudyCard
               key={item.studyid}
@@ -183,33 +209,63 @@ const HomeSidebar: React.FC = () => {
               isArchived={item.isarchived}
               launch={item.launch}
               studystate={item.studystate}
+              activeTab={activeTab}
             />
           ))
         ) : (
-          <h4 className="mt-8">No Study Found</h4>
+          <div className="home-panel-soft-bg mt-8 w-full rounded-[20px] border home-border-soft px-4 py-8 text-center">
+            <h4 className="home-heading text-[16px] font-semibold">No study found</h4>
+            <p className="home-muted mt-2 text-sm">
+              Try another search term or switch the study tab.
+            </p>
+          </div>
         )}
       </div>
       </div>
       {totalPages > 1 && (
-        <div className="mx-4 mt-1 flex items-center justify-center gap-2 border-t home-border-soft pt-3">
-          <div
-            className="home-muted flex w-8 cursor-pointer items-center justify-center rounded-lg border home-border p-2 hover:bg-home-panel"
-            onClick={() => setPage((prev) => (prev === 1 ? prev : prev - 1))}
-          >
-            <MdNavigateBefore />
-          </div>
-          <div className="home-muted text-sm">{`${page} of ${totalPages}`}</div>
-          <div
-            className="home-muted flex w-8 cursor-pointer items-center justify-center rounded-lg border home-border p-2 hover:bg-home-panel"
-            onClick={() =>
-              setPage((prev) => (prev < totalPages ? prev + 1 : prev))
-            }
-          >
-            <MdNavigateNext />
+        <div className="mx-4 mb-4 mt-2 border-t home-border-soft pt-4">
+          <div className="flex items-center justify-center gap-2">
+              <span className="home-muted text-sm font-medium">{`Page`}</span>
+              <Input
+                value={pageInput}
+                onChange={(e) => {
+                  const rawValue = e.target.value.replace(/\D/g, "");
+                  if (rawValue === "") {
+                    setPageInput("");
+                    return;
+                  }
+                  const parsedValue = Number(rawValue);
+                  const clampedValue = Math.min(
+                    Math.max(parsedValue, 1),
+                    totalPages
+                  );
+                  setPageInput(String(clampedValue));
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleGoToPage();
+                  }
+                }}
+                onBlur={handleGoToPage}
+                type="number"
+                min={1}
+                max={totalPages}
+                className="home-text h-10 w-20 rounded-xl border home-border bg-white px-3 text-center text-sm focus:outline-none"
+                placeholder="1"
+              />
+              <span className="home-muted text-sm font-medium">{`of ${totalPages}`}</span>
+              <button
+                type="button"
+                onClick={handleGoToPage}
+                className="report-toolbar-btn cursor-pointer rounded-xl bg-login-primary px-3 py-2 text-sm text-white hover:bg-login-primary-hover"
+              >
+                Go
+              </button>
           </div>
         </div>
       )}
       <DeleteModel />
+      <ArchiveModel />
       <ListingCopyModel />
     </div>
   );

@@ -7,7 +7,7 @@ import { useLocation } from "react-router";
 import { toast } from "sonner";
 import { setSubmitItems } from "../../../store/QuestionSlice";
 import { TbRefresh } from "react-icons/tb";
-import { GiCancel } from "react-icons/gi";
+import { LuBan, LuChevronDown } from "react-icons/lu";
 
 type RowLogic = {
   row: string;
@@ -177,8 +177,9 @@ export default function OptionLogic({
     <div>
       {logic.map((row, idx) => (
         <div key={row.row} className="flex items-center">
-          <div className="flex gap-4 items-center">
+          <div className="flex flex-wrap items-center gap-3">
             <button
+              type="button"
               onClick={() => toggleTerminate(idx)}
               title={
                 row.value
@@ -188,45 +189,50 @@ export default function OptionLogic({
                   : "Click to apply terminate"
               }
               disabled={!!row.value}
-              className={`text-lg focus:outline-none ${
+              className={`questionnaire-logic-chip inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold focus:outline-none ${
                 row.value ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-              } ${row.terminate ? "text-red-500" : "text-blue-300"}`}
+              } ${row.terminate ? "questionnaire-logic-chip-danger" : "questionnaire-logic-chip-muted"}`}
             >
-              <GiCancel />
+              <LuBan className="h-4 w-4" />
+              <span>{row.terminate ? "Termination Applied" : "Apply Termination"}</span>
             </button>
 
-            <select
-              className={`focus:outline-none border border-gray-400 px-2 py-0.5 rounded 
-                ${row.value?.trim() ? "bg-action text-white" : "bg-white"} 
-                ${row.terminate ? "opacity-50 cursor-not-allowed" : ""}`}
-              title={
-                row.terminate
-                  ? ""
-                  : row.value?.trim()
-                  ? "Click to remove or apply skip logic"
-                  : "Click to apply skip logic"
-              }
-              value={row.value}
-              onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                handleLogicChange(idx, e.target.value)
-              }
-              disabled={row.terminate}
-            >
-              <option value="">skip to</option>
-              {questionList?.map((opt) => (
-                <option key={opt.qID} value={opt.qID}>
-                  SKIP TO {opt.qID}
-                </option>
-              ))}
-            </select>
+            <div className="relative min-w-[144px]">
+              <select
+                className={`questionnaire-logic-select w-full appearance-none rounded-full py-2 pl-3 pr-9 text-sm font-semibold focus:outline-none ${
+                  row.value?.trim() ? "questionnaire-logic-select-active" : ""
+                } ${row.terminate ? "opacity-50 cursor-not-allowed" : ""}`}
+                title={
+                  row.terminate
+                    ? ""
+                    : row.value?.trim()
+                    ? "Click to remove or apply skip logic"
+                    : "Click to apply skip logic"
+                }
+                value={row.value}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleLogicChange(idx, e.target.value)
+                }
+                disabled={row.terminate}
+              >
+                <option value="">Skip to</option>
+                {questionList?.map((opt) => (
+                  <option key={opt.qID} value={opt.qID}>
+                    SKIP TO {opt.qID}
+                  </option>
+                ))}
+              </select>
+              <LuChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 questionnaire-muted" />
+            </div>
 
             {(row.value || row.terminate) && (
               <button
+                type="button"
                 onClick={() => handleReset(idx)}
                 title="Click to reset applied logic"
-                className="text-gray-400 hover:text-red-500 text-lg focus:outline-none cursor-pointer"
+                className="questionnaire-clickable inline-flex h-9 w-9 items-center justify-center rounded-full border questionnaire-border bg-white questionnaire-muted transition-colors hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-questionnaire-danger)] focus:outline-none"
               >
-                <TbRefresh />
+                <TbRefresh className="h-4 w-4" />
               </button>
             )}
           </div>

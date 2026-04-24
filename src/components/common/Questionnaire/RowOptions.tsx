@@ -14,11 +14,11 @@ interface RowOptions {
 
 const RowOptions:React.FC<RowOptions> = ({optionKey, Value, onChange, onDelete, error = false}) => {
   return (
-    <div className="flex items-center gap-3">
+    <div className="questionnaire-input flex items-center gap-3 rounded-[18px] px-4 py-3">
       <label htmlFor={`row`} className="questionnaire-label w-10 shrink-0 text-base font-medium">
         R{optionKey}
       </label>
-      <Input value={Value} onChange={(e)=>onChange(e.target.value)} className={`questionnaire-input questionnaire-heading questionnaire-clickable rounded-[18px] border-0 px-5 py-3.5 text-base focus-visible:ring-0 ${
+      <Input value={Value} onChange={(e)=>onChange(e.target.value)} className={`questionnaire-heading questionnaire-clickable rounded-[18px] border-0 bg-transparent px-1 py-1 text-base focus-visible:ring-0 ${
           error ? "ring-1 ring-red-400" : ""
         }`} required />
       <button

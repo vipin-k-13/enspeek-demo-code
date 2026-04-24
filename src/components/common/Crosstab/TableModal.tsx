@@ -1,6 +1,7 @@
 import React from "react";
 import DynamicModel from "../../global/DynamicModel";
 import TableList from "../table-List/TableList";
+import ModalInstruction from "../../ui/ModalInstruction";
 
 interface Props {
   isOpen: boolean;
@@ -22,6 +23,9 @@ const TableModal: React.FC<Props> = ({ isOpen, onClose, message }) => {
       }}
       className="max-w-5xl"
     >
+      <ModalInstruction>
+        Review the full crosstab table view for the selected message result.
+      </ModalInstruction>
       <TableList
         Id={"CROSSTAB"}
         qID={message.sdata.tableID}

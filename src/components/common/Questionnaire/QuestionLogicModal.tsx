@@ -8,6 +8,7 @@ import { useLocation } from "react-router";
 import Button from "../../ui/Button";
 import LogicModel from "../../global/LogicModal";
 import { useState } from "react";
+import ModalInstruction from "../../ui/ModalInstruction";
 
 interface QuesLogicModalProps {
   isOpen: boolean;
@@ -84,9 +85,9 @@ export default function QuesLogicModal({
       Title="Edit or Add logic"
       className="max-w-5xl"
       footerContent={
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Button
-            className="bg-gray-50 px-3 py-1 text-gray-700 border-action border focus:outline-none rounded"
+            className="questionnaire-action-btn rounded-2xl border questionnaire-border bg-white px-5 py-2.5 questionnaire-heading shadow-none"
             onClick={() => {
               handleReset();
             }}
@@ -94,7 +95,7 @@ export default function QuesLogicModal({
             Reset Logic
           </Button>
           <Button
-            className="bg-primary px-3 py-1 text-gray-50 focus:outline-none rounded"
+            className="questionnaire-save-btn questionnaire-action-btn rounded-2xl px-5 py-2.5 shadow-none"
             onClick={handleSave}
           >
             Save Logic
@@ -102,6 +103,9 @@ export default function QuesLogicModal({
         </div>
       }
     >
+      <ModalInstruction>
+        Configure logic rules for this question. Save when the conditions, skip path, or termination behavior are ready.
+      </ModalInstruction>
       <QuestionLogic questionID={qID} resetFlag={resetFlag} isOpen={isOpen} />
     </LogicModel>
   );

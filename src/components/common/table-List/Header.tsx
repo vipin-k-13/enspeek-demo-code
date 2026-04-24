@@ -12,7 +12,6 @@ import {
 import DropDown from "../../global/DropDown";
 import { toast } from "sonner";
 import { useTableListAdd } from "../Crosstab/CrossTab.Api";
-import { SurfaceCard } from "../../ui/SurfaceCard";
 import PageBreadcrumbs from "../../ui/PageBreadcrumbs";
 
 interface CrosstabHeaderProps {
@@ -61,49 +60,50 @@ const Header: React.FC<CrosstabHeaderProps> = ({
   }, [location.state?.bannerID]);
 
   return (
-    <SurfaceCard variant="toolbar" className="mb-4 flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
-      <div className="min-w-0">
-        <PageBreadcrumbs
-          prefix={`${bannerName} :`}
-          items={[
-            {
-              label: "Banner List",
-              to: "/crosstab",
-              state: { studyID: location.state.studyID },
-            },
-            {
-              label: "Design Banner",
-              to: "/crosstab/edit-banner",
-              state: {
-                studyID: location.state.studyID,
-                bannerID: location.state?.bannerID,
+    <header className="questionnaire-card questionnaire-border flex border-b px-5 py-4 md:px-6">
+      <div className="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0 md:flex md:min-h-[42px] md:items-center">
+          <PageBreadcrumbs
+            prefix={`${bannerName} :`}
+            items={[
+              {
+                label: "Banner List",
+                to: "/crosstab",
+                state: { studyID: location.state.studyID },
               },
-              active: location.pathname === "/crosstab/edit-banner",
-            },
-            {
-              label: "Crosstab",
-              to: "/crosstab/table-list",
-              state: {
-                studyID: location.state.studyID,
-                bannerID: location.state?.bannerID,
+              {
+                label: "Design Banner",
+                to: "/crosstab/edit-banner",
+                state: {
+                  studyID: location.state.studyID,
+                  bannerID: location.state?.bannerID,
+                },
+                active: location.pathname === "/crosstab/edit-banner",
               },
-              active: location.pathname === "/crosstab/table-list",
-            },
-          ]}
-        />
-      </div>
-      <div className="flex flex-wrap justify-end gap-2">
+              {
+                label: "Crosstab",
+                to: "/crosstab/table-list",
+                state: {
+                  studyID: location.state.studyID,
+                  bannerID: location.state?.bannerID,
+                },
+                active: location.pathname === "/crosstab/table-list",
+              },
+            ]}
+          />
+        </div>
+        <div className="flex min-h-[42px] flex-wrap items-center justify-end gap-2">
         {tableData.length > 0 ? (
           <>
             <Button
-              className="report-toolbar-btn bg-[var(--color-questionnaire-multi)] py-2 text-white hover:opacity-90"
+              className="report-toolbar-btn h-10 bg-[var(--color-questionnaire-multi)] px-4 text-white hover:opacity-90"
               onClick={() => dispatch(setIsBannerSettingsOpen(true))}
             >
               <LuSettings2 />
             </Button>
             <div className="relative" ref={dropdownRef}>
               <Button
-                className="report-toolbar-btn bg-[var(--color-study-progress)] py-2 text-white hover:opacity-90"
+                className="report-toolbar-btn h-10 bg-[var(--color-study-progress)] px-4 text-white hover:opacity-90"
                 onClick={() =>
                   dispatch(setIsDownloadDropdownOpen(!isDownloadDropdownOpen))
                 }
@@ -116,11 +116,11 @@ const Header: React.FC<CrosstabHeaderProps> = ({
                 </div>
                 )}
             </div>
-            <div className="crosstab-soft-panel flex items-center rounded-[16px] px-3 py-2">
+            <div className="crosstab-soft-panel flex h-10 items-center rounded-[16px] px-3">
               <select
                 value={selectedBanner}
                 onChange={(e) => setSelectedBanner(e.target.value)}
-                className="home-text bg-transparent pr-2 focus:outline-none"
+                className="home-text h-full bg-transparent pr-2 leading-none focus:outline-none"
               >
                 {BannersAll.map((banner) => (
                   <option key={banner.bannerid} value={banner.bannerid}>
@@ -137,7 +137,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
                     },
                   })
                 }
-                className="report-toolbar-btn ml-2 inline-flex items-center justify-center rounded-xl border border-login-primary px-3 py-1 text-sm text-login-primary hover:bg-login-primary hover:text-white"
+                className="report-toolbar-btn ml-2 inline-flex h-8 items-center justify-center rounded-xl border border-login-primary px-3 text-sm text-login-primary hover:bg-login-primary hover:text-white"
               >
                 Go <LuArrowRight className="ml-1 h-3.5 w-3.5" />
               </span>
@@ -146,7 +146,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
         ) : (
           <Button
             data-test-id="SAVE_QUESTION"
-            className="report-toolbar-btn border border-login-primary rounded-2xl text-login-primary hover:bg-login-primary hover:text-white"
+                className="report-toolbar-btn h-10 rounded-2xl border border-login-primary px-5 text-login-primary hover:bg-login-primary hover:text-white"
             onClick={() => {
               if (selectedQuestions.length === 0) {
                 toast.error(
@@ -161,8 +161,9 @@ const Header: React.FC<CrosstabHeaderProps> = ({
             <LuSave /> Save Question
           </Button>
         )}
+        </div>
       </div>
-    </SurfaceCard>
+    </header>
   );
 };
 

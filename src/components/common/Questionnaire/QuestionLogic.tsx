@@ -429,10 +429,10 @@ export default function QuestionLogic({
 
   return (
     <div>
-      <div className="mb-3">
+      <div className="mb-5">
         <label
           htmlFor="condition"
-          className="block text-sm font-medium text-gray-400 my-2"
+          className="questionnaire-label block"
         >
           Question logic
         </label>
@@ -446,14 +446,14 @@ export default function QuestionLogic({
         return (
           <div
             key={groupId}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md mb-4"
+            className="questionnaire-card questionnaire-border mb-4 w-full rounded-[22px] border px-4 py-4 shadow-sm"
           >
             {mainRow && (
-              <div className="flex items-center gap-4 mb-4">
+              <div className="mb-4 flex flex-wrap items-center gap-3">
                 <select
                   name="condition"
                   title="Conditions"
-                  className="outline-none text-red-500"
+                  className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
                   value={selectedConditions[groupId] || ""}
                   onChange={(e) => handleFirstChange(groupId, e.target.value)}
                 >
@@ -472,7 +472,7 @@ export default function QuestionLogic({
                     onChange={(e) =>
                       handleVariableChange(mainRow.id, e.target.value)
                     }
-                    className="px-3 py-2 w-48 text-red-500 focus:outline-none"
+                    className="questionnaire-logic-select min-w-[220px] rounded-[16px] px-4 py-3 focus:outline-none"
                   >
                     <option value="">Select variables</option>
                     {varsData?.variables?.survey?.length > 0 && (
@@ -499,7 +499,7 @@ export default function QuestionLogic({
                       onChange={(e) =>
                         handleOptionChange(mainRow.id, e.target.value)
                       }
-                      className="px-3 py-2 w-32 text-red-500 focus:outline-none"
+                      className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
                     >
                       <option value="">Select option</option>
                       {optsData[mainRow.variable].map(
@@ -518,7 +518,7 @@ export default function QuestionLogic({
                     onChange={(e) =>
                       handleValueChange(mainRow.id, e.target.value)
                     }
-                    className="px-3 py-2 w-32 text-red-500 focus:outline-none"
+                    className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
                   >
                     <option value="">Select value</option>
                     {optsData[mainRow.variable]
@@ -539,7 +539,7 @@ export default function QuestionLogic({
                   {selectedConditions[groupId] && (
                     <Button
                       onClick={() => addConditionRow(groupId)}
-                      className="p-2 text-blue-500 border border-gray-300 rounded-lg"
+                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 text-[var(--color-brand-primary)] shadow-none"
                       title="Add condition"
                     >
                       <AiOutlineArrowsAlt />
@@ -547,7 +547,7 @@ export default function QuestionLogic({
                   )}
                   <Button
                     onClick={() => resetAllGroupRows(groupId)}
-                    className="p-2 text-gray-500 border border-gray-300 rounded-lg"
+                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none"
                     title="Reset group"
                   >
                     <FaRotateLeft />
@@ -556,7 +556,7 @@ export default function QuestionLogic({
                   {groupId === lastGroupId && (
                     <Button
                       onClick={addNewLogicGroup}
-                      className="p-2 text-primary border border-gray-300 rounded-lg"
+                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-heading shadow-none"
                       title="Add new logic block"
                     >
                       <FaPlus />
@@ -566,7 +566,7 @@ export default function QuestionLogic({
                   {index > 0 && (
                     <Button
                       onClick={() => deleteGroup(groupId)}
-                      className="p-2 text-red-500 border border-gray-300 rounded-lg"
+                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none"
                       title="Delete group"
                     >
                       <FaTrash />
@@ -577,13 +577,13 @@ export default function QuestionLogic({
             )}
 
             {conditionRows.map((row) => (
-              <div key={row.id} className="flex items-center gap-4 mb-4">
+              <div key={row.id} className="mb-4 flex flex-wrap items-center gap-3">
                 <select
                   value={row.connector || "AND"}
                   onChange={(e) =>
                     handleConnectorChange(row.id, e.target.value)
                   }
-                  className="text-red-500 px-3 py-2 focus:outline-none"
+                  className="questionnaire-logic-select min-w-[120px] rounded-[16px] px-4 py-3 focus:outline-none"
                 >
                   {connectors.map((connector) => (
                     <option key={connector} value={connector}>
@@ -595,7 +595,7 @@ export default function QuestionLogic({
                 <select
                   value={row.variable || ""}
                   onChange={(e) => handleVariableChange(row.id, e.target.value)}
-                  className="px-3 py-2 w-48 text-red-500 focus:outline-none"
+                  className="questionnaire-logic-select min-w-[220px] rounded-[16px] px-4 py-3 focus:outline-none"
                 >
                   <option value="">Select variables</option>
                   {varsData?.variables?.survey?.length > 0 && (
@@ -622,7 +622,7 @@ export default function QuestionLogic({
                       onChange={(e) =>
                         handleOptionChange(row.id, e.target.value)
                       }
-                      className="px-3 py-2 w-32 text-red-500 focus:outline-none"
+                      className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
                     >
                       <option value="">Select option</option>
                       {optsData[row.variable].map((opt: any, index: number) => (
@@ -637,7 +637,7 @@ export default function QuestionLogic({
                   <select
                     value={String(row.value) || ""}
                     onChange={(e) => handleValueChange(row.id, e.target.value)}
-                    className="px-3 py-2 w-32 text-red-500 focus:outline-none"
+                    className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
                   >
                     <option value="">Select value</option>
                     {optsData[row.variable]
@@ -657,14 +657,14 @@ export default function QuestionLogic({
                 <div className="flex items-center gap-2">
                   <Button
                     onClick={() => resetRow(row.id)}
-                    className="p-2 text-gray-500 border border-gray-300 rounded-lg"
+                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none"
                     title="Reset"
                   >
                     <FaRotateLeft />
                   </Button>
                   <Button
                     onClick={() => deleteRow(row.id)}
-                    className="p-2 text-red-500 border border-gray-300 rounded-lg"
+                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none"
                     title="Delete"
                   >
                     <FaTrash />

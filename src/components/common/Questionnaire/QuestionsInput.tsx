@@ -18,7 +18,7 @@ const QuestionsInput: React.FC<QuestionsInput> = ({  error = false,
 }) => {
   return (
     <div className={cn(className)}>
-      <label className='questionnaire-label mb-3 block'>
+      <label className='questionnaire-label mb-3 block text-[15px]'>
         {lable} {require && <span className='text-red-500'>*</span>}
       </label>
       <div className="relative">

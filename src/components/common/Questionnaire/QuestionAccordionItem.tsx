@@ -18,10 +18,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import OptionLogic from "./OptionLogic";
 import { cn } from "../../../utils";
-import {
-  formatQuestionTypeLabel,
-  getQuestionTypeTheme,
-} from "../../../utils/questionnaireTheme";
+import { formatQuestionTypeLabel } from "../../../utils/questionnaireTheme";
 import { useAccordionContext } from "../../ui/Accrodion/Accordion";
 
 interface QuestionAccordionItem {
@@ -46,15 +43,14 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
     (state: RootState) => state.question.logic2Skip?.[Data.qID]
   );
   const expanded = isExpanded(Data.qID);
-  const qTypeTheme = getQuestionTypeTheme(Data.qType);
-  
+
   return (
     <AccordionItem value={Data.qID} className="border-0">
       <AccordionTrigger>
         <div
           data-test-id={Data.qID}
           className={cn(
-            "questionnaire-card questionnaire-border w-full rounded-[24px] border px-4 py-4 shadow-sm transition-shadow md:px-5",
+            "questionnaire-card questionnaire-border w-full rounded-[24px] border px-4 py-4 shadow-sm transition-shadow md:px-6",
             expanded && "rounded-b-none border-b-0 shadow-none"
           )}
         >
@@ -70,8 +66,8 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
             <span className="question-type-default rounded-full px-4 py-1 text-sm font-semibold">
               {Data.qID}
             </span>
-            <div className="min-w-0 flex-1">
-              <p className="questionnaire-heading truncate text-left text-lg font-medium">
+            <div className="min-w-0 flex-1 pr-1">
+              <p className="questionnaire-heading truncate text-left text-[18px] font-semibold">
                 {Data.qText}
               </p>
             </div>
@@ -79,7 +75,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
               <span
                 role="button"
                 tabIndex={0}
-                className="questionnaire-label questionnaire-clickable inline-flex items-center gap-2 text-sm"
+                className="questionnaire-label questionnaire-clickable inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm"
                 onClick={(e) => {
                   e.stopPropagation();
                   openLogicModal();
@@ -97,8 +93,8 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
               </span>
               <span
                 className={cn(
-                  "rounded-full px-3 py-1 text-sm font-medium",
-                  qTypeTheme.badgeClass
+                  "rounded-full px-3 py-1.5 text-sm font-semibold",
+                  "question-type-open"
                 )}
               >
                 {formatQuestionTypeLabel(Data.qType)}
@@ -106,7 +102,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
             </div>
             {!disableActions && (
               <div
-                className="questionnaire-muted flex items-center gap-3"
+                className="questionnaire-muted flex items-center gap-2 md:gap-3"
                 onClick={(e) => e.stopPropagation()}
               >
                 <span
@@ -170,7 +166,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
         </div>
       </AccordionTrigger>
       <AccordionContent>
-        <div className="questionnaire-card questionnaire-border rounded-b-[24px] border border-t-0 px-4 pb-5 pt-2 md:px-5">
+        <div className="questionnaire-card questionnaire-border rounded-b-[24px] border border-t-0 px-4 pb-6 pt-2 md:px-6">
           {logic2Skip &&
             Object.entries(logic2Skip).map(([type, message]) => (
               <p key={type} className="questionnaire-delete mb-1 text-sm">
@@ -179,7 +175,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
               </p>
             ))}
 
-          <div className="space-y-5 border-t questionnaire-border pt-4">
+          <div className="space-y-6 border-t questionnaire-border pt-5">
             <div>
               <p className="questionnaire-label">
                 Question Text
@@ -210,32 +206,34 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
               Data.rowOptionList.map((key, index) => (
                     <div
                       key={key.optionID}
-                      className="flex items-start gap-3"
+                      className="questionnaire-input rounded-[18px] px-4 py-3"
                     >
-                      <label className="questionnaire-label w-8 shrink-0 pt-0.5">{`R${
-                        index + 1
-                      }`}</label>
-                      <div className="flex w-full min-w-0 items-start justify-between gap-4">
-                        <label
-                          htmlFor={`option-${index}`}
-                          className="questionnaire-heading text-[16px]"
-                        >
-                          {key.optionText}
-                        </label>
+                      <div className="flex items-start gap-3">
+                        <label className="questionnaire-label w-8 shrink-0 pt-0.5">{`R${
+                          index + 1
+                        }`}</label>
+                        <div className="flex w-full min-w-0 items-start justify-between gap-4">
+                          <label
+                            htmlFor={`option-${index}`}
+                            className="questionnaire-heading text-[16px]"
+                          >
+                            {key.optionText}
+                          </label>
 
-                        <div className="flex items-center gap-2">
-                          <OptionLogic
-                            key={index}
-                            qID={Data.qID}
-                            rowIndex={key.optionID}
-                            optionText={key.optionText}
-                          />
+                          <div className="flex items-center gap-2">
+                            <OptionLogic
+                              key={index}
+                              qID={Data.qID}
+                              rowIndex={key.optionID}
+                              optionText={key.optionText}
+                            />
+                          </div>
                         </div>
-                      </div>
 
-                      {Boolean(key.other) && (
-                        <Input className="questionnaire-input h-8 w-24 border-0 focus-visible:ring-0" />
-                      )}
+                        {Boolean(key.other) && (
+                          <Input className="questionnaire-input h-8 w-24 border-0 focus-visible:ring-0" />
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

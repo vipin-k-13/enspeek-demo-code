@@ -21,9 +21,12 @@ const PageBreadcrumbs: React.FC<PageBreadcrumbsProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("text-sm", className)}>
-      {prefix && <span className="crosstab-title font-semibold">{prefix}</span>}
-      {prefix && <span> </span>}
+    <div className={cn("flex min-h-[42px] flex-wrap items-center gap-x-2 gap-y-1 text-sm leading-none", className)}>
+      {prefix && (
+        <span className="crosstab-title inline-flex items-center font-semibold leading-none">
+          {prefix}
+        </span>
+      )}
       {items.map((item, index) => (
         <React.Fragment key={`${item.label}-${index}`}>
           {item.to ? (
@@ -31,6 +34,7 @@ const PageBreadcrumbs: React.FC<PageBreadcrumbsProps> = ({
               to={item.to}
               state={item.state}
               className={cn(
+                "inline-flex items-center leading-none",
                 item.active
                   ? "questionnaire-label font-semibold"
                   : "crosstab-muted hover:text-login-primary"
@@ -41,6 +45,7 @@ const PageBreadcrumbs: React.FC<PageBreadcrumbsProps> = ({
           ) : (
             <span
               className={cn(
+                "inline-flex items-center leading-none",
                 item.active
                   ? "questionnaire-label font-semibold"
                   : "crosstab-muted"
@@ -49,7 +54,9 @@ const PageBreadcrumbs: React.FC<PageBreadcrumbsProps> = ({
               {item.label}
             </span>
           )}
-          {index < items.length - 1 && <span> / </span>}
+          {index < items.length - 1 && (
+            <span className="crosstab-muted inline-flex items-center leading-none">/</span>
+          )}
         </React.Fragment>
       ))}
     </div>

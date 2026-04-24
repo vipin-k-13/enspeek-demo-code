@@ -7,6 +7,7 @@ import { apiRequest } from "../../../services/apiService";
 import LoaderSpinner from "../../global/LoaderSpinner";
 import { setTrigger } from "../../../store/TriggerSlice";
 import { useLocation } from "react-router";
+import ModalInstruction from "../../ui/ModalInstruction";
 
 export default function FilterModal({isOpen, setIsOpen}:{isOpen:boolean, setIsOpen:()=>void}) {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -48,24 +49,27 @@ export default function FilterModal({isOpen, setIsOpen}:{isOpen:boolean, setIsOp
 
   return (
     <DynamicModel
-      Title="iPhone 15 Feature Usage"
+      Title="Add Report Filters"
       ButtonText="Save Filter List"
       isOpen={isOpen}
       onClick={()=>mutate()}
       onClose={() => setIsOpen()}
       className="max-w-lg"
     >
+      <ModalInstruction>
+        Select the questions you want available in the report filters list, then save the updated filter set.
+      </ModalInstruction>
       <div className="max-h-[60vh] overflow-y-auto">
         {filter.FilterList.map((option) => (
-          <div key={option.id} className="flex items-center mb-4">
+          <div key={option.id} className="mb-3 flex items-center rounded-[16px] bg-white px-4 py-3 shadow-sm">
             <input
               type="checkbox"
               id={option.id}
               checked={selectedFilters.includes(option.id)}
               onChange={() => toggleFilter(option.id)}
-              className="h-4 w-4 text-primary border-gray-300 cursor-pointer rounded"
+              className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary"
             />
-            <label htmlFor={option.id} className="ml-2 text-sm text-gray-700">
+            <label htmlFor={option.id} className="ml-3 home-text text-sm font-medium">
               {option.label}
             </label>
           </div>

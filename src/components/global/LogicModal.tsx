@@ -1,5 +1,6 @@
 import React from "react";
-import { IoCloseSharp } from "react-icons/io5";
+import Modal from "../ui/Modal";
+import { cn } from "../../utils";
 
 interface LogicModelProps {
   isOpen: boolean;
@@ -22,20 +23,26 @@ const LogicModel: React.FC<LogicModelProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[99]">
-      <div tabIndex={-1} className={`bg-white rounded-md w-full border border-gray-100 ${className}`}>
-        <div className="p-4 flex items-center justify-between">
-          <h3 className="text-xl font-semibold capitalize">{Title}</h3>
-          <IoCloseSharp onClick={onClose} size={24} className="cursor-pointer" />
+    <Modal isOpen={isOpen} onClose={onClose} className={cn("max-w-5xl", className)}>
+      <div tabIndex={-1} className="w-full">
+        <div className="flex items-center justify-between border-b questionnaire-border px-6 py-5">
+          <div>
+            <h3 className="questionnaire-heading text-[24px] font-semibold capitalize">
+              {Title}
+            </h3>
+            <p className="questionnaire-muted mt-1 text-sm leading-6">
+              Define skip, terminate, and conditional logic using the same guided flow across the platform.
+            </p>
+          </div>
         </div>
-        <div className="border-t border-b border-gray-200 h-full max-h-[70vh] w-full p-4 overflow-auto">
+        <div className="max-h-[70vh] w-full overflow-auto px-6 py-5 questionnaire-page-bg">
           {children}
         </div>
-        <div className="flex justify-end items-center gap-2 p-2 bg-gray-100 rounded-b-md">
+        <div className="flex items-center justify-end gap-3 border-t questionnaire-border bg-white px-6 py-4 rounded-b-[24px]">
           {footerContent}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

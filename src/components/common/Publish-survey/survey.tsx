@@ -99,16 +99,17 @@ export default function PublishSurvey() {
   }
 
   return (
-    <div className="questionnaire-page-bg h-full">
-      <div className="h-full">
-        <div className="flex h-full flex-col">
-          <div className="flex w-full flex-col">
+    <div className="questionnaire-page-bg flex h-full min-h-0 flex-col overflow-hidden">
+      <div className="flex h-full min-h-0 flex-col overflow-hidden">
+        <div className="flex h-full min-h-0 flex-col overflow-hidden">
+          <div className="flex h-full min-h-0 w-full flex-col overflow-hidden">
             <PublishSurveyHeader
               studyName={studyInfo.studyname}
               launch={studyInfo.launch}
               isSurveyActive={!!studyInfo.livelink}
             />
-            <div className="mx-auto flex h-full w-full max-w-[760px] flex-col gap-6 px-4 py-6 md:px-6 md:py-8">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pb-8 pt-2 md:px-6 md:pb-10 md:pt-3">
+              <div className="flex w-full flex-col gap-6 pb-4">
               {studyInfo.livelink ? (
                 <>
                   <div className="relative overflow-hidden rounded-[24px] bg-[var(--color-questionnaire-multi)] px-6 py-6 text-white shadow-sm">
@@ -185,6 +186,7 @@ export default function PublishSurvey() {
                 incomplete={quotaData?.incompletes || 0}
                 studyID={state.studyID}
               />
+              </div>
             </div>
           </div>
         </div>

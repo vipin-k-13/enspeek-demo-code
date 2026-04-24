@@ -3,6 +3,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 type trigger = {
   add: boolean;
   deleteModel: boolean;
+  archiveModel: boolean;
   selectedId: string;
   selectedStudyName: string;
   copyModel: boolean;
@@ -16,6 +17,7 @@ type trigger = {
 const initialState: trigger = {
   add: false,
   deleteModel: false,
+  archiveModel: false,
   selectedId: "",
   selectedStudyName: "",
   copyModel: false,
@@ -40,6 +42,10 @@ const TriggerSlice = createSlice({
     },
     setDeleteModel: (state, action: PayloadAction<boolean>) => {
       state.deleteModel = action.payload;
+      return state;
+    },
+    setArchiveModel: (state, action: PayloadAction<boolean>) => {
+      state.archiveModel = action.payload;
       return state;
     },
     setSelectedId: (state, action: PayloadAction<string>) => {
@@ -79,6 +85,7 @@ export const {
   setTrigger,
   resetTrigger,
   setDeleteModel,
+  setArchiveModel,
   setSelectedId,
   setCopyModel,
   setSelectedStudyName,

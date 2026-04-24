@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import DynamicModel from "./DynamicModel";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
 import LoaderSpinner from "./LoaderSpinner";
 import { handleKeyPress } from "../../utils";
 import { useCopy } from "../common/list/Api";
 import { setCopyModel } from "../../store/TriggerSlice";
+import Modal from "../ui/Modal";
+import ModalInstruction from "../ui/ModalInstruction";
 
 const ListingCopyModel: React.FC = () => {
   const { selectedStudyName, copyModel, selectedId } = useSelector(
@@ -19,41 +20,67 @@ const ListingCopyModel: React.FC = () => {
     return <LoaderSpinner />;
   }
 
+  const handleClose = () => {
+    dispatch(setCopyModel(false));
+    setValue("");
+  };
+
+  const defaultCopyName = selectedStudyName
+    ? `${selectedStudyName} (copy)`
+    : "";
+  const draftValue = value.trim() !== "" ? value : defaultCopyName;
+
   return (
-    <DynamicModel
-      Title={`Copy Study : ${selectedStudyName}`}
-      ButtonText="Copy Study"
-      isOpen={copyModel}
-      onClose={() => dispatch(setCopyModel(false))}
-      onClick={() => {
-        Copy({ studyId: selectedId, studyName: value }), setValue("");
-      }}
-      disable={isPending}
-      className="max-w-lg"
-    >
-      <>
-        <p>Please type study name in the below box</p>
+    <Modal isOpen={copyModel} onClose={handleClose} className="max-w-md">
+      <div className="p-6">
+        <h3 className="home-heading text-[22px] font-bold">Copy Study</h3>
+        <p className="home-muted mt-3 text-[15px] leading-6">
+          Create a copy of
+          <span className="home-heading font-semibold">{` ${selectedStudyName || "this study"}`}</span>
+          {" "}with a new study name.
+        </p>
+        <label className="home-heading mt-5 block text-[15px] font-semibold">
+          New Study Name
+        </label>
         <input
-          value={value.trim() !== "" ? value : selectedStudyName}
-          onChange={(e) => setValue(e.target.value)}
-          className="border border-gray-400 px-3 py-1 my-3 w-full rounded-md focus-visible:outline-none"
-          placeholder="new(copy)"
+          value={draftValue}
+          onChange={(e) => {
+            setValue(e.target.value);
+          }}
+          className="questionnaire-input home-text mt-3 w-full rounded-[18px] border questionnaire-border px-4 py-3 focus-visible:outline-none"
+          placeholder="Enter copied study name"
           onKeyDown={(e) =>
             handleKeyPress(e, () => {
-              Copy({ studyId: selectedId, studyName: value });
+              Copy({ studyId: selectedId, studyName: draftValue });
               setValue("");
             })
           }
         />
-        <div className="flex">
-          <span className="text-action pl-1">*</span>
-          <p>
-            Please click on "Copy study" button and wait for some time till the
-            study is copied.
-          </p>
+        <ModalInstruction>
+          Click <span className="font-semibold">Copy Study</span> and wait a moment while the duplicated study is created.
+        </ModalInstruction>
+        <div className="mt-6 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={handleClose}
+            className="report-toolbar-btn rounded-[16px] border home-border px-5 py-2.5 font-bold home-heading"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              Copy({ studyId: selectedId, studyName: draftValue });
+              setValue("");
+            }}
+            disabled={isPending || draftValue.trim() === ""}
+            className="report-toolbar-btn rounded-[16px] bg-login-primary px-5 py-2.5 font-bold text-white hover:bg-login-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Copy Study
+          </button>
         </div>
-      </>
-    </DynamicModel>
+      </div>
+    </Modal>
   );
 };
 

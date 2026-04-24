@@ -7,7 +7,6 @@ import { resetLogicData } from "../../../store/CrossTabDataSlice";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { cn } from "../../../utils";
 import { useAddBannerPointer } from "./designBanner_Api";
-import { SurfaceCard } from "../../ui/SurfaceCard";
 import PageBreadcrumbs from "../../ui/PageBreadcrumbs";
 
 const DesignBanner_Header = () => {
@@ -63,44 +62,48 @@ const DesignBanner_Header = () => {
   };
 
   return (
-    <SurfaceCard variant="toolbar" className="mb-4 flex flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between">
-      <PageBreadcrumbs
-        prefix={`${bannerName} :`}
-        items={[
-          {
-            label: "Banner List",
-            to: "/crosstab",
-            state: { studyID: location.state.studyID },
-          },
-          {
-            label: "Design Banner",
-            to: "/crosstab/edit-banner",
-            state: {
-              studyID: location.state.studyID,
-              bannerID: location.state?.bannerID,
-            },
-            active: location.pathname === "/crosstab/edit-banner",
-          },
-        ]}
-      />
-      <div className="flex justify-end">
-        <Button
-          data-test-id="SUBMIT"
-          className="report-toolbar-btn bg-login-primary text-white hover:bg-login-primary-hover"
-          onClick={onSubmitHandle}
-          disabled={isAddBannerPointerPending}
-        >
-          {isAddBannerPointerPending ? (
-            <AiOutlineLoading3Quarters
-              size={8}
-              className={cn("animate-spin text-action")}
-            />
-          ) : (
-            "Submit"
-          )}
-        </Button>
+    <header className="questionnaire-card questionnaire-border flex border-b px-5 py-4 md:px-6">
+      <div className="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0 md:flex md:min-h-[42px] md:items-center">
+          <PageBreadcrumbs
+            prefix={`${bannerName} :`}
+            items={[
+              {
+                label: "Banner List",
+                to: "/crosstab",
+                state: { studyID: location.state.studyID },
+              },
+              {
+                label: "Design Banner",
+                to: "/crosstab/edit-banner",
+                state: {
+                  studyID: location.state.studyID,
+                  bannerID: location.state?.bannerID,
+                },
+                active: location.pathname === "/crosstab/edit-banner",
+              },
+            ]}
+          />
+        </div>
+        <div className="flex min-h-[42px] items-center justify-end">
+          <Button
+            data-test-id="SUBMIT"
+            className="report-toolbar-btn h-10 bg-login-primary px-5 text-sm font-bold text-white hover:bg-login-primary-hover"
+            onClick={onSubmitHandle}
+            disabled={isAddBannerPointerPending}
+          >
+            {isAddBannerPointerPending ? (
+              <AiOutlineLoading3Quarters
+                size={8}
+                className={cn("animate-spin text-action")}
+              />
+            ) : (
+              "Submit"
+            )}
+          </Button>
+        </div>
       </div>
-    </SurfaceCard>
+    </header>
   );
 };
 

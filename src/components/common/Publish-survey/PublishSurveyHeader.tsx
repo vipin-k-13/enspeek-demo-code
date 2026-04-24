@@ -66,77 +66,77 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
 
   return (
     <>
-      <div className="mx-auto flex w-full max-w-[700px] flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-wrap items-center gap-3">
-          {isSurveyActive && (
-            <div className="flex flex-wrap items-center gap-3">
+      <header className="questionnaire-card questionnaire-border flex border-b px-5 py-4 md:px-6">
+        <div className="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="flex min-h-[42px] flex-wrap items-center gap-3">
+            {isSurveyActive && (
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  data-test-id="FACEBOOK_SURVEY"
+                  className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-[var(--color-brand-info)] px-5 text-sm font-bold text-white shadow-sm transition hover:brightness-95"
+                  onClick={() => {
+                    dispatch(setIsFbModalOpen(true));
+                  }}
+                >
+                  <FaFacebookF className="text-base" />
+                  <span>Share on Facebook</span>
+                </button>
+                <button
+                  className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-[var(--color-study-activated)] px-5 text-sm font-bold text-white shadow-sm transition hover:brightness-95"
+                  data-test-id="WHATSAPP_SURVEY"
+                  onClick={() => {
+                    dispatch(setIsWhatsappModalOpen(true));
+                  }}
+                >
+                  <FaWhatsapp className="text-base" />
+                  <span>Share on WhatsApp</span>
+                </button>
+              </div>
+            )}
+          </div>
+          <div className="flex min-h-[42px] flex-wrap items-center justify-end gap-3">
+            {isSurveyActive && launch !== 1 && (
               <button
-                data-test-id="FACEBOOK_SURVEY"
-                className="questionnaire-action-btn inline-flex items-center gap-2 rounded-full bg-[var(--color-brand-info)] px-5 py-3 text-sm text-white shadow-sm transition hover:brightness-95"
+                data-test-id="INITIATE"
+                className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-login-primary px-5 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
                 onClick={() => {
-                  dispatch(setIsFbModalOpen(true));
+                  setIsOpenInitiate(true);
                 }}
               >
-                <FaFacebookF className="text-base" />
-                <span>Share on Facebook</span>
+                <FaUsers /> Initiate Sample Collection
               </button>
+            )}
+            {isSurveyActive && launch === 1 && studyInfo.closed === 1 && (
               <button
-                className="questionnaire-action-btn inline-flex items-center gap-2 rounded-full bg-[var(--color-study-activated)] px-5 py-3 text-sm text-white shadow-sm transition hover:brightness-95"
-                data-test-id="WHATSAPP_SURVEY"
+                className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-login-primary px-5 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
                 onClick={() => {
-                  dispatch(setIsWhatsappModalOpen(true));
+                  setIsOpenInitiate(true);
                 }}
               >
-                <FaWhatsapp className="text-base" />
-                <span>Share on WhatsApp</span>
+                Relaunch Survey
               </button>
-            </div>
-          )}
-        </div>
-        <div className="flex flex-wrap items-center justify-end gap-3">
-          {isSurveyActive && launch !== 1 && (
-            <button
-              data-test-id="INITIATE"
-              className="questionnaire-action-btn inline-flex items-center gap-2 rounded-full bg-login-primary px-5 py-3 text-sm text-white shadow-sm transition hover:bg-login-primary-hover"
-              onClick={() => {
-                setIsOpenInitiate(true);
-              }}
-            >
-              <FaUsers /> Initiate Sample Collection
-            </button>
-          )}
-          {isSurveyActive && launch === 1 && studyInfo.closed === 1 && (
-            <button
-              className="questionnaire-action-btn inline-flex items-center gap-2 rounded-full bg-login-primary px-5 py-3 text-sm text-white shadow-sm transition hover:bg-login-primary-hover"
-              onClick={() => {
-                setIsOpenInitiate(true);
-              }}
-            >
-              Relaunch Survey
-            </button>
-          )}
-          {launch === 1 && (
-            <>
+            )}
+            {launch === 1 && (
               <button
                 data-test-id="NEXT_TO_REPORT"
-                className="questionnaire-action-btn inline-flex items-center gap-2 rounded-full bg-login-primary px-6 py-3 text-sm text-white shadow-sm transition hover:bg-login-primary-hover"
+                className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-login-primary px-6 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
                 onClick={() => {
                   navigate("/report", { state: { studyID: state.studyID } });
                 }}
               >
                 Next <LuArrowRight className="h-4 w-4" />
               </button>
-            </>
-          )}
-          <div className="relative" ref={dropdownRef}>
-            {open && (
-              <div className="absolute right-0 shadow-2xl rounded-lg z-10">
-                <DropDown Data={rawDataDropdown} className="w-52" />
-              </div>
             )}
+            <div className="relative" ref={dropdownRef}>
+              {open && (
+                <div className="absolute right-0 z-10 rounded-lg shadow-2xl">
+                  <DropDown Data={rawDataDropdown} className="w-52" />
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </header>
       <SampleCollectionModel
         isOpen={isOpenInitiate}
         Closed={() => setIsOpenInitiate(false)}

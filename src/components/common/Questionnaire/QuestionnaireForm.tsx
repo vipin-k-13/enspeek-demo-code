@@ -13,7 +13,6 @@ import { cn } from "../../../utils";
 import { setQType } from "../../../store/TriggerSlice";
 import { setChatOpen } from "../../../store/ChatSlice";
 import { useRI } from "./Api";
-import { formatQuestionTypeLabel, getQuestionTypeTheme } from "../../../utils/questionnaireTheme";
 import { LuChevronDown, LuGripVertical } from "react-icons/lu";
 
 interface QuestionnaireForm {
@@ -59,8 +58,6 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
   );
   const user = useSelector((state: RootState) => state.user);
   const isSelectableType = data?.qType ? data?.qType : qType;
-  const activeType = data?.qType || qType;
-  const qTypeTheme = getQuestionTypeTheme(activeType);
 
   const createOption = () => {
     if (options.length + optionCount > 50) {
@@ -256,35 +253,28 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
     isSelectableType !== "stop";
 
   return (
-    <div className="questionnaire-page-bg z-50 mb-4 h-full w-full p-2 md:p-6">
-      <div className="questionnaire-card questionnaire-border-strong questionnaire-card-edit overflow-hidden rounded-[26px] border-2 border-dashed">
-        <div className="border-b questionnaire-border px-4 py-4 md:px-5">
+    <div className="questionnaire-page-bg z-50 mb-4 w-full p-2 md:p-6">
+      <div className="w-full">
+      <div className="questionnaire-card questionnaire-card-edit questionnaire-edit-frame overflow-hidden rounded-[26px] shadow-[0_14px_36px_rgba(79,86,230,0.08)]">
+        <div className="border-b questionnaire-border px-4 py-4 md:px-6">
           <div className="flex flex-wrap items-start justify-between gap-4 lg:flex-nowrap">
             <div className="flex min-w-0 items-center gap-3">
               <span className="questionnaire-muted hidden md:inline-flex">
                 <LuGripVertical className="h-5 w-5" />
               </span>
-              <span className="question-type-multi rounded-full px-4 py-1 text-sm font-semibold">
+              <span className="question-type-default rounded-full px-4 py-1.5 text-sm font-semibold">
                 {data?.qID || `CQ${id || ""}`}
               </span>
               <div className="min-w-0">
-                <h2 className="questionnaire-heading truncate text-lg font-semibold md:text-[20px]">
+                <h2 className="questionnaire-heading truncate text-lg font-semibold md:text-[22px]">
                   {qtext || label || data?.qText || "Question"}
                 </h2>
               </div>
             </div>
 
             <div className="flex w-full flex-wrap items-center justify-end gap-3 lg:w-auto">
-              <span
-                className={cn(
-                  "rounded-full px-3 py-1 text-sm font-medium",
-                  qTypeTheme.badgeClass
-                )}
-              >
-                {formatQuestionTypeLabel(activeType)}
-              </span>
               <Button
-                className="questionnaire-save-btn questionnaire-action-btn rounded-2xl px-6 py-2 capitalize shadow-none"
+                className="questionnaire-save-btn questionnaire-action-btn rounded-2xl px-6 py-2.5 capitalize shadow-none"
                 onClick={data ? handleUpdate : handleClick}
               >
                 {data ? "Save" : "Submit"}
@@ -308,7 +298,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
           </div>
         </div>
 
-        <div className="max-h-[calc(100vh-15rem)] overflow-y-auto px-4 py-5 pr-2 md:px-5 md:pr-3">
+        <div className="px-4 py-5 pr-2 md:px-6 md:pr-3">
           {!data && (
             <div className="mb-6 grid gap-4 md:grid-cols-[1fr_2fr_1fr]">
               <QuestionsInput
@@ -367,7 +357,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
           )}
         
           <QuestionsInput
-            className="mb-4 w-full"
+            className="mb-5 w-full"
             value={qtext}
             lable="Question Text"
             onChange={(e) => {
@@ -381,13 +371,13 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
             error={errors.qtext}
           />
           <QuestionsInput
-            className="mb-4 w-full"
+            className="mb-5 w-full"
             value={qtext2}
             lable="Question Text 2 (Optional)"
             onChange={(e) => setQtext2(e.target.value)}
             placeholder="Additional context..."
           />
-          <div className="mb-4">
+          <div className="mb-5">
             <QuestionsInput
               value={qInstruction}
               onChange={(e) => setQinstruction(e.target.value)}
@@ -487,6 +477,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
             </>
           )}
         </div>
+      </div>
       </div>
     </div>
   );
