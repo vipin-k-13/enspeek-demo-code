@@ -12,7 +12,7 @@ import {
 } from "../../../store/CrosstabSlice";
 import FacebookModal from "./FacebookModal";
 import WhatsaapModal from "./WhatsaapModal";
-import { LuArrowRight } from "react-icons/lu";
+import { LuArrowRight, LuDownload } from "react-icons/lu";
 import PageSubheader from "../../ui/PageSubheader";
 
 interface PublishSurveyHeaderProps {
@@ -142,23 +142,34 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
               </button>
             )}
             {launch === 1 && (
-              <button
-                data-test-id="NEXT_TO_REPORT"
-                className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-login-primary px-6 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
-                onClick={() => {
-                  navigate("/report", { state: { studyID: state.studyID } });
-                }}
-              >
-                Next <LuArrowRight className="h-4 w-4" />
-              </button>
-            )}
-            <div className="relative" ref={dropdownRef}>
-              {open && (
-                <div className="absolute right-0 z-10 rounded-lg shadow-2xl">
-                  <DropDown Data={rawDataDropdown} className="w-52" />
+              <>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    type="button"
+                    data-test-id="PUBLISH_SURVEY_DOWNLOADS"
+                    aria-label="Open download history"
+                    className="report-toolbar-btn inline-flex h-10 w-10 items-center justify-center border home-border-soft bg-white text-[var(--color-brand-info)] hover:bg-[var(--color-brand-primary-softest)]"
+                    onClick={() => setOpen((prev) => !prev)}
+                  >
+                    <LuDownload className="h-4 w-4" />
+                  </button>
+                  {open && (
+                    <div className="absolute right-0 z-10 rounded-lg shadow-2xl">
+                      <DropDown Data={rawDataDropdown} className="w-52" />
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+                <button
+                  data-test-id="NEXT_TO_REPORT"
+                  className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-login-primary px-6 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
+                  onClick={() => {
+                    navigate("/report", { state: { studyID: state.studyID } });
+                  }}
+                >
+                  Next <LuArrowRight className="h-4 w-4" />
+                </button>
+              </>
+            )}
           </>
         }
         leftClassName="flex min-h-[42px] flex-wrap items-center gap-3 md:block"

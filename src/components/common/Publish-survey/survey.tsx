@@ -33,7 +33,7 @@ export default function PublishSurvey() {
   const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   const { data: studyInfo, isLoading } = useQuery({
-    queryKey: ["studyInfo"],
+    queryKey: ["studyInfo", state?.studyID],
     queryFn: async () => {
       const res = await apiRequest("post", "study/info", {
         apiToken: user.apiToken,
@@ -52,12 +52,12 @@ export default function PublishSurvey() {
       );
       return res.response;
     },
-    enabled: !!user.apiToken,
+    enabled: !!user.apiToken && !!state?.studyID,
     refetchOnWindowFocus: false,
   });
 
   const {} = useQuery({
-    queryKey: ["studyGetSubgroup"],
+    queryKey: ["studyGetSubgroup", state?.studyID],
     queryFn: async () => {
       const res = await apiRequest("post", "study/get_subgroup", {
         apiToken: user.apiToken,
@@ -65,7 +65,7 @@ export default function PublishSurvey() {
       });
       return res.response;
     },
-    enabled: !!user.apiToken,
+    enabled: !!user.apiToken && !!state?.studyID,
     refetchOnWindowFocus: false,
   });
 
@@ -80,7 +80,7 @@ export default function PublishSurvey() {
     },
     onSuccess: () => {
       setIsOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["studyInfo"] });
+      queryClient.invalidateQueries({ queryKey: ["studyInfo", state?.studyID] });
       toast.success(
         `${studyInfo.studyname} Study activated, data collection enabled`
       );
