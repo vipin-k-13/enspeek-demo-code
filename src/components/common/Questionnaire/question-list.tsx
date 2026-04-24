@@ -191,7 +191,7 @@ export default function QuestionList() {
               {submitItems.length > 0 && (
                 <button
                   data-test-id="NEXTTOSURVEY"
-                  className="questionnaire-action-btn inline-flex items-center gap-2 rounded-2xl bg-login-primary px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
+                  className="platform-btn-pill questionnaire-action-btn inline-flex items-center gap-2 bg-login-primary px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
                   onClick={() => {
                     navigate("/publish-survey", {
                       state: { studyID: studyID },

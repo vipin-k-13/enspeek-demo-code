@@ -71,7 +71,7 @@ const CopyModel: React.FC<CopyModelProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="report-toolbar-btn rounded-[16px] border questionnaire-border px-5 py-2.5 font-bold questionnaire-heading"
+            className="platform-btn-modal report-toolbar-btn border questionnaire-border px-5 py-2.5 font-bold questionnaire-heading"
           >
             Cancel
           </button>
@@ -79,7 +79,7 @@ const CopyModel: React.FC<CopyModelProps> = ({
             type="button"
             onClick={handleClick}
             disabled={QID.trim() === "" || QLabel.trim() === ""}
-            className="report-toolbar-btn rounded-[16px] bg-login-primary px-5 py-2.5 font-bold text-white hover:bg-login-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+            className="platform-btn-modal report-toolbar-btn bg-login-primary px-5 py-2.5 font-bold text-white hover:bg-login-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             Copy Question
           </button>

@@ -52,7 +52,7 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
             onClick={onClick}
             data-test-id="MODEL_BUTTON"
             className={cn(
-              "min-w-[180px] rounded-[18px] px-6 text-white",
+              "platform-btn-modal min-w-[180px] px-6 text-white",
               ButtonText.toLowerCase().includes("delete")
                 ? "questionnaire-delete-btn"
                 : "bg-login-primary hover:bg-login-primary-hover"

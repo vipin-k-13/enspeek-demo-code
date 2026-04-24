@@ -137,7 +137,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
                     },
                   })
                 }
-                className="report-toolbar-btn ml-2 inline-flex h-8 items-center justify-center rounded-xl border border-login-primary px-3 text-sm text-login-primary hover:bg-login-primary hover:text-white"
+                className="platform-btn-pill report-toolbar-btn ml-2 inline-flex h-8 items-center justify-center border border-login-primary px-3 text-sm text-login-primary hover:bg-login-primary hover:text-white"
               >
                 Go <LuArrowRight className="ml-1 h-3.5 w-3.5" />
               </span>
@@ -146,7 +146,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
         ) : (
           <Button
             data-test-id="SAVE_QUESTION"
-                className="report-toolbar-btn h-10 rounded-2xl border border-login-primary px-5 text-login-primary hover:bg-login-primary hover:text-white"
+                className="platform-btn-pill report-toolbar-btn h-10 border border-login-primary px-5 text-login-primary hover:bg-login-primary hover:text-white"
             onClick={() => {
               if (selectedQuestions.length === 0) {
                 toast.error(

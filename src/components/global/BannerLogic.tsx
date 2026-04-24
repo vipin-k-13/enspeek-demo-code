@@ -7,6 +7,7 @@ import { setLogic, setValidateLogic } from "../../store/CrosstabSlice";
 import type { AppDispatch, RootState } from "../../store/store";
 import { setLogicData } from "../../store/CrossTabDataSlice";
 import { useLocation } from "react-router";
+import { Tooltip } from "../ui/Tooltip";
 
 export interface LogicRow {
   id: string;
@@ -248,48 +249,53 @@ export default function BannerLogic({
           <div className="flex items-center gap-2">
             {row.type === "main" && (
               <>
-                <Button
-                  onClick={resetAllValues}
-                  className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none focus:outline-none"
-                  title="Reset all"
-                >
-                  <FaRotateLeft />
-                </Button>
-                <Button
-                  onClick={addSimpleRow}
-                  className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-heading shadow-none focus:outline-none"
-                  title="Add simple row"
-                >
-                  <FaPlus />
-                </Button>
+                <Tooltip content="Reset all" position="top">
+                  <Button
+                    onClick={resetAllValues}
+                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none focus:outline-none"
+                  >
+                    <FaRotateLeft />
+                  </Button>
+                </Tooltip>
+                <Tooltip content="Add simple row" position="top">
+                  <Button
+                    onClick={addSimpleRow}
+                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-heading shadow-none focus:outline-none"
+                  >
+                    <FaPlus />
+                  </Button>
+                </Tooltip>
               </>
             )}
             {row.type === "condition" && (
               <>
-                <button
-                  onClick={() => resetRow(row.id)}
-                  className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none transition-colors"
-                  title="Reset this row"
-                >
-                  <FaRotateLeft />
-                </button>
-                <button
-                  onClick={() => deleteRow(row.id)}
-                  className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none transition-colors"
-                  title="Delete this row"
-                >
-                  <FaTrash />
-                </button>
+                <Tooltip content="Reset this row" position="top">
+                  <button
+                    onClick={() => resetRow(row.id)}
+                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none transition-colors"
+                  >
+                    <FaRotateLeft />
+                  </button>
+                </Tooltip>
+                <Tooltip content="Delete this row" position="top">
+                  <button
+                    onClick={() => deleteRow(row.id)}
+                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none transition-colors"
+                  >
+                    <FaTrash />
+                  </button>
+                </Tooltip>
               </>
             )}
             {row.type === "simple" && (
-              <button
-                onClick={() => deleteRow(row.id)}
-                className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none transition-colors"
-                title="Delete this row"
-              >
-                <FaTrash />
-              </button>
+              <Tooltip content="Delete this row" position="top">
+                <button
+                  onClick={() => deleteRow(row.id)}
+                  className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none transition-colors"
+                >
+                  <FaTrash />
+                </button>
+              </Tooltip>
             )}
           </div>
         </div>

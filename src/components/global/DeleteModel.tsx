@@ -54,7 +54,7 @@ const DeleteModel: React.FC<DeleteModelProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="report-toolbar-btn rounded-[16px] border questionnaire-border px-5 py-2.5 font-bold questionnaire-heading"
+            className="platform-btn-modal report-toolbar-btn border questionnaire-border px-5 py-2.5 font-bold questionnaire-heading"
           >
             Cancel
           </button>
@@ -62,7 +62,7 @@ const DeleteModel: React.FC<DeleteModelProps> = ({
             type="button"
             onClick={handleClick}
             disabled={!isDeleteConfirmed}
-            className="report-toolbar-btn rounded-[16px] bg-red-500 px-5 py-2.5 font-bold text-white hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-55"
+            className="platform-btn-modal report-toolbar-btn bg-red-500 px-5 py-2.5 font-bold text-white hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-55"
           >
             Delete
           </button>

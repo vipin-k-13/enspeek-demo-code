@@ -54,13 +54,13 @@ const ReportFilter: React.FC<ReportFilterProps> = ({
       <div className="flex justify-between px-4 py-3">
         <button
           onClick={onClose}
-          className="report-toolbar-btn rounded-xl border border-[var(--color-questionnaire-multi)] px-4 py-2 text-[var(--color-questionnaire-multi)] hover:bg-[var(--color-questionnaire-open-bg)]"
+          className="platform-btn-pill report-toolbar-btn border border-[var(--color-questionnaire-multi)] px-4 py-2 text-[var(--color-questionnaire-multi)] hover:bg-[var(--color-questionnaire-open-bg)]"
         >
           Apply
         </button>
         <button
           onClick={onClear}
-          className="report-toolbar-btn rounded-xl border border-[var(--color-study-progress)] px-4 py-2 text-[var(--color-study-progress)] hover:bg-[var(--color-home-panel-soft)]"
+          className="platform-btn-pill report-toolbar-btn border border-[var(--color-study-progress)] px-4 py-2 text-[var(--color-study-progress)] hover:bg-[var(--color-home-panel-soft)]"
         >
           Clear
         </button>

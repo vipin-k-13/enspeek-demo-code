@@ -380,18 +380,19 @@ const ChatWindow: React.FC<{ surface?: "auto" | "page" | "card" }> = ({
                       🔗 Click to view survey
                     </a>
 
-                    <button
-                      onClick={() => {
-                        if (msg.liveLink) {
-                          navigator.clipboard.writeText(msg.liveLink);
-                        }
-                        toast.success("Survey link copied to clipboard!");
-                      }}
-                      className="text-gray-400 hover:text-gray-700 cursor-pointer"
-                      title="Copy survey link"
-                    >
-                      <FaCopy />
-                    </button>
+                    <Tooltip content="Copy survey link" position="top">
+                      <button
+                        onClick={() => {
+                          if (msg.liveLink) {
+                            navigator.clipboard.writeText(msg.liveLink);
+                          }
+                          toast.success("Survey link copied to clipboard!");
+                        }}
+                        className="text-gray-400 hover:text-gray-700 cursor-pointer"
+                      >
+                        <FaCopy />
+                      </button>
+                    </Tooltip>
                   </div>
                 )}
               </>

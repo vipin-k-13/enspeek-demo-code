@@ -4,6 +4,7 @@ import { MdCancel } from "react-icons/md";
 import { toast } from "sonner";
 import { useSetQuota } from "./SurveyApi";
 import { LuCircleCheck, LuCircleX, LuClock3, LuPencilLine } from "react-icons/lu";
+import { Tooltip } from "../../ui/Tooltip";
 
 interface QuotaProps {
   studyID: string;
@@ -54,13 +55,14 @@ const Quota: React.FC<QuotaProps> = ({
                 <span className="questionnaire-heading text-sm font-bold">
                   {isSetQuotaPending ? "Updating..." : editTotal}
                 </span>
-                <button
-                  onClick={() => setIsEditingTotal(true)}
-                  title="Edit total quota"
-                  className="questionnaire-clickable questionnaire-muted transition hover:text-login-primary"
-                >
-                  <LuPencilLine size={16} />
-                </button>
+                <Tooltip content="Edit total quota" position="top">
+                  <button
+                    onClick={() => setIsEditingTotal(true)}
+                    className="questionnaire-clickable questionnaire-muted transition hover:text-login-primary"
+                  >
+                    <LuPencilLine size={16} />
+                  </button>
+                </Tooltip>
               </div>
             ) : (
               <div className="flex items-center justify-end gap-2">
@@ -70,20 +72,22 @@ const Quota: React.FC<QuotaProps> = ({
                   onChange={(e) => setEditTotal(Number(e.target.value))}
                   className="questionnaire-input questionnaire-heading w-20 rounded-xl border questionnaire-border px-3 py-2 text-sm focus:outline-none"
                 />
-                <button
-                  onClick={handleSaveTotal}
-                  title="Set total quota"
-                  className="questionnaire-clickable text-[var(--color-questionnaire-multi)] transition hover:opacity-80"
-                >
-                  <AiOutlineSave size={18} />
-                </button>
-                <button
-                  onClick={() => setIsEditingTotal(false)}
-                  title="Cancel"
-                  className="questionnaire-clickable questionnaire-delete transition hover:opacity-80"
-                >
-                  <MdCancel size={18} />
-                </button>
+                <Tooltip content="Set total quota" position="top">
+                  <button
+                    onClick={handleSaveTotal}
+                    className="questionnaire-clickable text-[var(--color-questionnaire-multi)] transition hover:opacity-80"
+                  >
+                    <AiOutlineSave size={18} />
+                  </button>
+                </Tooltip>
+                <Tooltip content="Cancel" position="top">
+                  <button
+                    onClick={() => setIsEditingTotal(false)}
+                    className="questionnaire-clickable questionnaire-delete transition hover:opacity-80"
+                  >
+                    <MdCancel size={18} />
+                  </button>
+                </Tooltip>
               </div>
             )}
           </div>

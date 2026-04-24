@@ -10,6 +10,8 @@ import { useQuesLogicOpts, useQuesLogicVar } from "../Crosstab/CrossTab.Api";
 import { setLogicPayload } from "../../../store/QuestionSlice";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "../../../services/apiService";
+import { cn } from "../../../utils";
+import { Tooltip } from "../../ui/Tooltip";
 
 export interface LogicRow {
   id: string;
@@ -450,21 +452,22 @@ export default function QuestionLogic({
           >
             {mainRow && (
               <div className="mb-4 flex flex-wrap items-center gap-3">
-                <select
-                  name="condition"
-                  title="Conditions"
-                  className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
-                  value={selectedConditions[groupId] || ""}
-                  onChange={(e) => handleFirstChange(groupId, e.target.value)}
-                >
-                  <option value="">Select condition</option>
-                  {varsData?.condition?.length > 0 &&
-                    varsData.condition.map((cond: any, index: number) => (
-                      <option key={index} value={cond.code}>
-                        {cond.show}
-                      </option>
-                    ))}
-                </select>
+                <Tooltip content="Conditions" position="top">
+                  <select
+                    name="condition"
+                    className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
+                    value={selectedConditions[groupId] || ""}
+                    onChange={(e) => handleFirstChange(groupId, e.target.value)}
+                  >
+                    <option value="">Select condition</option>
+                    {varsData?.condition?.length > 0 &&
+                      varsData.condition.map((cond: any, index: number) => (
+                        <option key={index} value={cond.code}>
+                          {cond.show}
+                        </option>
+                      ))}
+                  </select>
+                </Tooltip>
 
                 {selectedConditions[groupId] && (
                   <select
@@ -537,47 +540,57 @@ export default function QuestionLogic({
 
                 <div className="flex items-center gap-2">
                   {selectedConditions[groupId] && (
-                    <Button
-                      onClick={() => addConditionRow(groupId)}
-                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 text-[var(--color-brand-primary)] shadow-none"
-                      title="Add condition"
-                    >
-                      <AiOutlineArrowsAlt />
-                    </Button>
+                    <Tooltip content="Add condition" position="top">
+                      <Button
+                        onClick={() => addConditionRow(groupId)}
+                        className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 text-[var(--color-brand-primary)] shadow-none"
+                      >
+                        <AiOutlineArrowsAlt />
+                      </Button>
+                    </Tooltip>
                   )}
-                  <Button
-                    onClick={() => resetAllGroupRows(groupId)}
-                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none"
-                    title="Reset group"
-                  >
-                    <FaRotateLeft />
-                  </Button>
+                  <Tooltip content="Reset group" position="top">
+                    <Button
+                      onClick={() => resetAllGroupRows(groupId)}
+                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none"
+                    >
+                      <FaRotateLeft />
+                    </Button>
+                  </Tooltip>
 
                   {groupId === lastGroupId && (
-                    <Button
-                      onClick={addNewLogicGroup}
-                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-heading shadow-none"
-                      title="Add new logic block"
-                    >
-                      <FaPlus />
-                    </Button>
+                    <Tooltip content="Add new logic block" position="top">
+                      <Button
+                        onClick={addNewLogicGroup}
+                        className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-heading shadow-none"
+                      >
+                        <FaPlus />
+                      </Button>
+                    </Tooltip>
                   )}
 
                   {index > 0 && (
-                    <Button
-                      onClick={() => deleteGroup(groupId)}
-                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none"
-                      title="Delete group"
-                    >
-                      <FaTrash />
-                    </Button>
+                    <Tooltip content="Delete group" position="top">
+                      <Button
+                        onClick={() => deleteGroup(groupId)}
+                        className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none"
+                      >
+                        <FaTrash />
+                      </Button>
+                    </Tooltip>
                   )}
                 </div>
               </div>
             )}
 
-            {conditionRows.map((row) => (
-              <div key={row.id} className="mb-4 flex flex-wrap items-center gap-3">
+            {conditionRows.map((row, rowIndex) => (
+              <div
+                key={row.id}
+                className={cn(
+                  "flex flex-wrap items-center gap-3",
+                  rowIndex !== conditionRows.length - 1 && "mb-4"
+                )}
+              >
                 <select
                   value={row.connector || "AND"}
                   onChange={(e) =>
@@ -655,20 +668,22 @@ export default function QuestionLogic({
                 )}
 
                 <div className="flex items-center gap-2">
-                  <Button
-                    onClick={() => resetRow(row.id)}
-                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none"
-                    title="Reset"
-                  >
-                    <FaRotateLeft />
-                  </Button>
-                  <Button
-                    onClick={() => deleteRow(row.id)}
-                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none"
-                    title="Delete"
-                  >
-                    <FaTrash />
-                  </Button>
+                  <Tooltip content="Reset" position="top">
+                    <Button
+                      onClick={() => resetRow(row.id)}
+                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none"
+                    >
+                      <FaRotateLeft />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip content="Delete" position="top">
+                    <Button
+                      onClick={() => deleteRow(row.id)}
+                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none"
+                    >
+                      <FaTrash />
+                    </Button>
+                  </Tooltip>
                 </div>
               </div>
             ))}

@@ -117,14 +117,14 @@ const Header = () => {
             <button
               type="button"
               onClick={() => setLogoutModalOpen(false)}
-              className="report-toolbar-btn rounded-[16px] border home-border px-5 py-2.5 home-heading"
+              className="platform-btn-modal report-toolbar-btn border home-border px-5 py-2.5 home-heading"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleLogout}
-              className="report-toolbar-btn rounded-[16px] bg-login-primary px-5 py-2.5 text-white hover:bg-login-primary-hover"
+              className="platform-btn-modal report-toolbar-btn bg-login-primary px-5 py-2.5 text-white hover:bg-login-primary-hover"
             >
               Logout
             </button>

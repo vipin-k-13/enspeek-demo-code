@@ -8,7 +8,6 @@ import { useLocation } from "react-router";
 import Button from "../../ui/Button";
 import LogicModel from "../../global/LogicModal";
 import { useState } from "react";
-import ModalInstruction from "../../ui/ModalInstruction";
 
 interface QuesLogicModalProps {
   isOpen: boolean;
@@ -83,11 +82,11 @@ export default function QuesLogicModal({
       isOpen={isOpen}
       onClose={onClose}
       Title="Edit or Add logic"
-      className="max-w-5xl"
+      className="max-w-[min(92vw,1320px)]"
       footerContent={
-        <div className="flex gap-3">
+        <div className="flex flex-wrap items-center justify-end gap-3">
           <Button
-            className="questionnaire-action-btn rounded-2xl border questionnaire-border bg-white px-5 py-2.5 questionnaire-heading shadow-none"
+            className="platform-btn-modal questionnaire-action-btn border questionnaire-border bg-white px-5 py-2.5 questionnaire-heading shadow-none"
             onClick={() => {
               handleReset();
             }}
@@ -95,7 +94,7 @@ export default function QuesLogicModal({
             Reset Logic
           </Button>
           <Button
-            className="questionnaire-save-btn questionnaire-action-btn rounded-2xl px-5 py-2.5 shadow-none"
+            className="platform-btn-modal questionnaire-save-btn questionnaire-action-btn px-5 py-2.5 shadow-none"
             onClick={handleSave}
           >
             Save Logic
@@ -103,10 +102,15 @@ export default function QuesLogicModal({
         </div>
       }
     >
-      <ModalInstruction>
-        Configure logic rules for this question. Save when the conditions, skip path, or termination behavior are ready.
-      </ModalInstruction>
-      <QuestionLogic questionID={qID} resetFlag={resetFlag} isOpen={isOpen} />
+      <div className="space-y-5">
+        <div className="rounded-[16px] home-panel-soft-bg px-4 py-3">
+          <p className="home-muted text-sm leading-6">
+            Configure logic rules for this question. Save when the conditions,
+            skip path, or termination behavior are ready.
+          </p>
+        </div>
+        <QuestionLogic questionID={qID} resetFlag={resetFlag} isOpen={isOpen} />
+      </div>
     </LogicModel>
   );
 }

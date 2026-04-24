@@ -78,7 +78,6 @@ export default function Crosstab() {
   return (
     <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pb-8 pt-3 md:px-4 md:pb-10 md:pt-4">
       <div className="w-full">
-      <div className="crosstab-surface overflow-hidden">
       <div className="w-full px-3 py-3 md:px-4">
         {Banners.length ? (
           Banners.map((Banner: any) => {
@@ -109,7 +108,7 @@ export default function Crosstab() {
           <div className="flex flex-col items-center justify-center mt-24">
             <p className="crosstab-title mb-4 text-base font-medium">No banner list found.</p>
             <button
-              className="report-toolbar-btn inline-flex items-center gap-2 rounded-2xl bg-login-primary px-5 py-3 text-white hover:bg-login-primary-hover"
+              className="platform-btn-pill report-toolbar-btn inline-flex items-center gap-2 bg-login-primary px-5 py-3 text-white hover:bg-login-primary-hover"
               onClick={() => dispatch(setIsAddBannerModalOpen(true))}
             >
               <LuPlus />
@@ -117,7 +116,6 @@ export default function Crosstab() {
             </button>
           </div>
         )}
-      </div>
       </div>
       </div>
       <AddBannerModal

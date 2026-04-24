@@ -312,7 +312,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
         <Link
           to={"/crosstab"}
           state={{ studyID: state.studyID }}
-          className="report-toolbar-btn inline-flex h-10 items-center gap-2 rounded-2xl bg-login-primary px-5 text-sm font-bold text-white hover:bg-login-primary-hover"
+          className="platform-btn-pill report-toolbar-btn inline-flex h-10 items-center gap-2 bg-login-primary px-5 text-sm font-bold text-white hover:bg-login-primary-hover"
         >
           Next <LuArrowRight className="h-4 w-4" />
         </Link>

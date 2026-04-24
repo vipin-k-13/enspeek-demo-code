@@ -140,10 +140,10 @@ const HomeSidebar: React.FC = () => {
         <div className="mb-4 flex items-center justify-between gap-3">
           <p className="home-heading text-[18px] font-semibold">My Studies</p>
         </div>
-        <div className="home-panel-bg grid grid-cols-3 gap-1 rounded-[18px] p-1 text-sm">
+        <div className="home-panel-bg grid grid-cols-3 gap-1 rounded-full p-1 text-sm">
         <button
           className={cn(
-            "inline-flex h-10 cursor-pointer items-center justify-center rounded-[14px] px-2 py-2 text-center text-[13px] leading-none transition-colors",
+            "platform-btn-pill inline-flex h-10 cursor-pointer items-center justify-center px-2 py-2 text-center text-[13px] leading-none transition-colors",
             activeTab === "myactive"
               ? "bg-login-primary text-white font-semibold shadow-sm"
               : "home-muted hover:bg-white"
@@ -154,7 +154,7 @@ const HomeSidebar: React.FC = () => {
         </button>
         <button
           className={cn(
-            "inline-flex h-10 cursor-pointer items-center justify-center rounded-[14px] px-2 py-2 text-center text-[13px] leading-none transition-colors",
+            "platform-btn-pill inline-flex h-10 cursor-pointer items-center justify-center px-2 py-2 text-center text-[13px] leading-none transition-colors",
             activeTab === "allactive"
               ? "bg-login-primary text-white font-semibold shadow-sm"
               : "home-muted hover:bg-white"
@@ -165,7 +165,7 @@ const HomeSidebar: React.FC = () => {
         </button>
         <button
           className={cn(
-            "inline-flex h-10 cursor-pointer items-center justify-center rounded-[14px] px-2 py-2 text-center text-[13px] leading-none transition-colors",
+            "platform-btn-pill inline-flex h-10 cursor-pointer items-center justify-center px-2 py-2 text-center text-[13px] leading-none transition-colors",
             activeTab === "isarchived"
               ? "bg-login-primary text-white font-semibold shadow-sm"
               : "home-muted hover:bg-white"
@@ -257,7 +257,7 @@ const HomeSidebar: React.FC = () => {
               <button
                 type="button"
                 onClick={handleGoToPage}
-                className="report-toolbar-btn cursor-pointer rounded-xl bg-login-primary px-3 py-2 text-sm text-white hover:bg-login-primary-hover"
+                className="platform-btn-pill report-toolbar-btn cursor-pointer bg-login-primary px-3 py-2 text-sm text-white hover:bg-login-primary-hover"
               >
                 Go
               </button>

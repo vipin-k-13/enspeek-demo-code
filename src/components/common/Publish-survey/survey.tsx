@@ -173,7 +173,7 @@ export default function PublishSurvey() {
                     onClick={() => {
                       setIsOpen(true);
                     }}
-                    className="questionnaire-action-btn mt-6 rounded-2xl bg-login-primary px-5 py-3 text-white transition hover:bg-login-primary-hover"
+                    className="platform-btn-pill questionnaire-action-btn mt-6 bg-login-primary px-5 py-3 text-white transition hover:bg-login-primary-hover"
                   >
                     Activate {studyInfo.studyname} Study
                   </button>

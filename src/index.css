@@ -293,6 +293,16 @@ body{
 .questionnaire-input {
   background-color: var(--color-questionnaire-input);
   box-shadow: inset 0 0 0 1px var(--color-questionnaire-input-ring);
+  cursor: text;
+}
+
+.questionnaire-input[type="number"],
+.questionnaire-input[type="text"],
+.questionnaire-input[type="email"],
+.questionnaire-input[type="password"],
+.questionnaire-input[type="search"],
+.questionnaire-input textarea {
+  cursor: text;
 }
 
 .questionnaire-delete {
@@ -353,18 +363,27 @@ body{
 .questionnaire-action-btn {
   font-weight: 700;
   cursor: pointer;
+  border-radius: 9999px;
 }
 
 .questionnaire-clickable {
   cursor: pointer;
 }
 
+.platform-btn-pill {
+  border-radius: 9999px;
+}
+
+.platform-btn-modal {
+  border-radius: 1rem;
+}
+
 .questionnaire-card-edit {
-  border-width: 2.5px;
+  border-width: 3.5px;
 }
 
 .questionnaire-edit-frame {
-  border: 2.5px dashed color-mix(in srgb, var(--color-brand-primary) 58%, white 42%);
+  border: 3.5px dashed color-mix(in srgb, var(--color-brand-primary) 58%, white 42%);
   background:
     linear-gradient(
       180deg,
@@ -453,7 +472,7 @@ body{
 
 .report-toolbar-btn {
   cursor: pointer;
-  border-radius: 1rem;
+  border-radius: 9999px;
   font-weight: 700;
   transition:
     background-color 0.2s ease,

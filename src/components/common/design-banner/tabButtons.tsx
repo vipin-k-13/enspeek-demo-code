@@ -46,7 +46,7 @@ const TabButtons: React.FC<TabButtonsProps> = ({
           <button
             key={point.title}
             onClick={() => setActiveTab(index)}
-            className={`report-toolbar-btn inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 transition-colors ${
+            className={`platform-btn-pill report-toolbar-btn inline-flex items-center gap-2 px-4 py-2.5 transition-colors ${
               activeTab === index
                 ? "bg-[var(--color-brand-primary-softest)] text-login-primary"
                 : "bg-white text-[var(--color-text-supporting)] hover:bg-[var(--color-home-panel-soft)]"
@@ -60,7 +60,7 @@ const TabButtons: React.FC<TabButtonsProps> = ({
       </div>
       <button
         onClick={addBannerPoint}
-        className="report-toolbar-btn inline-flex items-center gap-2 rounded-2xl bg-login-primary px-4 py-2.5 text-white hover:bg-login-primary-hover"
+        className="platform-btn-pill report-toolbar-btn inline-flex items-center gap-2 bg-login-primary px-4 py-2.5 text-white hover:bg-login-primary-hover"
         disabled={isBannerPointerListPending}
       >
         <LuPlus className="h-4 w-4" />

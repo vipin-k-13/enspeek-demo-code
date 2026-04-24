@@ -14,6 +14,7 @@ import { setQType } from "../../../store/TriggerSlice";
 import { setChatOpen } from "../../../store/ChatSlice";
 import { useRI } from "./Api";
 import { LuChevronDown, LuGripVertical } from "react-icons/lu";
+import { Tooltip } from "../../ui/Tooltip";
 
 interface QuestionnaireForm {
   onSubmit: (e: string) => void;
@@ -255,7 +256,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
   return (
     <div className="questionnaire-page-bg z-50 mb-4 w-full p-2 md:p-6">
       <div className="w-full">
-      <div className="questionnaire-card questionnaire-card-edit questionnaire-edit-frame overflow-hidden rounded-[26px] shadow-[0_14px_36px_rgba(79,86,230,0.08)]">
+      <div className="questionnaire-card questionnaire-card-edit questionnaire-edit-frame overflow-hidden rounded-[26px]">
         <div className="border-b questionnaire-border px-4 py-4 md:px-6">
           <div className="flex flex-wrap items-start justify-between gap-4 lg:flex-nowrap">
             <div className="flex min-w-0 items-center gap-3">
@@ -274,7 +275,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
 
             <div className="flex w-full flex-wrap items-center justify-end gap-3 lg:w-auto">
               <Button
-                className="questionnaire-save-btn questionnaire-action-btn rounded-2xl px-6 py-2.5 capitalize shadow-none"
+                className="platform-btn-pill questionnaire-save-btn questionnaire-action-btn px-6 py-2.5 capitalize shadow-none"
                 onClick={data ? handleUpdate : handleClick}
               >
                 {data ? "Save" : "Submit"}
@@ -286,14 +287,16 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
               >
                 Close
               </button>
-              <button
-                type="button"
-                aria-label="Close edit question"
-                className="questionnaire-muted questionnaire-clickable inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[var(--color-home-panel-soft)]"
-                onClick={onClose}
-              >
-                <LuChevronDown className="h-5 w-5" />
-              </button>
+              <Tooltip content="Collapse" position="top">
+                <button
+                  type="button"
+                  aria-label="Close edit question"
+                  className="questionnaire-muted questionnaire-clickable inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[var(--color-home-panel-soft)]"
+                  onClick={onClose}
+                >
+                  <LuChevronDown className="h-5 w-5" />
+                </button>
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -343,7 +346,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                   value={qType}
                   onChange={(e) => dispatch(setQType(e.target.value))}
                   className={cn(
-                    "questionnaire-input questionnaire-heading questionnaire-clickable questionnaire-border w-full rounded-[18px] border px-4 py-3.5 focus:outline-none"
+                    "questionnaire-input questionnaire-heading questionnaire-border w-full rounded-[18px] border px-4 py-3.5 focus:outline-none"
                   )}
                 >
                   {qTypeList.filter((item) => item.code !== "stop").map((item) => (
@@ -420,10 +423,10 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                       }
                     }}
                     placeholder="0"
-                    className="questionnaire-input questionnaire-heading questionnaire-clickable questionnaire-border h-[46px] w-[82px] rounded-[16px] border px-4 text-center text-base focus:outline-none"
+                    className="questionnaire-input questionnaire-heading questionnaire-border h-[46px] w-[82px] rounded-[16px] border px-4 text-center text-base focus:outline-none"
                   />
                   <Button
-                  className="questionnaire-action-btn rounded-2xl bg-login-primary px-6 py-3 text-sm text-white shadow-none hover:bg-login-primary-hover"
+                  className="platform-btn-pill questionnaire-action-btn bg-login-primary px-6 py-3 text-sm text-white shadow-none hover:bg-login-primary-hover"
                   size="lg"
                   onClick={createOption}
                   disabled={isPending}

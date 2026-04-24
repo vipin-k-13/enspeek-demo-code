@@ -20,6 +20,7 @@ import OptionLogic from "./OptionLogic";
 import { cn } from "../../../utils";
 import { formatQuestionTypeLabel } from "../../../utils/questionnaireTheme";
 import { useAccordionContext } from "../../ui/Accrodion/Accordion";
+import { Tooltip } from "../../ui/Tooltip";
 
 interface QuestionAccordionItem {
   Data: Question;
@@ -72,25 +73,27 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
               </p>
             </div>
             <div className="hidden items-center gap-3 md:flex">
-              <span
-                role="button"
-                tabIndex={0}
-                className="questionnaire-label questionnaire-clickable inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openLogicModal();
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
+              <Tooltip content="Add or edit logic" position="top">
+                <span
+                  role="button"
+                  tabIndex={0}
+                  className="questionnaire-label questionnaire-clickable inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm"
+                  onClick={(e) => {
                     e.stopPropagation();
                     openLogicModal();
-                  }
-                }}
-              >
-                <LuGitBranchPlus className="h-4 w-4" />
-                <span>Add/Edit Logic</span>
-              </span>
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      openLogicModal();
+                    }
+                  }}
+                >
+                  <LuGitBranchPlus className="h-4 w-4" />
+                  <span>Add/Edit Logic</span>
+                </span>
+              </Tooltip>
               <span
                 className={cn(
                   "rounded-full px-3 py-1.5 text-sm font-semibold",
@@ -105,63 +108,68 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
                 className="questionnaire-muted flex items-center gap-2 md:gap-3"
                 onClick={(e) => e.stopPropagation()}
               >
-                <span
-                  role="button"
-                  tabIndex={0}
-                  className="questionnaire-clickable transition hover:text-login-primary"
-                  data-test-id={`${Data.qID}_EDIT`}
-                  title="Edit"
-                  onClick={() => setEditData()}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setEditData();
-                    }
-                  }}
-                >
-                  <LuPencil className="h-4 w-4" />
-                </span>
-                <span
-                  role="button"
-                  tabIndex={0}
-                  className="questionnaire-clickable transition hover:text-login-primary"
-                  data-test-id={`${Data.qID}_COPY`}
-                  title="Copy"
-                  onClick={() => setIsCopyOpen(Data.qID, Data.qLabel)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setIsCopyOpen(Data.qID, Data.qLabel);
-                    }
-                  }}
-                >
-                  <LuCopy className="h-4 w-4" />
-                </span>
-                <span
-                  role="button"
-                  tabIndex={0}
-                  className="questionnaire-delete questionnaire-clickable transition hover:opacity-80"
-                  data-test-id={`${Data.qID}_DELETE`}
-                  title="Delete"
-                  onClick={() => setIsDeleteOpen()}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setIsDeleteOpen();
-                    }
-                  }}
-                >
-                  <LuTrash2 className="h-4 w-4" />
-                </span>
+                <Tooltip content="Edit question" position="top">
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    className="questionnaire-clickable transition hover:text-login-primary"
+                    data-test-id={`${Data.qID}_EDIT`}
+                    onClick={() => setEditData()}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setEditData();
+                      }
+                    }}
+                  >
+                    <LuPencil className="h-4 w-4" />
+                  </span>
+                </Tooltip>
+                <Tooltip content="Copy question" position="top">
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    className="questionnaire-clickable transition hover:text-login-primary"
+                    data-test-id={`${Data.qID}_COPY`}
+                    onClick={() => setIsCopyOpen(Data.qID, Data.qLabel)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setIsCopyOpen(Data.qID, Data.qLabel);
+                      }
+                    }}
+                  >
+                    <LuCopy className="h-4 w-4" />
+                  </span>
+                </Tooltip>
+                <Tooltip content="Delete question" position="top">
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    className="questionnaire-delete questionnaire-clickable transition hover:opacity-80"
+                    data-test-id={`${Data.qID}_DELETE`}
+                    onClick={() => setIsDeleteOpen()}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setIsDeleteOpen();
+                      }
+                    }}
+                  >
+                    <LuTrash2 className="h-4 w-4" />
+                  </span>
+                </Tooltip>
               </div>
             )}
-            <div className="questionnaire-muted questionnaire-clickable shrink-0">
-              {expanded ? (
-                <LuChevronDown className="h-5 w-5" />
-              ) : (
-                <LuChevronRight className="h-5 w-5" />
-              )}
-            </div>
+            <Tooltip content={expanded ? "Collapse question" : "Expand question"} position="top">
+              <div className="questionnaire-muted questionnaire-clickable shrink-0">
+                {expanded ? (
+                  <LuChevronDown className="h-5 w-5" />
+                ) : (
+                  <LuChevronRight className="h-5 w-5" />
+                )}
+              </div>
+            </Tooltip>
           </div>
         </div>
       </AccordionTrigger>
@@ -208,11 +216,11 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
                       key={key.optionID}
                       className="questionnaire-input rounded-[18px] px-4 py-3"
                     >
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-center gap-3">
                         <label className="questionnaire-label w-8 shrink-0 pt-0.5">{`R${
                           index + 1
                         }`}</label>
-                        <div className="flex w-full min-w-0 items-start justify-between gap-4">
+                        <div className="flex w-full min-w-0 items-center justify-between gap-4">
                           <label
                             htmlFor={`option-${index}`}
                             className="questionnaire-heading text-[16px]"

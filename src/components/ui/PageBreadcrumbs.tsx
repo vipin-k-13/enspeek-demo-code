@@ -29,15 +29,13 @@ const PageBreadcrumbs: React.FC<PageBreadcrumbsProps> = ({
       )}
       {items.map((item, index) => (
         <React.Fragment key={`${item.label}-${index}`}>
-          {item.to ? (
+          {item.to && !item.active ? (
             <Link
               to={item.to}
               state={item.state}
               className={cn(
                 "inline-flex items-center leading-none",
-                item.active
-                  ? "questionnaire-label font-semibold"
-                  : "crosstab-muted hover:text-login-primary"
+                "crosstab-muted hover:text-login-primary"
               )}
             >
               {item.label}
