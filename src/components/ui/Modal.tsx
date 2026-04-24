@@ -30,7 +30,7 @@ const Modal: React.FC<{
       )}
       <div
         className={cn(
-          "questionnaire-card questionnaire-border relative z-50 w-full rounded-[24px] border shadow-2xl transition-all",
+          "questionnaire-card questionnaire-border relative z-50 w-full overflow-hidden rounded-[24px] border shadow-2xl transition-all",
           className
         )}
       >
