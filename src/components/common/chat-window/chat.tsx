@@ -18,8 +18,12 @@ import { Tooltip } from "../../ui/Tooltip";
 import { getFullName, getInitials } from "../../../utils";
 import { LuBotMessageSquare, LuSparkles } from "react-icons/lu";
 
-const ChatWindow: React.FC<{ surface?: "auto" | "page" | "card" }> = ({
+const ChatWindow: React.FC<{
+  surface?: "auto" | "page" | "card";
+  scrollMode?: "internal" | "external";
+}> = ({
   surface = "auto",
+  scrollMode = "internal",
 }) => {
   const { messages, isTyping, pending } = useSelector(
     (state: RootState) => state.chat
@@ -73,7 +77,8 @@ const ChatWindow: React.FC<{ surface?: "auto" | "page" | "card" }> = ({
     <div className="z-50 flex h-full min-h-0 w-full max-w-full flex-col">
       <div
         className={cn(
-          "min-h-0 flex-1 overflow-y-auto",
+          "min-h-0 flex-1",
+          scrollMode === "internal" && "overflow-y-auto",
           surface === "page"
             ? "home-page-bg"
             : surface === "card"
@@ -82,7 +87,7 @@ const ChatWindow: React.FC<{ surface?: "auto" | "page" | "card" }> = ({
                 ? "home-page-bg"
                 : "home-surface"
         )}
-        style={{ scrollbarGutter: "stable" }}
+        style={scrollMode === "internal" ? { scrollbarGutter: "stable" } : undefined}
       >
         <div className="px-4 pb-36 pt-4 md:px-6 md:pb-40 md:pt-6">
         {messages.map((msg, index) => (

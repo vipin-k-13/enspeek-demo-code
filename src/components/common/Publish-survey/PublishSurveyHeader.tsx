@@ -19,11 +19,13 @@ interface PublishSurveyHeaderProps {
   studyName?: string;
   launch?: number;
   isSurveyActive: boolean;
+  onActivate?: () => void;
 }
 const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
   studyName,
   launch,
   isSurveyActive,
+  onActivate,
 }) => {
   const [isOpenInitiate, setIsOpenInitiate] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
@@ -92,10 +94,32 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
                 <span>Share on WhatsApp</span>
               </button>
             </div>
-          ) : null
+          ) : (
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="questionnaire-question-count inline-flex min-h-[34px] items-center gap-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="questionnaire-question-count-value text-sm font-semibold md:text-base">
+                    Survey
+                  </span>
+                  <span className="questionnaire-question-count-label text-[11px] font-semibold uppercase tracking-[0.16em]">
+                    Not Active
+                  </span>
+                </div>
+              </div>
+            </div>
+          )
         }
         right={
           <>
+            {!isSurveyActive && (
+              <button
+                data-test-id="ACTIVATE_FROM_SUBHEADER"
+                className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-login-primary px-5 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
+                onClick={onActivate}
+              >
+                Activate Survey
+              </button>
+            )}
             {isSurveyActive && launch !== 1 && (
               <button
                 data-test-id="INITIATE"

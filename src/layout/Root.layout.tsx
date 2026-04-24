@@ -73,8 +73,8 @@ const isForceShowChat = forceShowChatRoutes.some(route =>
           >
             {usePanelChatLayout ? (
               <div className="flex h-full min-h-0 flex-col overflow-hidden">
-                <div className="min-h-0 flex-1">
-                  <ChatWindow surface="card" />
+                <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+                  <ChatWindow surface="card" scrollMode="external" />
                 </div>
                 <ChatTextArea placement="panel" />
               </div>
