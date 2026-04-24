@@ -99,8 +99,8 @@ const dataSource = isStatic ? sdata : tableOutputData;
               onClick={onEditHandle}
             >
               <LuPencilLine size={18} />
-            </IconActionButton>  
-             )}         
+            </IconActionButton>
+             )}
           </div>
         </div>
         <div className="crosstab-soft-panel my-4 overflow-x-auto mx-auto">
