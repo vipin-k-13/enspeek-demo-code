@@ -474,4 +474,3 @@ const ChatWindow: React.FC<{
 };
 
 export default ChatWindow;
-
