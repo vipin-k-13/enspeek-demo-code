@@ -6,6 +6,7 @@ import { useState } from "react";
 import TabButtons from "../components/common/design-banner/tabButtons";
 import PointDetails from "../components/common/design-banner/pointerDetails";
 import { useBannerPointerList } from "../components/common/design-banner/designBanner_Api";
+import PageContentShell from "../components/ui/PageContentShell";
 
 const BannerDesign_page = () => {
   const { state } = useLocation();
@@ -22,7 +23,7 @@ const BannerDesign_page = () => {
   return (
     <div className="crosstab-page-bg flex h-full min-h-0 flex-col overflow-hidden">
       <DesignBanner_Header />
-      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pb-8 pt-3 md:px-4 md:pb-10 md:pt-4">
+      <PageContentShell>
         <div className="w-full">
         <TabButtons
           activeTab={activeTab}
@@ -53,7 +54,7 @@ const BannerDesign_page = () => {
           )}
         </div>
         </div>
-      </div>
+      </PageContentShell>
     </div>
   );
 };

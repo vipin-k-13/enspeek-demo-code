@@ -13,6 +13,7 @@ import {
 import FacebookModal from "./FacebookModal";
 import WhatsaapModal from "./WhatsaapModal";
 import { LuArrowRight } from "react-icons/lu";
+import PageSubheader from "../../ui/PageSubheader";
 
 interface PublishSurveyHeaderProps {
   studyName?: string;
@@ -66,35 +67,35 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
 
   return (
     <>
-      <header className="questionnaire-card questionnaire-border flex border-b px-5 py-4 md:px-6">
-        <div className="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="flex min-h-[42px] flex-wrap items-center gap-3">
-            {isSurveyActive && (
-              <div className="flex flex-wrap items-center gap-3">
-                <button
-                  data-test-id="FACEBOOK_SURVEY"
-                  className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-[var(--color-brand-info)] px-5 text-sm font-bold text-white shadow-sm transition hover:brightness-95"
-                  onClick={() => {
-                    dispatch(setIsFbModalOpen(true));
-                  }}
-                >
-                  <FaFacebookF className="text-base" />
-                  <span>Share on Facebook</span>
-                </button>
-                <button
-                  className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-[var(--color-study-activated)] px-5 text-sm font-bold text-white shadow-sm transition hover:brightness-95"
-                  data-test-id="WHATSAPP_SURVEY"
-                  onClick={() => {
-                    dispatch(setIsWhatsappModalOpen(true));
-                  }}
-                >
-                  <FaWhatsapp className="text-base" />
-                  <span>Share on WhatsApp</span>
-                </button>
-              </div>
-            )}
-          </div>
-          <div className="flex min-h-[42px] flex-wrap items-center justify-end gap-3">
+      <PageSubheader
+        left={
+          isSurveyActive ? (
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                data-test-id="FACEBOOK_SURVEY"
+                className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-[var(--color-brand-info)] px-5 text-sm font-bold text-white shadow-sm transition hover:brightness-95"
+                onClick={() => {
+                  dispatch(setIsFbModalOpen(true));
+                }}
+              >
+                <FaFacebookF className="text-base" />
+                <span>Share on Facebook</span>
+              </button>
+              <button
+                className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-[var(--color-study-activated)] px-5 text-sm font-bold text-white shadow-sm transition hover:brightness-95"
+                data-test-id="WHATSAPP_SURVEY"
+                onClick={() => {
+                  dispatch(setIsWhatsappModalOpen(true));
+                }}
+              >
+                <FaWhatsapp className="text-base" />
+                <span>Share on WhatsApp</span>
+              </button>
+            </div>
+          ) : null
+        }
+        right={
+          <>
             {isSurveyActive && launch !== 1 && (
               <button
                 data-test-id="INITIATE"
@@ -134,9 +135,11 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      </header>
+          </>
+        }
+        leftClassName="flex min-h-[42px] flex-wrap items-center gap-3 md:block"
+        rightClassName="gap-3"
+      />
       <SampleCollectionModel
         isOpen={isOpenInitiate}
         Closed={() => setIsOpenInitiate(false)}

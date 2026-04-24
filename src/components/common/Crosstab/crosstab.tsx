@@ -22,6 +22,7 @@ import Error from "../../global/Error";
 import { useLocation } from "react-router";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { cn } from "../../../utils";
+import PageContentShell from "../../ui/PageContentShell";
 
 export default function Crosstab() {
   const { state } = useLocation();
@@ -76,7 +77,7 @@ export default function Crosstab() {
   if (isBannerListError) return <Error showHome />;
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pb-8 pt-3 md:px-4 md:pb-10 md:pt-4">
+    <PageContentShell>
       <div className="w-full">
       <div className="w-full px-3 py-3 md:px-4">
         {Banners.length ? (
@@ -126,6 +127,6 @@ export default function Crosstab() {
         isPending={isAddBannerPending}
         isOpen={isAddBannerModalOpen}
       />
-    </div>
+    </PageContentShell>
   );
 }

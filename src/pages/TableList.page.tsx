@@ -8,6 +8,7 @@ import { setIsDownloadDropdownOpen, setIsHistoryModalOpen } from "../store/Cross
 import { LuDownload, LuFileSpreadsheet } from "react-icons/lu";
 import Header from "../components/common/table-List/Header";
 import CrossTabTable from "../components/common/table-List/CrossTabTable";
+import PageContentShell from "../components/ui/PageContentShell";
 
 const TableList_page = () => {
   const dispatch = useDispatch();
@@ -56,11 +57,11 @@ const TableList_page = () => {
   return (
     <div className="crosstab-page-bg flex h-full min-h-0 flex-col overflow-hidden">
       <Header dropdownRef={dropdownRef} dropDownData={dropDownData} />
-      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pb-8 pt-3 md:px-4 md:pb-10 md:pt-4">
+      <PageContentShell>
         <div className="w-full">
           <CrossTabTable />
         </div>
-      </div>
+      </PageContentShell>
     </div>
   );
 };

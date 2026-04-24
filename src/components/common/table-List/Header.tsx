@@ -13,6 +13,7 @@ import DropDown from "../../global/DropDown";
 import { toast } from "sonner";
 import { useTableListAdd } from "../Crosstab/CrossTab.Api";
 import PageBreadcrumbs from "../../ui/PageBreadcrumbs";
+import PageSubheader from "../../ui/PageSubheader";
 
 interface CrosstabHeaderProps {
   dropdownRef: RefObject<HTMLDivElement | null>;
@@ -60,40 +61,39 @@ const Header: React.FC<CrosstabHeaderProps> = ({
   }, [location.state?.bannerID]);
 
   return (
-    <header className="questionnaire-card questionnaire-border flex border-b px-5 py-4 md:px-6">
-      <div className="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="min-w-0 md:flex md:min-h-[42px] md:items-center">
-          <PageBreadcrumbs
-            prefix={`${bannerName} :`}
-            items={[
-              {
-                label: "Banner List",
-                to: "/crosstab",
-                state: { studyID: location.state.studyID },
+    <PageSubheader
+      left={
+        <PageBreadcrumbs
+          prefix={`${bannerName} :`}
+          items={[
+            {
+              label: "Banner List",
+              to: "/crosstab",
+              state: { studyID: location.state.studyID },
+            },
+            {
+              label: "Design Banner",
+              to: "/crosstab/edit-banner",
+              state: {
+                studyID: location.state.studyID,
+                bannerID: location.state?.bannerID,
               },
-              {
-                label: "Design Banner",
-                to: "/crosstab/edit-banner",
-                state: {
-                  studyID: location.state.studyID,
-                  bannerID: location.state?.bannerID,
-                },
-                active: location.pathname === "/crosstab/edit-banner",
+              active: location.pathname === "/crosstab/edit-banner",
+            },
+            {
+              label: "Crosstab",
+              to: "/crosstab/table-list",
+              state: {
+                studyID: location.state.studyID,
+                bannerID: location.state?.bannerID,
               },
-              {
-                label: "Crosstab",
-                to: "/crosstab/table-list",
-                state: {
-                  studyID: location.state.studyID,
-                  bannerID: location.state?.bannerID,
-                },
-                active: location.pathname === "/crosstab/table-list",
-              },
-            ]}
-          />
-        </div>
-        <div className="flex min-h-[42px] flex-wrap items-center justify-end gap-2">
-        {tableData.length > 0 ? (
+              active: location.pathname === "/crosstab/table-list",
+            },
+          ]}
+        />
+      }
+      right={
+        tableData.length > 0 ? (
           <>
             <Button
               className="report-toolbar-btn h-10 bg-[var(--color-questionnaire-multi)] px-4 text-white hover:opacity-90"
@@ -114,7 +114,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
                 <div className="absolute right-0 mt-1 z-50">
                   <DropDown Data={dropDownData} />
                 </div>
-                )}
+              )}
             </div>
             <div className="crosstab-soft-panel flex h-10 items-center rounded-[16px] px-3">
               <select
@@ -146,7 +146,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
         ) : (
           <Button
             data-test-id="SAVE_QUESTION"
-                className="platform-btn-pill report-toolbar-btn h-10 border border-login-primary px-5 text-login-primary hover:bg-login-primary hover:text-white"
+            className="platform-btn-pill report-toolbar-btn h-10 border border-login-primary px-5 text-login-primary hover:bg-login-primary hover:text-white"
             onClick={() => {
               if (selectedQuestions.length === 0) {
                 toast.error(
@@ -160,10 +160,9 @@ const Header: React.FC<CrosstabHeaderProps> = ({
           >
             <LuSave /> Save Question
           </Button>
-        )}
-        </div>
-      </div>
-    </header>
+        )
+      }
+    />
   );
 };
 

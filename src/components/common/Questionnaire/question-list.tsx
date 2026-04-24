@@ -24,6 +24,7 @@ import ChatWindow from "../chat-window/chat";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ChatTextArea from "../../global/chattextares";
 import { LuBotMessageSquare, LuSparkles } from "react-icons/lu";
+import PageSubheader from "../../ui/PageSubheader";
 
 export default function QuestionList() {
   const navigate = useNavigate();
@@ -169,41 +170,40 @@ export default function QuestionList() {
   return (
     <div className="questionnaire-page-bg relative flex h-full min-h-0 flex-col overflow-hidden">
       {(submitItems.length > 0 || isAddingQuestion) && (
-        <header className="questionnaire-card questionnaire-border flex border-b px-5 py-4 md:px-6">
-          <div className="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div className="min-w-0 md:flex md:min-h-[42px] md:items-center">
-              <div className="flex flex-wrap items-center gap-3">
-                {submitItems.length > 0 && (
-                  <div className="questionnaire-question-count inline-flex min-h-[34px] items-center gap-2.5">
-                    <div className="flex items-center gap-2">
-                      <span className="questionnaire-question-count-value text-sm font-semibold md:text-base">
-                        {submitItems.length}
-                      </span>
-                      <span className="questionnaire-question-count-label text-[11px] font-semibold uppercase tracking-[0.16em]">
-                        Questions
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center justify-between gap-2 md:min-h-[42px]">
+        <PageSubheader
+          left={
+            <div className="flex flex-wrap items-center gap-3">
               {submitItems.length > 0 && (
-                <button
-                  data-test-id="NEXTTOSURVEY"
-                  className="platform-btn-pill questionnaire-action-btn inline-flex items-center gap-2 bg-login-primary px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
-                  onClick={() => {
-                    navigate("/publish-survey", {
-                      state: { studyID: studyID },
-                    });
-                  }}
-                >
-                  Next <MdArrowForwardIos />
-                </button>
+                <div className="questionnaire-question-count inline-flex min-h-[34px] items-center gap-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="questionnaire-question-count-value text-sm font-semibold md:text-base">
+                      {submitItems.length}
+                    </span>
+                    <span className="questionnaire-question-count-label text-[11px] font-semibold uppercase tracking-[0.16em]">
+                      Questions
+                    </span>
+                  </div>
+                </div>
               )}
             </div>
-          </div>
-        </header>
+          }
+          right={
+            submitItems.length > 0 ? (
+              <button
+                data-test-id="NEXTTOSURVEY"
+                className="platform-btn-pill questionnaire-action-btn inline-flex items-center gap-2 bg-login-primary px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
+                onClick={() => {
+                  navigate("/publish-survey", {
+                    state: { studyID: studyID },
+                  });
+                }}
+              >
+                Next <MdArrowForwardIos />
+              </button>
+            ) : null
+          }
+          rightClassName="justify-between md:justify-end"
+        />
       )}
       {!hasQuestionnaire && !isAddingQuestion ? (
         hasMessages ? (

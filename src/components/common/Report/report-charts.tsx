@@ -8,6 +8,7 @@ import TableAndCardScreen from "./TableAndCardScreen";
 import { setFliterReportData, setTableQList } from "../../../store/FiltersSlice";
 import { useLocation } from "react-router";
 import { setStudyInfo } from "../../../store/CrosstabStudySlice";
+import PageContentShell from "../../ui/PageContentShell";
 
 export default function Report() {
   const [showTableView, setShowTableView] = useState(false);
@@ -64,7 +65,7 @@ export default function Report() {
         showTableView={showTableView}
         setShowTableView={setShowTableView}
       />
-      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pb-8 pt-3 md:px-4 md:pb-10 md:pt-4">
+      <PageContentShell>
         <div className="w-full space-y-4">
           {ViewList[0].groupList.seq.map((q: any) => {
             if (!fliterReportData.includes(q)) return null;
@@ -77,7 +78,7 @@ export default function Report() {
             );
           })}
         </div>
-      </div>
+      </PageContentShell>
     </div>
   );
 }
