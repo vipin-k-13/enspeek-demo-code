@@ -22,7 +22,6 @@ import { setChatOpen, setMessage } from "../../../store/ChatSlice";
 import { MdArrowForwardIos } from "react-icons/md";
 import ChatWindow from "../chat-window/chat";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import ChatTextArea from "../../global/chattextares";
 import {
   LuBotMessageSquare,
   LuCircleCheckBig,
@@ -66,21 +65,29 @@ export default function QuestionList() {
   const { isAddingQuestion } = useSelector((state: RootState) => state.trigger);
   const hasMessages = messages.length > 0;
   const firstName = user.firstName || "there";
+  const normalizedFirstName = firstName
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+  const currentHour = new Date().getHours();
+  const greeting =
+    currentHour < 12
+      ? "Good Morning"
+      : currentHour < 17
+        ? "Good Afternoon"
+        : "Good Evening";
   const emptyStatePrompts = [
     {
       title: "Generate screening questions",
-      text: "Generate 5 screening questions about pizza preferences",
+      text: "Generate 5 screening questions for this study",
       icon: <LuWandSparkles className="h-4 w-4" />,
     },
     {
       title: "Create your first question",
-      text: "Create a single select question about favourite snacks",
+      text: "Create a single select question for this study",
       icon: <LuPlus className="h-4 w-4" />,
-    },
-    {
-      title: "Ask for a full questionnaire",
-      text: "Generate 10 survey questions about fresh food shopping",
-      icon: <LuListChecks className="h-4 w-4" />,
     },
   ];
 
@@ -380,7 +387,135 @@ export default function QuestionList() {
                 studyInfo={StudyInfo}
               />
             ) : submitItems.length === 0 ? (
-              <div className="mt-8">Create or Generate Questions</div>
+              <div className="flex min-h-full w-full items-center justify-center px-5 py-4 md:px-6 md:py-5">
+                <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+                  <div className="grid gap-4 xl:grid-cols-[minmax(0,1.16fr)_minmax(280px,0.84fr)] xl:items-stretch">
+                    <div className="questionnaire-card questionnaire-border overflow-hidden rounded-[30px] border shadow-[0_18px_44px_rgba(79,86,230,0.08)]">
+                      <div className="bg-[radial-gradient(circle_at_top_left,_rgba(109,99,255,0.18),_transparent_36%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.12),_transparent_34%),linear-gradient(180deg,_rgba(255,255,255,0.96)_0%,_rgba(251,250,255,0.98)_100%)] px-5 py-5 md:px-6 md:py-6">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="home-panel-soft-bg home-highlight inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                            <LuSparkles className="h-3.5 w-3.5" />
+                            AI-assisted questionnaire
+                          </span>
+                        </div>
+
+                        <div className="mt-4 flex items-center gap-3">
+                          <div className="relative flex h-12 w-12 items-center justify-center rounded-[18px] bg-gradient-to-br from-login-primary to-action shadow-lg">
+                            <LuBotMessageSquare className="h-6 w-6 text-white" />
+                            <LuSparkles className="absolute -right-2 -top-2 h-4 w-4 text-amber-400" />
+                          </div>
+                          <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold questionnaire-heading shadow-sm">
+                            {`${greeting}, ${normalizedFirstName}`}
+                          </div>
+                        </div>
+
+                        <h2 className="questionnaire-heading mt-4 max-w-3xl text-[clamp(1.9rem,3vw,2.65rem)] font-semibold leading-[1.05] tracking-[-0.04em]">
+                          Start building your questionnaire
+                        </h2>
+                        <p className="home-highlight mt-2.5 max-w-2xl text-[14px] leading-6 md:text-[16px] md:leading-6">
+                          Tell Enspeek what your study is about and it can generate
+                          your first set of questions in plain language.
+                        </p>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            dispatch(setChatOpen(true));
+                            dispatch(setMessage("Generate 5 questions about my study."));
+                          }}
+                          className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-full border questionnaire-border bg-white px-4 py-2 text-sm home-muted shadow-sm transition-colors hover:border-login-primary/30 hover:bg-login-primary/5"
+                        >
+                          Try:
+                          <span className="font-semibold text-login-primary">
+                            "Generate 5 questions about my study."
+                          </span>
+                        </button>
+
+                        <div className="mt-3.5 grid gap-3 md:grid-cols-2">
+                          {emptyStatePrompts.map((prompt) => (
+                            <button
+                              key={prompt.title}
+                              type="button"
+                              onClick={() => {
+                                dispatch(setChatOpen(true));
+                                dispatch(setMessage(prompt.text));
+                              }}
+                              className="home-panel-soft-bg questionnaire-border group flex w-full cursor-pointer items-start gap-3 rounded-[20px] border px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                            >
+                              <span className="home-dropdown-icon-wrap flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl">
+                                {prompt.icon}
+                              </span>
+                              <span>
+                                <span className="questionnaire-heading block text-sm font-semibold">
+                                  {prompt.title}
+                                </span>
+                                <span className="questionnaire-muted mt-0.5 block text-sm leading-5">
+                                  {prompt.text}
+                                </span>
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="questionnaire-card questionnaire-border h-full rounded-[28px] border px-5 py-5 shadow-[0_14px_36px_rgba(79,86,230,0.07)]">
+                      <div className="flex h-full flex-col">
+                      <div className="flex items-center gap-3">
+                        <div className="home-panel-soft-bg flex h-10 w-10 items-center justify-center rounded-2xl">
+                          <LuCircleCheckBig className="h-5 w-5 text-login-primary" />
+                        </div>
+                        <div>
+                          <p className="questionnaire-heading text-[17px] font-semibold">
+                            What happens next
+                          </p>
+                          <p className="questionnaire-muted mt-0.5 text-sm leading-5">
+                            A simple path from first question to final survey.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mt-3 flex flex-1 flex-col gap-2">
+                        {[
+                          {
+                            title: "Describe your topic in simple words",
+                            body: "Tell Enspeek what the study is about and let it draft the first questions for you.",
+                          },
+                          {
+                            title: "Review and edit the generated questions",
+                            body: "Refine wording, reorder items, or create your own question when you need more control.",
+                          },
+                          {
+                            title: "Move to publish survey when ready",
+                            body: "When the questionnaire looks right, continue to publish and activate the study.",
+                          },
+                        ].map((item, index) => (
+                          <div
+                            key={item.title}
+                            className="home-panel-soft-bg flex flex-1 items-center rounded-[20px] border questionnaire-border px-4 py-3"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-login-primary text-sm font-semibold text-white">
+                                {index + 1}
+                              </div>
+                              <div>
+                                <p className="questionnaire-heading text-sm font-semibold leading-5.5">
+                                  {item.title}
+                                </p>
+                                <p className="questionnaire-muted mt-1 text-sm leading-5">
+                                  {item.body}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
             ) : (
               <DataList
                 submittedItems={submitItems}
@@ -393,7 +528,6 @@ export default function QuestionList() {
           </div>
         </div>
       )}
-      {!submitItems.length && <ChatTextArea />}
     </div>
   );
 }

@@ -124,7 +124,7 @@ export default function ProjectListing() {
                         dispatch(setChatOpen(true));
                         dispatch(setMessage("count of in progress studies"));
                       }}
-                      className="inline-flex max-w-full items-center gap-2 rounded-full border home-border bg-white px-3.5 py-2 text-sm home-muted shadow-sm transition-colors hover:border-login-primary/30 hover:bg-login-primary/5"
+                      className="inline-flex max-w-full cursor-pointer items-center gap-2 rounded-full border home-border bg-white px-3.5 py-2 text-sm home-muted shadow-sm transition-colors hover:border-login-primary/30 hover:bg-login-primary/5"
                     >
                       Try:
                       <span className="truncate font-semibold text-login-primary">
@@ -146,7 +146,7 @@ export default function ProjectListing() {
                             dispatch(setMessage(prompt.message));
                           }
                         }}
-                        className="home-panel-soft-bg home-border-soft group flex h-full min-h-[108px] w-full items-start gap-3 rounded-[20px] border px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                        className="home-panel-soft-bg home-border-soft group flex h-full min-h-[108px] w-full cursor-pointer items-start gap-3 rounded-[20px] border px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                       >
                         <span className="home-dropdown-icon-wrap flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl">
                           {prompt.icon}
