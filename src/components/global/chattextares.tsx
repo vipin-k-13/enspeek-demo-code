@@ -107,7 +107,7 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
             : "opacity-0 translate-y-8 scale-95 pointer-events-none",
           isPanelPlacement
             ? "questionnaire-chatbar-panel relative m-4 mt-3 w-auto overflow-hidden rounded-[24px] bg-white"
-            : "absolute bottom-4 left-1/2 w-[min(94%,1120px)] -translate-x-1/2 rounded-[26px] shadow-xl md:bottom-6",
+            : "absolute bottom-4 left-1/2 w-[min(94%,1120px)] -translate-x-1/2 rounded-[26px] shadow-[0_10px_28px_rgba(31,41,55,0.10),0_2px_8px_rgba(31,41,55,0.05)] md:bottom-6",
           !isHome && !isPanelPlacement && "w-[min(92%,820px)]"
         )}
       >

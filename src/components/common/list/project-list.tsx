@@ -69,10 +69,9 @@ export default function ProjectListing() {
   return (
     <div className="home-page-bg relative flex h-full min-h-0 w-full justify-center overflow-hidden">
       {messages.length > 0 ? (
-        <div className="h-full min-h-0 w-full pb-40 md:pb-44">
-          <div className="mx-auto h-full w-full max-w-6xl px-4 md:px-6">
-            <ChatWindow />
-          </div>
+        <div className="h-full min-h-0 w-full">
+          <ChatWindow surface="page" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-40 h-[164px] bg-[linear-gradient(180deg,rgba(245,244,255,0)_0%,rgba(245,244,255,0.36)_42%,rgba(245,244,255,0.78)_68%,rgba(245,244,255,0.96)_86%,rgba(245,244,255,1)_100%)]" />
         </div>
       ) : (
         <div className="h-full min-h-0 w-full overflow-y-auto overflow-x-hidden pb-28 md:pb-32">

@@ -48,6 +48,8 @@ const ChatWindow: React.FC<{
   const [isCrosstabModalOpen, setIsCrosstabModalOpen] = useState(false);
   const fullName = getFullName(firstName, lastName) || firstName || "User";
   const userInitials = getInitials(fullName, "U");
+  const isHomePageSurface =
+    pathname === "/" && (surface === "auto" || surface === "page");
   useEffect(() => {
     const defaultTabs: { [key: number]: "chart" | "table" } = {};
     messages.forEach((_, i) => {
@@ -89,7 +91,13 @@ const ChatWindow: React.FC<{
         )}
         style={scrollMode === "internal" ? { scrollbarGutter: "stable" } : undefined}
       >
-        <div className="px-4 pb-36 pt-4 md:px-6 md:pb-40 md:pt-6">
+        <div
+          className={cn(
+            isHomePageSurface
+              ? "mx-auto w-[min(94%,1120px)] pb-[170px] pt-4 md:pb-[184px] md:pt-6"
+              : "px-4 pb-36 pt-4 md:px-6 md:pb-40 md:pt-6"
+          )}
+        >
         {messages.map((msg, index) => (
           <div
             key={index}
