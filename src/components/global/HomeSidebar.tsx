@@ -114,6 +114,12 @@ const HomeSidebar: React.FC = () => {
 
   const totalPages = FilterStudys ? Math.ceil(FilterStudys.length / limit) : 0;
   const hasResults = FilterStudys?.length > 0;
+  const sidebarTitle =
+    activeTab === "myactive"
+      ? "My Studies"
+      : activeTab === "allactive"
+        ? "All Studies"
+        : "Archive Studies";
   const activeCount =
     studyList?.count?.active ??
     Studys.filter((s: any) => !Boolean(s.isarchived)).length;
@@ -138,7 +144,7 @@ const HomeSidebar: React.FC = () => {
     <div className="home-surface flex h-full w-full shrink-0 flex-col border-r home-border md:w-[340px]" ref={sidebarRef}>
       <div className="border-b home-border-soft px-4 py-4">
         <div className="mb-4 flex items-center justify-between gap-3">
-          <p className="home-heading text-[18px] font-semibold">My Studies</p>
+          <p className="home-heading text-[18px] font-semibold">{sidebarTitle}</p>
         </div>
         <div className="home-panel-bg grid grid-cols-3 gap-1 rounded-full p-1 text-sm">
         <button

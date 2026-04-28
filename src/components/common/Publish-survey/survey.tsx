@@ -107,7 +107,6 @@ export default function PublishSurvey() {
               studyName={studyInfo.studyname}
               launch={studyInfo.launch}
               isSurveyActive={!!studyInfo.livelink}
-              onActivate={() => setIsOpen(true)}
             />
             <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pb-8 pt-2 md:px-6 md:pb-10 md:pt-3">
               <div className="flex w-full flex-col gap-6 pb-4">
@@ -176,7 +175,7 @@ export default function PublishSurvey() {
                     }}
                     className="platform-btn-pill questionnaire-action-btn mt-6 bg-login-primary px-5 py-3 text-white transition hover:bg-login-primary-hover"
                   >
-                    Activate {studyInfo.studyname} Study
+                    Activate Study
                   </button>
                 </div>
               )}

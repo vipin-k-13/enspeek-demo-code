@@ -17,6 +17,7 @@ import { setSubmitItems } from "../../../store/QuestionSlice";
 
 export const useChat = () => {
   const { pathname, state } = useLocation();
+  const studyID = state?.studyID;
   const pageName = getPageName(pathname);
   const navigate = useNavigate();
   const { apiToken } = useSelector((state: RootState) => state.user);
@@ -29,7 +30,7 @@ export const useChat = () => {
     mutationFn: async (CQID: string) => {
       const res = await apiRequest("post", `questionnaire/view/${CQID}`, {
         apiToken,
-        studyID: state?.studyID,
+        studyID,
       });
       return res.response;
     },
@@ -49,11 +50,23 @@ export const useChat = () => {
         prompt: payload.prompt,
         pageName: pageName,
         followUp: followUp,
-        studyID: state?.studyID,
+        studyID,
       });
       return res.response;
     },
     onSuccess: async (data) => {
+      const refreshQuestionnaireList = async () => {
+        if (!studyID) return;
+
+        await queryClient.invalidateQueries({
+          queryKey: ["viewCustomList", studyID],
+        });
+        await queryClient.refetchQueries({
+          queryKey: ["viewCustomList", studyID],
+          type: "all",
+        });
+      };
+
       dispatch(setIsTyping(false));
 
       if (data.showGraph) {
@@ -90,17 +103,21 @@ export const useChat = () => {
       }
 
       if (data.add && !data.questions) {
-        queryClient.invalidateQueries({ queryKey: ["viewCustomList"] });
+        await refreshQuestionnaireList();
       }
 
-      if (data.add && data.liveLink && state?.studyID) {
-        queryClient.invalidateQueries({ queryKey: ["studyInfo"] });
+      if (data.add && data.liveLink && studyID) {
+        await queryClient.invalidateQueries({ queryKey: ["studyInfo", studyID] });
+        await queryClient.refetchQueries({
+          queryKey: ["studyInfo", studyID],
+          type: "all",
+        });
       }
 
       dispatch(setFollowUp(data.followUp));
 
       if (data.questions?.questions?.length > 0 && data.add) {
-        queryClient.invalidateQueries({ queryKey: ["viewCustomList"] });
+        await refreshQuestionnaireList();
       }
 
       if (data.download === true && data?.pid) {

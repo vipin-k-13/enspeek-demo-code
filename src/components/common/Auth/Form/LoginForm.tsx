@@ -84,7 +84,7 @@ const LoginForm = () => {
           </span>
         </div>
         <h2 className="text-[2rem] font-semibold leading-tight text-[#232542]">
-          Welcome back
+          Welcome Back!
         </h2>
         <p className="mt-1 text-sm text-login-muted">Sign in to your account</p>
       </div>

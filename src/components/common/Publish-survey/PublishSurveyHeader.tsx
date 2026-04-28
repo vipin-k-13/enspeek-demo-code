@@ -14,18 +14,17 @@ import FacebookModal from "./FacebookModal";
 import WhatsaapModal from "./WhatsaapModal";
 import { LuArrowRight, LuDownload } from "react-icons/lu";
 import PageSubheader from "../../ui/PageSubheader";
+import { Tooltip } from "../../ui/Tooltip";
 
 interface PublishSurveyHeaderProps {
   studyName?: string;
   launch?: number;
   isSurveyActive: boolean;
-  onActivate?: () => void;
 }
 const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
   studyName,
   launch,
   isSurveyActive,
-  onActivate,
 }) => {
   const [isOpenInitiate, setIsOpenInitiate] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
@@ -112,13 +111,22 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
         right={
           <>
             {!isSurveyActive && (
-              <button
-                data-test-id="ACTIVATE_FROM_SUBHEADER"
-                className="questionnaire-action-btn inline-flex h-10 items-center gap-2 rounded-full bg-login-primary px-5 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
-                onClick={onActivate}
+              <Tooltip
+                content="Activate the study first."
+                position="top"
               >
-                Activate Survey
-              </button>
+                <span className="inline-flex cursor-not-allowed">
+                  <button
+                    type="button"
+                    disabled
+                    data-test-id="INITIATE_DISABLED"
+                    aria-disabled="true"
+                    className="questionnaire-action-btn pointer-events-none inline-flex h-10 items-center gap-2 rounded-full border border-[var(--color-border-soft)] bg-[var(--color-surface-soft)] px-5 text-sm font-bold text-[var(--color-text-muted)] shadow-none opacity-55 grayscale-[0.2] saturate-[0.75]"
+                  >
+                    <FaUsers /> Initiate Sample Collection
+                  </button>
+                </span>
+              </Tooltip>
             )}
             {isSurveyActive && launch !== 1 && (
               <button

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FaSignOutAlt } from "react-icons/fa";
 import { LuChevronDown } from "react-icons/lu";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import ICON from "../../assets/icons/icon.png";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
@@ -15,8 +15,10 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { pathname } = useLocation();
   const { name } = useSelector((state: RootState) => state.study);
   const { firstName, lastName } = useSelector((state: RootState) => state.user);
+  const showStudyName = pathname !== "/" && name.trim() !== "";
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
@@ -60,24 +62,24 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="home-surface sticky top-0 z-40 flex h-[62px] items-center justify-between border-b home-border px-6">
-      <div className="flex items-center gap-3">
+    <div className="home-surface sticky top-0 z-40 flex h-[62px] items-center justify-between gap-6 border-b home-border px-6">
+      <div className="flex min-w-0 flex-1 items-center gap-3">
         <Link to={"/"}>
           <img src={ICON} alt="Enspeek" className="h-11 w-auto" />
         </Link>
-        <div className="text-[23px] font-extrabold tracking-[-0.03em] text-login-primary">
+        <div className="shrink-0 text-[23px] font-extrabold tracking-[-0.03em] text-login-primary">
           Enspeek
         </div>
-        {name !== "" && (
+        {showStudyName && (
           <>
-            <div className="home-muted mx-2 text-sm font-medium">|</div>
-            <div className="home-heading max-w-[340px] truncate text-[16px] font-semibold">
+            <div className="home-muted shrink-0 mx-2 text-sm font-medium">|</div>
+            <div className="home-heading min-w-0 flex-1 truncate text-[16px] font-semibold">
               {name}
             </div>
           </>
         )}
       </div>
-      <div className="relative flex items-center" ref={dropdownRef}>
+      <div className="relative flex shrink-0 items-center" ref={dropdownRef}>
         <div
           className="flex cursor-pointer items-center gap-3"
           onClick={toggleDropdown}
