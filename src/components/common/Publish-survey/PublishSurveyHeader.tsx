@@ -20,11 +20,13 @@ interface PublishSurveyHeaderProps {
   studyName?: string;
   launch?: number;
   isSurveyActive: boolean;
+  onHoverDisabledInitiate?: (isHovered: boolean) => void;
 }
 const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
   studyName,
   launch,
   isSurveyActive,
+  onHoverDisabledInitiate,
 }) => {
   const [isOpenInitiate, setIsOpenInitiate] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
@@ -115,7 +117,13 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
                 content="Activate the study first."
                 position="top"
               >
-                <span className="inline-flex cursor-not-allowed">
+                <span
+                  className="inline-flex cursor-not-allowed"
+                  onMouseEnter={() => onHoverDisabledInitiate?.(true)}
+                  onMouseLeave={() => onHoverDisabledInitiate?.(false)}
+                  onFocus={() => onHoverDisabledInitiate?.(true)}
+                  onBlur={() => onHoverDisabledInitiate?.(false)}
+                >
                   <button
                     type="button"
                     disabled
