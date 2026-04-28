@@ -1,7 +1,6 @@
 import * as React from "react";
 import { IoMdSend } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { IoMdClose } from "react-icons/io";
 import type { AppDispatch, RootState } from "../../store/store";
 import {
   setChatOpen,
@@ -16,7 +15,6 @@ import { useLocation } from "react-router";
 import NewDropdown from "./NewDropDown";
 import PromptsList from "./PromptsList";
 import { CiCircleList } from "react-icons/ci";
-import Suggestion from "./Suggestion";
 import { useChat } from "../common/chat-window/Api";
 
 interface ChatTextAreaProps {
@@ -53,10 +51,6 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
       Chat({ prompt: message });
       dispatch(setMessage(""));
     }
-  };
-
-  const handleClose = () => {
-    dispatch(setChatOpen(false));
   };
 
   const handleOpen = () => {
@@ -166,30 +160,6 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
                 <span className="sr-only">Send message</span>
               </button>
             </Tooltip>
-          </div>
-        </div>
-        <div
-          className={cn(
-            "home-panel-soft-bg rounded-b-[26px] border-t home-border-soft px-4 py-2.5",
-            isHome && !isPanelPlacement ? "hidden" : "block",
-            isPanelPlacement && "rounded-b-[24px] border-t bg-[var(--color-surface-softest)] px-4 py-3 md:px-5"
-          )}
-        >
-          <div className="flex items-center gap-3">
-            <Suggestion />
-
-            <div className="ml-auto flex items-center gap-2">
-              {pathname !== "/" && !isPanelPlacement && (
-                <Tooltip content="Close" position="top">
-                  <button
-                    onClick={handleClose}
-                    className="flex h-8 cursor-pointer items-center gap-2 rounded-full p-2 text-sm text-foreground transition-colors hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-ring"
-                  >
-                    <IoMdClose className="w-4 h-4" />
-                  </button>
-                </Tooltip>
-              )}
-            </div>
           </div>
         </div>
       </div>
