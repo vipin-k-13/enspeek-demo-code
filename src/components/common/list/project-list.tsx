@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { resetQuestionGroup } from "../../../store/QuestionSlice";
 import Error from "../../global/Error";
-import { cn } from "../../../utils";
+import { cn, getTimeGreeting, normalizeDisplayName } from "../../../utils";
 import { promptCatalog } from "../../../utils/promptCatalog";
 import ChatWindow from "../chat-window/chat";
 import ChatTextArea from "../../global/chattextares";
@@ -40,19 +40,8 @@ export default function ProjectListing() {
 
   const { messages } = useSelector((state: RootState) => state.chat);
   const firstName = user.firstName || "there";
-  const normalizedFirstName = firstName
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-    .join(" ");
-  const currentHour = new Date().getHours();
-  const greeting =
-    currentHour < 12
-      ? "Good Morning"
-      : currentHour < 17
-        ? "Good Afternoon"
-        : "Good Evening";
+  const normalizedFirstName = normalizeDisplayName(firstName);
+  const greeting = getTimeGreeting();
 
   const starterPrompts = promptCatalog.filter((prompt) =>
     ["create [study name]", "activate study"].includes(prompt.id)

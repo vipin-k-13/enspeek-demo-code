@@ -14,7 +14,7 @@ import {
   setSubmitItems,
 } from "../../../store/QuestionSlice";
 import { toast } from "sonner";
-import { cn } from "../../../utils";
+import { cn, getTimeGreeting, normalizeDisplayName } from "../../../utils";
 import { setStudyInfo } from "../../../store/CrosstabStudySlice";
 import { setIsAddingQuestion } from "../../../store/TriggerSlice";
 import { useQtype } from "./Api";
@@ -25,7 +25,6 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
   LuBotMessageSquare,
   LuCircleCheckBig,
-  LuListChecks,
   LuPlus,
   LuSparkles,
   LuWandSparkles,
@@ -65,19 +64,8 @@ export default function QuestionList() {
   const { isAddingQuestion } = useSelector((state: RootState) => state.trigger);
   const hasMessages = messages.length > 0;
   const firstName = user.firstName || "there";
-  const normalizedFirstName = firstName
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-    .join(" ");
-  const currentHour = new Date().getHours();
-  const greeting =
-    currentHour < 12
-      ? "Good Morning"
-      : currentHour < 17
-        ? "Good Afternoon"
-        : "Good Evening";
+  const normalizedFirstName = normalizeDisplayName(firstName);
+  const greeting = getTimeGreeting();
   const emptyStatePrompts = [
     {
       title: "Generate screening questions",

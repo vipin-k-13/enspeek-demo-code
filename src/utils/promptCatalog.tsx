@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import {
   LuArchive,
   LuCalendar,
@@ -21,7 +22,7 @@ export type PromptCatalogItem = {
   label: string;
   description?: string;
   message?: string;
-  icon: JSX.Element;
+  icon: ReactElement;
 };
 
 export const promptCatalog: PromptCatalogItem[] = [

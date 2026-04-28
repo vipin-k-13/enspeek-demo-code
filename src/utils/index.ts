@@ -11,6 +11,25 @@ export function getFullName(firstName?: string, lastName?: string) {
   return [firstName, lastName].filter(Boolean).join(" ").trim();
 }
 
+export function normalizeDisplayName(name?: string, fallback = "there") {
+  const normalized = (name || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+
+  return normalized || fallback;
+}
+
+export function getTimeGreeting(date = new Date()) {
+  const hour = date.getHours();
+
+  if (hour < 12) return "Good Morning";
+  if (hour < 17) return "Good Afternoon";
+  return "Good Evening";
+}
+
 export function getInitials(name?: string, fallback = "U") {
   const parts = (name || "")
     .trim()
