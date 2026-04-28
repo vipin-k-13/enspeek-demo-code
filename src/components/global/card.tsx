@@ -154,17 +154,15 @@ export const StudyCard: React.FC<StudyCardProps> = ({
               </span>
             </Tooltip>
             <div className="min-w-0 flex-1">
-              <Tooltip content={name} position="top">
                 <h3
                   data-test-id={name}
-                  className="home-heading line-clamp-2 overflow-hidden text-ellipsis text-[15px] leading-5 font-semibold"
+                  className="home-heading break-words pr-1 text-[15px] font-semibold leading-5 whitespace-normal"
                   onClick={() =>
                     navigate("/questionnaire", { state: { studyID: id } })
                   }
                 >
                   {name}
                 </h3>
-              </Tooltip>
               <div className="mt-1 flex flex-wrap items-center gap-2 text-sm">
                 <p className={cn("font-semibold", stateTheme.textClass)}>
                   {studystate || cleanStatus || "Draft"}
