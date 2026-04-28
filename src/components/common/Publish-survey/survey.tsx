@@ -176,7 +176,7 @@ export default function PublishSurvey() {
                     }}
                     className="platform-btn-pill questionnaire-action-btn mt-6 bg-login-primary px-5 py-3 text-white transition hover:bg-login-primary-hover"
                   >
-                    Activate {studyInfo.studyname} Study
+                    Activate Study
                   </button>
                 </div>
               )}

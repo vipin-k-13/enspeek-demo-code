@@ -139,7 +139,10 @@ export default function QuestionList() {
         apiToken: user.apiToken,
         studyID,
       });
-      const apiData = res.response[0];
+      const apiData =
+        Array.isArray(res.response) && res.response[0]?.qList
+          ? res.response[0]
+          : { qList: [] };
       dispatch(setQuestionList(apiData.qList));
 
       return apiData;
@@ -150,7 +153,23 @@ export default function QuestionList() {
   });
 
   useEffect(() => {
-    dispatch(setQuestionGroup(data));
+    if (data) {
+      dispatch(setQuestionGroup(data));
+    } else {
+      dispatch(
+        setQuestionGroup({
+          groupID: "",
+          groupText: "",
+          groupLogic: "",
+          qList: [],
+          logicPayload: {},
+          logic2Skip: {},
+          getLogicRes: {},
+          questionList: [],
+          submitItems: [],
+        })
+      );
+    }
   }, [data]);
 
   useEffect(() => {
