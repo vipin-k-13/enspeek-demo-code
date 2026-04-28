@@ -24,10 +24,11 @@ const Root_layout = () => {
   "/publish-survey"
 ];
 
-const isForceShowChat = forceShowChatRoutes.some(route =>
+  const isForceShowChat = forceShowChatRoutes.some(route =>
   location.pathname.startsWith(route)
 );
   const showRightChat =
+    (!isHome && isQuestionnaire) ||
     (!isHome && hasQuestionnaire) ||
     (!isHome && isAddingQuestion) ||
     (!isHome && isForceShowChat);
@@ -49,11 +50,13 @@ const isForceShowChat = forceShowChatRoutes.some(route =>
           className={cn(
             "min-h-0 flex-1 transition-all duration-300 overflow-hidden",
             isHome ? "h-full w-full" : "h-full",
-            isHome || Boolean(!isHome && !hasQuestionnaire)
+            isHome
               ? "w-full"
               : usePanelChatLayout
                 ? "w-full xl:w-[68%]"
-                : "w-full xl:w-[70%]"
+                : Boolean(!isHome && !hasQuestionnaire)
+                  ? "w-full"
+                  : "w-full xl:w-[70%]"
           )}
         >
           <Outlet />

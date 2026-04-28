@@ -20,7 +20,6 @@ import { setIsAddingQuestion } from "../../../store/TriggerSlice";
 import { useQtype } from "./Api";
 import { setChatOpen, setMessage } from "../../../store/ChatSlice";
 import { MdArrowForwardIos } from "react-icons/md";
-import ChatWindow from "../chat-window/chat";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
   LuBotMessageSquare,
@@ -36,7 +35,7 @@ export default function QuestionList() {
   const [editData, setEditData] = React.useState<Question | null>(null);
   const { qType } = useSelector((state: RootState) => state.trigger);
   const dispatch = useDispatch<AppDispatch>();
-  const { launch, output, hasQuestionnaire } = useSelector(
+  const { launch, output } = useSelector(
     (state: RootState) => state.study
   );
   const isDragDisabled = launch === 1 && output === 1;
@@ -60,9 +59,7 @@ export default function QuestionList() {
   const location = useLocation();
   const studyID = location.state?.studyID;
   const user = useSelector((state: RootState) => state.user);
-  const { messages } = useSelector((state: RootState) => state.chat);
   const { isAddingQuestion } = useSelector((state: RootState) => state.trigger);
-  const hasMessages = messages.length > 0;
   const firstName = user.firstName || "there";
   const normalizedFirstName = normalizeDisplayName(firstName);
   const greeting = getTimeGreeting();
@@ -225,157 +222,26 @@ export default function QuestionList() {
           rightClassName="justify-between md:justify-end"
         />
       )}
-      {!hasQuestionnaire && !isAddingQuestion ? (
-        hasMessages ? (
-          <div className="h-full w-full overflow-y-auto overflow-x-hidden pb-40 md:pb-44">
-            <div className="mx-auto h-full w-full max-w-5xl px-4 pt-4 md:px-6 md:pt-5">
-              <ChatWindow surface="page" scrollMode="external" />
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-1 justify-center overflow-y-auto px-5 pb-40 pt-5 md:px-6 md:pb-44 md:pt-6">
-            <div className="mx-auto flex w-full max-w-5xl flex-col gap-5">
-              <div className="grid gap-5 xl:grid-cols-[minmax(0,1.12fr)_minmax(300px,0.88fr)]">
-                <div className="questionnaire-card questionnaire-border overflow-hidden rounded-[30px] border shadow-[0_18px_44px_rgba(79,86,230,0.08)]">
-                  <div className="bg-[radial-gradient(circle_at_top_left,_rgba(109,99,255,0.18),_transparent_36%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.12),_transparent_34%),linear-gradient(180deg,_rgba(255,255,255,0.96)_0%,_rgba(251,250,255,0.98)_100%)] px-6 py-6 md:px-7 md:py-7">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="home-panel-soft-bg home-highlight inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                        <LuSparkles className="h-3.5 w-3.5" />
-                        AI-assisted questionnaire
-                      </span>
-                    </div>
-
-                    <div className="mt-5 flex items-center gap-3">
-                      <div className="relative flex h-14 w-14 items-center justify-center rounded-[18px] bg-gradient-to-br from-login-primary to-action shadow-lg">
-                        <LuBotMessageSquare className="h-7 w-7 text-white" />
-                        <LuSparkles className="absolute -right-2 -top-2 h-4 w-4 text-amber-400" />
-                      </div>
-                      <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold questionnaire-heading shadow-sm">
-                        Good evening, {firstName}
-                      </div>
-                    </div>
-
-                    <h2 className="questionnaire-heading mt-5 max-w-3xl text-[clamp(2rem,3.2vw,2.9rem)] font-semibold leading-[1.08] tracking-[-0.04em]">
-                      Start building your questionnaire
-                    </h2>
-                    <p className="home-highlight mt-3 max-w-2xl text-[15px] leading-7 md:text-[17px]">
-                      Tell Enspeek what your study is about and it can generate
-                      your first set of questions in plain language.
-                    </p>
-
-                    <div className="mt-5 inline-flex items-center gap-2 rounded-full border questionnaire-border bg-white px-4 py-2 text-sm home-muted shadow-sm">
-                      Try:
-                      <span className="font-semibold text-login-primary">
-                        "Generate 5 questions about fresh foods"
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="questionnaire-card questionnaire-border rounded-[28px] border px-5 py-6 shadow-[0_14px_36px_rgba(79,86,230,0.07)]">
-                  <div className="flex items-center gap-3">
-                    <div className="home-panel-soft-bg flex h-12 w-12 items-center justify-center rounded-2xl">
-                      <LuCircleCheckBig className="h-6 w-6 text-login-primary" />
-                    </div>
-                    <div>
-                      <p className="questionnaire-heading text-lg font-semibold">
-                        What happens next
-                      </p>
-                      <p className="questionnaire-muted mt-1 text-sm leading-6">
-                        A simple path from first question to final survey.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 space-y-3">
-                    {[
-                      "Describe your topic in simple words",
-                      "Review and edit the generated questions",
-                      "Move to publish survey when ready",
-                    ].map((item, index) => (
-                      <div
-                        key={item}
-                        className="home-panel-soft-bg rounded-[20px] border questionnaire-border px-4 py-3.5"
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-login-primary text-sm font-semibold text-white">
-                            {index + 1}
-                          </div>
-                          <p className="questionnaire-heading text-sm font-semibold leading-6">
-                            {item}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="questionnaire-card questionnaire-border rounded-[28px] border px-5 py-5 shadow-[0_14px_36px_rgba(79,86,230,0.07)] md:px-6">
-                <div className="flex items-center gap-3">
-                  <div className="home-panel-soft-bg flex h-12 w-12 items-center justify-center rounded-2xl">
-                    <LuWandSparkles className="h-6 w-6 text-login-primary" />
-                  </div>
-                  <div>
-                    <p className="questionnaire-heading text-lg font-semibold">
-                      Start with one request
-                    </p>
-                    <p className="questionnaire-muted mt-1 text-sm leading-6">
-                      Choose a suggestion below or type your own request in the chat bar.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-4 grid gap-3 lg:grid-cols-3">
-                  {emptyStatePrompts.map((prompt) => (
-                    <button
-                      key={prompt.title}
-                      type="button"
-                      onClick={() => {
-                        dispatch(setChatOpen(true));
-                        dispatch(setMessage(prompt.text));
-                      }}
-                      className="home-panel-soft-bg questionnaire-border group flex w-full items-start gap-3 rounded-[20px] border px-4 py-3.5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-                    >
-                      <span className="home-dropdown-icon-wrap flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl">
-                        {prompt.icon}
-                      </span>
-                      <span>
-                        <span className="questionnaire-heading block text-sm font-semibold">
-                          {prompt.title}
-                        </span>
-                        <span className="questionnaire-muted mt-1 block text-sm leading-6">
-                          {prompt.text}
-                        </span>
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )
-      ) : (
-        <div className="flex flex-1 min-h-0">
-          <div
-            className="relative flex h-full min-h-0 flex-1 items-start justify-center overflow-y-auto overflow-x-hidden"
-            onDragOver={isDragDisabled ? undefined : handleDragOver}
-            onDrop={isDragDisabled ? undefined : handleDrop}
-          >
-            {isAddingQuestion ? (
-              <QuestionnaireForm
-                data={editData}
-                onSubmit={(CQID) => submit(CQID)}
-                onClose={() => {
-                  dispatch(setIsAddingQuestion(false));
-                  dispatch(setChatOpen(true));
-                  setEditData(null);
-                }}
-                qType={qType}
-                studyInfo={StudyInfo}
-              />
-            ) : submitItems.length === 0 ? (
-              <div className="flex min-h-full w-full items-center justify-center px-5 py-4 md:px-6 md:py-5">
+      <div className="flex flex-1 min-h-0">
+        <div
+          className="relative flex h-full min-h-0 flex-1 items-start justify-center overflow-y-auto overflow-x-hidden"
+          onDragOver={isDragDisabled ? undefined : handleDragOver}
+          onDrop={isDragDisabled ? undefined : handleDrop}
+        >
+          {isAddingQuestion ? (
+            <QuestionnaireForm
+              data={editData}
+              onSubmit={(CQID) => submit(CQID)}
+              onClose={() => {
+                dispatch(setIsAddingQuestion(false));
+                dispatch(setChatOpen(true));
+                setEditData(null);
+              }}
+              qType={qType}
+              studyInfo={StudyInfo}
+            />
+          ) : submitItems.length === 0 ? (
+            <div className="flex min-h-full w-full items-center justify-center px-5 py-4 md:px-6 md:py-5">
                 <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
                   <div className="grid gap-4 xl:grid-cols-[minmax(0,1.16fr)_minmax(280px,0.84fr)] xl:items-stretch">
                     <div className="questionnaire-card questionnaire-border overflow-hidden rounded-[30px] border shadow-[0_18px_44px_rgba(79,86,230,0.08)]">
@@ -504,18 +370,17 @@ export default function QuestionList() {
 
                 </div>
               </div>
-            ) : (
-              <DataList
-                submittedItems={submitItems}
-                setAllSubmittedItems={(e) => dispatch(setAllSubmitItems(e))}
-                onSubmit={(e) => submit(e)}
-                handleEdit={(e) => handleEditItem(e)}
-                isPending={isPending}
-              />
-            )}
-          </div>
+          ) : (
+            <DataList
+              submittedItems={submitItems}
+              setAllSubmittedItems={(e) => dispatch(setAllSubmitItems(e))}
+              onSubmit={(e) => submit(e)}
+              handleEdit={(e) => handleEditItem(e)}
+              isPending={isPending}
+            />
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
