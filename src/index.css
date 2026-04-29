@@ -384,12 +384,7 @@ body{
 
 .questionnaire-edit-frame {
   border: 3.5px dashed color-mix(in srgb, var(--color-brand-primary) 58%, white 42%);
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-brand-primary-softest) 78%, white 22%) 0%,
-      var(--color-questionnaire-card) 16%
-    );
+  background: var(--color-questionnaire-card);
 }
 
 .questionnaire-question-count {
