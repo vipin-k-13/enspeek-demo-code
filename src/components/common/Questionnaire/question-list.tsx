@@ -206,26 +206,27 @@ export default function QuestionList() {
 
   return (
     <div className="questionnaire-page-bg relative flex h-full min-h-0 flex-col overflow-hidden">
-      {(submitItems.length > 0 || isAddingQuestion) && (
-        <PageSubheader
-          left={
-            <div className="flex flex-wrap items-center gap-3">
-              {submitItems.length > 0 && (
-                <div className="questionnaire-question-count inline-flex min-h-[34px] items-center gap-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="questionnaire-question-count-value text-sm font-semibold md:text-base">
-                      {submitItems.length}
-                    </span>
-                    <span className="questionnaire-question-count-label text-[11px] font-semibold uppercase tracking-[0.16em]">
-                      Questions
-                    </span>
-                  </div>
+      <PageSubheader
+        left={
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="questionnaire-heading text-[18px] font-semibold leading-none md:text-[22px]">
+              Questionnaire
+            </h1>
+          </div>
+        }
+        right={
+          submitItems.length > 0 ? (
+            <>
+              <div className="questionnaire-question-count inline-flex min-h-[34px] items-center gap-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="questionnaire-question-count-value text-sm font-semibold md:text-base">
+                    {submitItems.length}
+                  </span>
+                  <span className="questionnaire-question-count-label text-[11px] font-semibold uppercase tracking-[0.16em]">
+                    Questions
+                  </span>
                 </div>
-              )}
-            </div>
-          }
-          right={
-            submitItems.length > 0 ? (
+              </div>
               <Button
                 data-test-id="NEXTTOSURVEY"
                 varinat="theme"
@@ -237,11 +238,11 @@ export default function QuestionList() {
               >
                 Next <MdArrowForwardIos />
               </Button>
-            ) : null
-          }
-          rightClassName="justify-between md:justify-end"
-        />
-      )}
+            </>
+          ) : null
+        }
+        rightClassName="justify-between gap-4 md:justify-end md:gap-5"
+      />
       <div className="flex flex-1 min-h-0">
         <div
           className="relative flex h-full min-h-0 flex-1 items-start justify-center overflow-y-auto overflow-x-hidden"

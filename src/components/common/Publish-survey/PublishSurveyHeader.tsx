@@ -71,49 +71,53 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
 
   return (
     <>
-      <PageSubheader
-        left={
-          isSurveyActive ? (
+        <PageSubheader
+          left={
             <div className="flex flex-wrap items-center gap-3">
-              <Button
-                data-test-id="FACEBOOK_SURVEY"
-                className="bg-[var(--color-brand-info)] text-white hover:brightness-95"
-                onClick={() => {
-                  dispatch(setIsFbModalOpen(true));
-                }}
-              >
-                <FaFacebookF className="text-base" />
-                <span>Share on Facebook</span>
-              </Button>
-              <Button
-                varinat="success"
-                className="hover:brightness-95"
-                data-test-id="WHATSAPP_SURVEY"
-                onClick={() => {
-                  dispatch(setIsWhatsappModalOpen(true));
-                }}
-              >
-                <FaWhatsapp className="text-base" />
-                <span>Share on WhatsApp</span>
-              </Button>
-            </div>
-          ) : (
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="questionnaire-question-count inline-flex min-h-[34px] items-center gap-2.5">
-                <div className="flex items-center gap-2">
-                  <span className="questionnaire-question-count-value text-sm font-semibold md:text-base">
-                    Survey
-                  </span>
-                  <span className="questionnaire-question-count-label text-[11px] font-semibold uppercase tracking-[0.16em]">
-                    Not Active
-                  </span>
+              <h1 className="questionnaire-heading text-[18px] font-semibold leading-none md:text-[22px]">
+                Publish Survey
+              </h1>
+              {!isSurveyActive && (
+                <div className="questionnaire-question-count inline-flex min-h-[34px] items-center gap-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="questionnaire-question-count-value text-sm font-semibold md:text-base">
+                      Survey
+                    </span>
+                    <span className="questionnaire-question-count-label text-[11px] font-semibold uppercase tracking-[0.16em]">
+                      Not Active
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
-          )
         }
         right={
           <>
+            {isSurveyActive && (
+              <>
+                <Button
+                  data-test-id="FACEBOOK_SURVEY"
+                  className="bg-[var(--color-brand-info)] text-white hover:brightness-95"
+                  onClick={() => {
+                    dispatch(setIsFbModalOpen(true));
+                  }}
+                >
+                  <FaFacebookF className="text-base" />
+                  <span>Share on Facebook</span>
+                </Button>
+                <Button
+                  varinat="success"
+                  className="hover:brightness-95"
+                  data-test-id="WHATSAPP_SURVEY"
+                  onClick={() => {
+                    dispatch(setIsWhatsappModalOpen(true));
+                  }}
+                >
+                  <FaWhatsapp className="text-base" />
+                  <span>Share on WhatsApp</span>
+                </Button>
+              </>
+            )}
             {!isSurveyActive && (
               <Tooltip
                 content="Activate the study first."
@@ -195,7 +199,7 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
             )}
           </>
         }
-        leftClassName="flex min-h-[42px] flex-wrap items-center gap-3 md:block"
+        leftClassName="flex min-h-[42px] flex-wrap items-center gap-3"
         rightClassName="gap-3"
       />
       <SampleCollectionModel
