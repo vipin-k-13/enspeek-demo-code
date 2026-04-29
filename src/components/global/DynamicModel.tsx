@@ -8,6 +8,7 @@ interface DynamicModelProps {
   isOpen: boolean;
   onClose: () => void;
   Title: string;
+  description?: React.ReactNode;
   ButtonText: string;
   children: React.ReactNode;
   onClick: () => void;
@@ -21,6 +22,7 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
   isOpen,
   onClose,
   Title,
+  description,
   ButtonText,
   children,
   onClick,
@@ -46,6 +48,11 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
           <h3 className="questionnaire-heading text-[24px] font-semibold capitalize">
             {Title}
           </h3>
+          {description ? (
+            <p className="report-muted mt-3 text-sm leading-6">
+              {description}
+            </p>
+          ) : null}
         </div>
         <div className="max-h-[70vh] w-full overflow-auto px-6 py-5 questionnaire-page-bg">
           {children}

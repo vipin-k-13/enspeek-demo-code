@@ -98,6 +98,7 @@ export default function EditTableModal({
   return (
     <DynamicModel
       Title={tableLabel}
+      description="Update the table details, logic, and row settings, then save the refreshed table configuration."
       disable={isEditTableListQuestionPending}
       ButtonText="Update Table"
       isOpen={open}
@@ -114,9 +115,6 @@ export default function EditTableModal({
         </div>
       ) : (
         <div className="space-y-6">
-          <ModalInstruction>
-            Update the table details, logic, and row settings, then save the refreshed table configuration.
-          </ModalInstruction>
           <div className="space-y-2">
             <CrosstabInput
               label="Table Label"

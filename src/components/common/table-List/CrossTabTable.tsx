@@ -36,7 +36,7 @@ const CrossTabTable = () => {
   } = useSelector((state: RootState) => state.crosstab);
 
   return (
-    <div className="crosstab-surface h-[78vh] overflow-y-auto p-3 md:p-4">
+    <div className="p-3 md:p-4">
       <SuspenseContent
         studyID={state.studyID}
         bannerID={state.bannerID}
