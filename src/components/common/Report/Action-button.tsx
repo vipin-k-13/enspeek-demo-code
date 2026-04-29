@@ -221,7 +221,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
         <div className="flex items-center gap-2">
           <Button
             data-test-id="GROUP_TOGGLE"
-            className="report-toolbar-btn report-title border home-border-soft bg-white px-4 [&_svg]:size-5"
+            className="report-toolbar-btn report-title border home-border-soft bg-white px-4 hover:bg-white hover:text-[var(--color-text-strong)] [&_svg]:size-5"
             onClick={subGroupToggle}
           >
             {subgroupOn ? (
