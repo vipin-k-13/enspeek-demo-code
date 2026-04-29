@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import {
   LuArchive,
+  LuBadgeCheck,
   LuCalendar,
   LuChartBar,
   LuCirclePlus,
@@ -132,7 +133,7 @@ export const promptCatalog: PromptCatalogItem[] = [
   {
     id: "activate study",
     label: "Activate Study",
-    icon: <LuCirclePlus className="h-4 w-4" />,
+    icon: <LuBadgeCheck className="h-4 w-4" />,
     description: "Activate study [study name]",
     message: "activate study",
   },
