@@ -526,6 +526,7 @@ body{
   width: 2.8rem;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   border-radius: 1rem;
   color: var(--color-questionnaire-sidebar-icon);
   font-size: 1.12rem;
