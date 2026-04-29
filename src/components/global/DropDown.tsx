@@ -31,7 +31,7 @@ const DropDown: React.FC<DropDownProps> = ({ className, Data, showCheckbox = fal
               (Title === "Add New Filters" || Title === "Share Study") &&
                 "pointer-events-none opacity-35"
             )}
-            onClick={!showCheckbox ? onClick : undefined}
+            onClick={onClick}
             tabIndex={0}
           >
             {showCheckbox && (

@@ -6,6 +6,7 @@ interface LogicModelProps {
   isOpen: boolean;
   onClose: () => void;
   Title: string;
+  description?: React.ReactNode;
   children: React.ReactNode;
   disable?: boolean;
   className?: string;
@@ -16,6 +17,7 @@ const LogicModel: React.FC<LogicModelProps> = ({
   isOpen,
   onClose,
   Title,
+  description,
   children,
   className = "",
   footerContent,
@@ -30,6 +32,11 @@ const LogicModel: React.FC<LogicModelProps> = ({
             <h3 className="questionnaire-heading text-[28px] font-semibold capitalize tracking-[-0.02em] leading-none">
               {Title}
             </h3>
+            {description ? (
+              <p className="home-muted mt-3 text-sm leading-6">
+                {description}
+              </p>
+            ) : null}
           </div>
         </div>
         <div className="max-h-[72vh] w-full overflow-auto px-7 py-4 questionnaire-page-bg">
