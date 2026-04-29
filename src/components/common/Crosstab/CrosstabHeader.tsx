@@ -28,15 +28,11 @@ export default function CrosstabHeader({
   return (
     <PageSubheader
       left={
-        <PageBreadcrumbs
-          items={[
-            {
-              label: "Banner List",
-              to: "/crosstab",
-              active: location.pathname.replace(/\/$/, "") === "/crosstab",
-            },
-          ]}
-        />
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="questionnaire-heading text-[18px] font-semibold leading-none md:text-[22px]">
+            Banner List
+          </h1>
+        </div>
       }
       right={
         <>
