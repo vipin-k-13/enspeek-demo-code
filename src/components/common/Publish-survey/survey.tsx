@@ -14,9 +14,11 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Quota from "./Quota";
 import { useOverQuotaReport } from "./SurveyApi";
 import { LuCheck, LuCopy, LuExternalLink } from "react-icons/lu";
+import Button from "../../ui/Button";
 
 export default function PublishSurvey() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [highlightActivate, setHighlightActivate] = useState(false);
   const { state } = useLocation();
   const navigate = useNavigate();
   const { data: quotaData } = useOverQuotaReport(state?.studyID);
@@ -107,6 +109,7 @@ export default function PublishSurvey() {
               studyName={studyInfo.studyname}
               launch={studyInfo.launch}
               isSurveyActive={!!studyInfo.livelink}
+              onHoverDisabledInitiate={setHighlightActivate}
             />
             <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pb-8 pt-2 md:px-6 md:pb-10 md:pt-3">
               <div className="flex w-full flex-col gap-6 pb-4">
@@ -168,15 +171,33 @@ export default function PublishSurvey() {
                     Survey is not active yet. Activate it to enable data
                     collection and generate the live link.
                   </p>
-                  <button
-                    data-test-id="ACTIVATE"
-                    onClick={() => {
-                      setIsOpen(true);
-                    }}
-                    className="platform-btn-pill questionnaire-action-btn mt-6 bg-login-primary px-5 py-3 text-white transition hover:bg-login-primary-hover"
-                  >
-                    Activate Study
-                  </button>
+                  <div className="mt-6 flex justify-center">
+                    <div className="relative inline-flex">
+                      {highlightActivate && (
+                        <>
+                          <span className="pointer-events-none absolute inset-0 rounded-full border border-login-primary/35 animate-ping" />
+                          <span
+                            className="pointer-events-none absolute inset-0 rounded-full border border-login-primary/25 animate-ping"
+                            style={{ animationDelay: "250ms" }}
+                          />
+                        </>
+                      )}
+                      <Button
+                        data-test-id="ACTIVATE"
+                        varinat="theme"
+                        onClick={() => {
+                          setIsOpen(true);
+                        }}
+                        className={cn(
+                          "relative",
+                          highlightActivate &&
+                            "shadow-[0_0_0_6px_rgba(79,86,230,0.12),0_14px_28px_rgba(79,86,230,0.24)]"
+                        )}
+                      >
+                        Activate Study
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               )}
               <Quota

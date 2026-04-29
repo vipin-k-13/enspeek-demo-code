@@ -82,11 +82,12 @@ export default function QuesLogicModal({
       isOpen={isOpen}
       onClose={onClose}
       Title="Edit or Add logic"
+      description="Configure logic rules for this question. Save when the conditions, skip path, or termination behavior are ready."
       className="max-w-[min(92vw,1320px)]"
       footerContent={
         <div className="flex flex-wrap items-center justify-end gap-3">
           <Button
-            className="platform-btn-modal questionnaire-action-btn border questionnaire-border bg-white px-5 py-2.5 questionnaire-heading shadow-none"
+            varinat="cancel"
             onClick={() => {
               handleReset();
             }}
@@ -94,7 +95,7 @@ export default function QuesLogicModal({
             Reset Logic
           </Button>
           <Button
-            className="platform-btn-modal questionnaire-save-btn questionnaire-action-btn px-5 py-2.5 shadow-none"
+            varinat="success"
             onClick={handleSave}
           >
             Save Logic
@@ -103,12 +104,6 @@ export default function QuesLogicModal({
       }
     >
       <div className="space-y-5">
-        <div className="rounded-[16px] home-panel-soft-bg px-4 py-3">
-          <p className="home-muted text-sm leading-6">
-            Configure logic rules for this question. Save when the conditions,
-            skip path, or termination behavior are ready.
-          </p>
-        </div>
         <QuestionLogic questionID={qID} resetFlag={resetFlag} isOpen={isOpen} />
       </div>
     </LogicModel>

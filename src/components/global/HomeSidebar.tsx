@@ -8,6 +8,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { cn } from "../../utils";
 import { setFilterStudys, setStudys } from "../../store/CrosstabStudySlice";
 import Input from "../ui/Input";
+import Button from "../ui/Button";
 import { HiSearch } from "react-icons/hi";
 import DeleteModel from "../common/list/DeleteModel";
 import ListingCopyModel from "./ListingCopyModal";
@@ -147,39 +148,42 @@ const HomeSidebar: React.FC = () => {
           <p className="home-heading text-[18px] font-semibold">{sidebarTitle}</p>
         </div>
         <div className="home-panel-bg grid grid-cols-3 gap-1 rounded-full p-1 text-sm">
-        <button
+        <Button
+          varinat={activeTab === "myactive" ? "theme" : "secondary"}
           className={cn(
-            "platform-btn-pill inline-flex h-10 cursor-pointer items-center justify-center px-2 py-2 text-center text-[13px] leading-none transition-colors",
+            "px-2 text-center text-[13px] leading-none",
             activeTab === "myactive"
-              ? "bg-login-primary text-white font-semibold shadow-sm"
-              : "home-muted hover:bg-white"
+              ? "shadow-sm hover:bg-login-primary-hover"
+              : "home-muted shadow-none hover:bg-white hover:text-[var(--color-text-strong)]"
           )}
           onClick={() => setActiveTab("myactive")}
         >
           {`Active (${activeCount})`}
-        </button>
-        <button
+        </Button>
+        <Button
+          varinat={activeTab === "allactive" ? "theme" : "secondary"}
           className={cn(
-            "platform-btn-pill inline-flex h-10 cursor-pointer items-center justify-center px-2 py-2 text-center text-[13px] leading-none transition-colors",
+            "px-2 text-center text-[13px] leading-none",
             activeTab === "allactive"
-              ? "bg-login-primary text-white font-semibold shadow-sm"
-              : "home-muted hover:bg-white"
+              ? "shadow-sm hover:bg-login-primary-hover"
+              : "home-muted shadow-none hover:bg-white hover:text-[var(--color-text-strong)]"
           )}
           onClick={() => setActiveTab("allactive")}
         >
           {`All (${allCount})`}
-        </button>
-        <button
+        </Button>
+        <Button
+          varinat={activeTab === "isarchived" ? "theme" : "secondary"}
           className={cn(
-            "platform-btn-pill inline-flex h-10 cursor-pointer items-center justify-center px-2 py-2 text-center text-[13px] leading-none transition-colors",
+            "px-2 text-center text-[13px] leading-none",
             activeTab === "isarchived"
-              ? "bg-login-primary text-white font-semibold shadow-sm"
-              : "home-muted hover:bg-white"
+              ? "shadow-sm hover:bg-login-primary-hover"
+              : "home-muted shadow-none hover:bg-white hover:text-[var(--color-text-strong)]"
           )}
           onClick={() => setActiveTab("isarchived")}
         >
           {`Archive (${archivedCount})`}
-        </button>
+        </Button>
       </div>
       </div>
       <div className="px-4 py-4">

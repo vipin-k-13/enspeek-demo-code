@@ -23,6 +23,7 @@ import { useLocation } from "react-router";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { cn } from "../../../utils";
 import PageContentShell from "../../ui/PageContentShell";
+import Button from "../../ui/Button";
 
 export default function Crosstab() {
   const { state } = useLocation();
@@ -108,13 +109,13 @@ export default function Crosstab() {
         ) : (
           <div className="flex flex-col items-center justify-center mt-24">
             <p className="crosstab-title mb-4 text-base font-medium">No banner list found.</p>
-            <button
-              className="platform-btn-pill report-toolbar-btn inline-flex items-center gap-2 bg-login-primary px-5 py-3 text-white hover:bg-login-primary-hover"
+            <Button
+              varinat="theme"
               onClick={() => dispatch(setIsAddBannerModalOpen(true))}
             >
               <LuPlus />
               <span>Add New Banner</span>
-            </button>
+            </Button>
           </div>
         )}
       </div>

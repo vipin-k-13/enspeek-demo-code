@@ -2,31 +2,44 @@ import React from "react";
 import Button from "../ui/Button";
 import { cn } from "../../utils";
 import Modal from "../ui/Modal";
+import type { ButtonProps } from "../ui/Button";
 
 interface DynamicModelProps {
   isOpen: boolean;
   onClose: () => void;
   Title: string;
+  description?: React.ReactNode;
   ButtonText: string;
   children: React.ReactNode;
   onClick: () => void;
   disable?: boolean;
   className?: string;
   footerContent?: React.ReactNode;
+  buttonVariant?: ButtonProps["varinat"];
 }
 
 const DynamicModel: React.FC<DynamicModelProps> = ({
   isOpen,
   onClose,
   Title,
+  description,
   ButtonText,
   children,
   onClick,
   disable,
   className = "",
   footerContent,
+  buttonVariant,
 }) => {
   if (!isOpen) return null;
+
+  const resolvedButtonVariant = buttonVariant
+    ? buttonVariant
+    : ButtonText.toLowerCase().includes("delete")
+      ? "danger"
+      : /(save|update|submit)/i.test(ButtonText)
+        ? "success"
+        : "theme";
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className={cn("w-full", className)}>
@@ -35,6 +48,11 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
           <h3 className="questionnaire-heading text-[24px] font-semibold capitalize">
             {Title}
           </h3>
+          {description ? (
+            <p className="report-muted mt-3 text-sm leading-6">
+              {description}
+            </p>
+          ) : null}
         </div>
         <div className="max-h-[70vh] w-full overflow-auto px-6 py-5 questionnaire-page-bg">
           {children}
@@ -48,15 +66,11 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
           {ButtonText && onClick && (
 
           <Button
-            size={"sm"}
+            size="default"
+            varinat={resolvedButtonVariant}
             onClick={onClick}
             data-test-id="MODEL_BUTTON"
-            className={cn(
-              "platform-btn-modal min-w-[180px] px-6 text-white",
-              ButtonText.toLowerCase().includes("delete")
-                ? "questionnaire-delete-btn"
-                : "bg-login-primary hover:bg-login-primary-hover"
-            )}
+            className="min-w-[180px]"
             disabled={disable}
           >
             {ButtonText}

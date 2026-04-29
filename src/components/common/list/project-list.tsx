@@ -134,12 +134,12 @@ export default function ProjectListing() {
                             dispatch(setMessage(prompt.message));
                           }
                         }}
-                        className="home-panel-soft-bg home-border-soft group flex h-full min-h-[108px] w-full cursor-pointer items-start gap-3 rounded-[20px] border px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                        className="home-panel-soft-bg home-border-soft group flex h-full min-h-[108px] w-full cursor-pointer items-center gap-3 rounded-[20px] border px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                       >
                         <span className="home-dropdown-icon-wrap flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl">
                           {prompt.icon}
                         </span>
-                        <span className="min-w-0 flex-1">
+                        <span className="min-w-0 flex-1 self-center">
                           <span className="home-heading block text-sm font-semibold">
                             {prompt.label}
                           </span>
@@ -169,13 +169,13 @@ export default function ProjectListing() {
                     </div>
                   </div>
 
-                  <div className="mt-3 flex-1 space-y-2">
+                  <div className="mt-3 flex flex-1 flex-col gap-2">
                     {steps.map((step, index) => (
                       <div
                         key={step.title}
-                        className="home-panel-soft-bg rounded-[20px] border home-border-soft px-4 py-2.5"
+                        className="home-panel-soft-bg flex flex-1 items-center rounded-[20px] border home-border-soft px-4 py-3"
                       >
-                        <div className="flex items-start gap-3">
+                        <div className="flex items-center gap-3">
                           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-login-primary text-sm font-semibold text-white">
                             {index + 1}
                           </div>

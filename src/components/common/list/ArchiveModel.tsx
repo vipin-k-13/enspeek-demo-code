@@ -8,6 +8,7 @@ import {
 } from "../../../store/TriggerSlice";
 import { useArchive } from "./Api";
 import ModalInstruction from "../../ui/ModalInstruction";
+import Button from "../../ui/Button";
 
 const ArchiveModel = () => {
   const { archiveModel, selectedId, selectedStudyName } = useSelector(
@@ -41,20 +42,20 @@ const ArchiveModel = () => {
           You can activate it again later from the archive tab if needed.
         </ModalInstruction>
         <div className="mt-6 flex justify-end gap-3">
-          <button
+          <Button
             type="button"
+            varinat="cancel"
             onClick={handleClose}
-            className="platform-btn-modal report-toolbar-btn border home-border px-5 py-2.5 font-bold home-heading"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            varinat="theme"
             onClick={handleArchive}
-            className="platform-btn-modal report-toolbar-btn bg-login-primary px-5 py-2.5 font-bold text-white hover:bg-login-primary-hover"
           >
             Archive
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

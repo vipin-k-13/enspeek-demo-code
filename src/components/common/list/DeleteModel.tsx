@@ -11,6 +11,7 @@ import { useDelete } from "./Api";
 import { toast } from "sonner";
 import Modal from "../../ui/Modal";
 import ModalInstruction from "../../ui/ModalInstruction";
+import Button from "../../ui/Button";
 
 const DeleteModel = () => {
   const [deleteInputValue, setDeleteInputValue] = useState<string>("");
@@ -63,21 +64,21 @@ const DeleteModel = () => {
           onKeyDown={(e) => handleKeyPress(e, handleDelete)}
         />
         <div className="mt-6 flex justify-end gap-3">
-          <button
+          <Button
             type="button"
+            varinat="cancel"
             onClick={handleClose}
-            className="platform-btn-modal report-toolbar-btn border home-border px-5 py-2.5 font-bold home-heading"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            varinat="danger"
             onClick={handleDelete}
             disabled={!isDeleteConfirmed}
-            className="platform-btn-modal report-toolbar-btn bg-red-500 px-5 py-2.5 font-bold text-white hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-55"
           >
             Delete
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

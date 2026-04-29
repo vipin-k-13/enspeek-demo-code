@@ -109,7 +109,16 @@ const dataSource = isStatic ? sdata : tableOutputData;
               <LuLoaderCircle size={34} className="animate-spin text-action" />
             </div>
           ) : (
-            <table className="w-full divide-y home-border-soft">
+            <table className="w-full table-fixed divide-y home-border-soft">
+              <colgroup>
+                <col className="w-[48%]" />
+                {bannerPointerListData.map((header: BannerPoint) => (
+                  <col
+                    key={header.pointID}
+                    style={{ width: `${52 / Math.max(bannerPointerListData.length, 1)}%` }}
+                  />
+                ))}
+              </colgroup>
               <thead>
                 <tr className="home-panel-soft-bg">
                   <th className="px-6 py-3 text-left crosstab-muted"></th>
@@ -126,13 +135,13 @@ const dataSource = isStatic ? sdata : tableOutputData;
               </thead>
               <tbody className="bg-white divide-y home-border-soft">
                 <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold crosstab-title">
+                  <td className="px-6 py-4 text-sm font-semibold crosstab-title">
                     Base
                   </td>
                   {bannerPointerListData.map((seq: BannerPoint) => (
                     <td
                       key={seq.pointID}
-                      className="px-6 py-4 whitespace-nowrap text-center text-sm font-bold crosstab-title border-l home-border-soft"
+                      className="px-6 py-4 text-center text-sm font-bold crosstab-title border-l home-border-soft"
                     >
                       {
                         dataSource.base[
@@ -144,7 +153,7 @@ const dataSource = isStatic ? sdata : tableOutputData;
                 </tr>
                 {dataSource._row_order.map((seq: any) => (
                   <tr key={seq}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm crosstab-title">
+                    <td className="px-6 py-4 text-sm crosstab-title">
                       {
                         dataSource._rows[
                           seq as keyof typeof dataSource._rows
@@ -159,7 +168,7 @@ const dataSource = isStatic ? sdata : tableOutputData;
                       return (
                         <td
                           key={seqData.pointID}
-                          className="px-6 py-4 whitespace-nowrap text-center text-sm home-text border-l home-border-soft"
+                          className="px-6 py-4 text-center text-sm home-text border-l home-border-soft"
                         >
                           {value[seqData.pointID as keyof typeof value]}
                         </td>

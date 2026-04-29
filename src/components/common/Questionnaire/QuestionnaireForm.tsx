@@ -275,27 +275,31 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
 
             <div className="flex w-full flex-wrap items-center justify-end gap-3 lg:w-auto">
               <Button
-                className="platform-btn-pill questionnaire-save-btn questionnaire-action-btn px-6 py-2.5 capitalize shadow-none"
+                varinat="success"
+                className="capitalize"
                 onClick={data ? handleUpdate : handleClick}
               >
                 {data ? "Save" : "Submit"}
               </Button>
-              <button
+              <Button
                 type="button"
-                className="questionnaire-label questionnaire-clickable px-1 text-base"
+                varinat="cancel"
+                className="px-5"
                 onClick={onClose}
               >
                 Close
-              </button>
+              </Button>
               <Tooltip content="Collapse" position="top">
-                <button
+                <Button
                   type="button"
                   aria-label="Close edit question"
-                  className="questionnaire-muted questionnaire-clickable inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[var(--color-home-panel-soft)]"
+                  varinat="secondary"
+                  size="icon"
+                  className="questionnaire-muted shadow-none"
                   onClick={onClose}
                 >
                   <LuChevronDown className="h-5 w-5" />
-                </button>
+                </Button>
               </Tooltip>
             </div>
           </div>
@@ -426,8 +430,8 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                     className="questionnaire-input questionnaire-heading questionnaire-border h-[46px] w-[82px] rounded-[16px] border px-4 text-center text-base focus:outline-none"
                   />
                   <Button
-                  className="platform-btn-pill questionnaire-action-btn bg-login-primary px-6 py-3 text-sm text-white shadow-none hover:bg-login-primary-hover"
-                  size="lg"
+                  varinat="theme"
+                  size="default"
                   onClick={createOption}
                   disabled={isPending}
                   >

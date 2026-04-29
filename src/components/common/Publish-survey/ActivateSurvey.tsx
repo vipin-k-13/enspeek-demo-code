@@ -30,6 +30,7 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
     <DynamicModel
       Title={studyInfo.studyname}
       ButtonText="Activate Survey"
+      buttonVariant="theme"
       isOpen={isOpen}
       onClick={handleActivateSurvey}
       onClose={onClose}

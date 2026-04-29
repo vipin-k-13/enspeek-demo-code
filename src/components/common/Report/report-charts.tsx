@@ -60,7 +60,7 @@ export default function Report() {
   return (
     <div className="report-page-bg flex h-full min-h-0 flex-col overflow-hidden">
       <ReportHeader
-        Title={StudyInfo.studyname}
+        Title=""
         Type={StudyInfo.whichquestionnaire}
         showTableView={showTableView}
         setShowTableView={setShowTableView}

@@ -2,6 +2,7 @@ import React from "react";
 import { handleKeyPress } from "../../utils";
 import Modal from "../ui/Modal";
 import ModalInstruction from "../ui/ModalInstruction";
+import Button from "../ui/Button";
 
 interface CopyModelProps {
   isOpen: boolean;
@@ -68,21 +69,21 @@ const CopyModel: React.FC<CopyModelProps> = ({
         </ModalInstruction>
 
         <div className="mt-6 flex justify-end gap-3">
-          <button
+          <Button
             type="button"
+            varinat="cancel"
             onClick={onClose}
-            className="platform-btn-modal report-toolbar-btn border questionnaire-border px-5 py-2.5 font-bold questionnaire-heading"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            varinat="theme"
             onClick={handleClick}
             disabled={QID.trim() === "" || QLabel.trim() === ""}
-            className="platform-btn-modal report-toolbar-btn bg-login-primary px-5 py-2.5 font-bold text-white hover:bg-login-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             Copy Question
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>
