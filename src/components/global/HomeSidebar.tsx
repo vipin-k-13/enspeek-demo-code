@@ -152,7 +152,9 @@ const HomeSidebar: React.FC = () => {
           varinat={activeTab === "myactive" ? "theme" : "secondary"}
           className={cn(
             "px-2 text-center text-[13px] leading-none",
-            activeTab !== "myactive" && "home-muted hover:bg-white"
+            activeTab === "myactive"
+              ? "shadow-sm hover:bg-login-primary-hover"
+              : "home-muted shadow-none hover:bg-white hover:text-[var(--color-text-strong)]"
           )}
           onClick={() => setActiveTab("myactive")}
         >
@@ -162,7 +164,9 @@ const HomeSidebar: React.FC = () => {
           varinat={activeTab === "allactive" ? "theme" : "secondary"}
           className={cn(
             "px-2 text-center text-[13px] leading-none",
-            activeTab !== "allactive" && "home-muted hover:bg-white"
+            activeTab === "allactive"
+              ? "shadow-sm hover:bg-login-primary-hover"
+              : "home-muted shadow-none hover:bg-white hover:text-[var(--color-text-strong)]"
           )}
           onClick={() => setActiveTab("allactive")}
         >
@@ -172,7 +176,9 @@ const HomeSidebar: React.FC = () => {
           varinat={activeTab === "isarchived" ? "theme" : "secondary"}
           className={cn(
             "px-2 text-center text-[13px] leading-none",
-            activeTab !== "isarchived" && "home-muted hover:bg-white"
+            activeTab === "isarchived"
+              ? "shadow-sm hover:bg-login-primary-hover"
+              : "home-muted shadow-none hover:bg-white hover:text-[var(--color-text-strong)]"
           )}
           onClick={() => setActiveTab("isarchived")}
         >
