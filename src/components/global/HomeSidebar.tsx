@@ -264,13 +264,9 @@ const HomeSidebar: React.FC = () => {
                 placeholder="1"
               />
               <span className="home-muted text-sm font-medium">{`of ${totalPages}`}</span>
-              <button
-                type="button"
-                onClick={handleGoToPage}
-                className="platform-btn-pill report-toolbar-btn cursor-pointer bg-login-primary px-3 py-2 text-sm text-white hover:bg-login-primary-hover"
-              >
+              <Button type="button" varinat="theme" size="sm" onClick={handleGoToPage}>
                 Go
-              </button>
+              </Button>
           </div>
         </div>
       )}

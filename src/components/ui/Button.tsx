@@ -2,8 +2,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { type ButtonHTMLAttributes, type FC, type ReactNode } from "react";
 import { cn } from "../../utils";
 
-export const buttonVariants = cva(
-  "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-full border border-transparent px-5 py-2.5 text-sm font-bold leading-none align-middle transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+const buttonBaseClasses =
+  "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-full border border-transparent font-bold leading-none align-middle transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
+
+const buttonToneVariants = cva(
+  "",
   {
     variants: {
       varinat: {
@@ -24,23 +27,31 @@ export const buttonVariants = cva(
         social:
           "w-full flex items-center justify-center gap-2 bg-white border border-gray-200 rounded-full p-2 hover:bg-gray-50 transition-all duration-300 text-gray-700 shadow-sm",
       },
-      size: {
-        default: "px-5 py-2.5 text-sm",
-        sm: "px-4 py-2 text-sm",
-        lg: "px-6 py-3 text-sm",
-        icon: "aspect-square p-2.5 text-2xl",
-      },
     },
     defaultVariants: {
       varinat: "default",
-      size: "default",
     },
   }
 );
 
+const buttonSizeVariants = cva("", {
+  variants: {
+    size: {
+      default: "px-5 py-2.5 text-sm",
+      sm: "px-4 py-2 text-sm",
+      lg: "px-6 py-3 text-sm",
+      icon: "aspect-square p-2.5 text-2xl",
+    },
+  },
+  defaultVariants: {
+    size: "default",
+  },
+});
+
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+    VariantProps<typeof buttonToneVariants>,
+    VariantProps<typeof buttonSizeVariants> {
   children: ReactNode;
 }
 
@@ -53,7 +64,12 @@ const Button: FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className={cn(buttonVariants({ varinat, size }), className)}
+      className={cn(
+        buttonToneVariants({ varinat }),
+        className,
+        buttonBaseClasses,
+        buttonSizeVariants({ size })
+      )}
       {...props}
     >
       {children}

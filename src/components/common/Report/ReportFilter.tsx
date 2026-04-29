@@ -3,6 +3,7 @@ import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import { SimpleAccordion, SimpleAccordionItem } from "./ShortAccorion";
+import Button from "../../ui/Button";
 
 type ReportFilterProps = {
   onClose: () => void;
@@ -52,18 +53,12 @@ const ReportFilter: React.FC<ReportFilterProps> = ({
         </SimpleAccordion>
       </div>
       <div className="flex justify-between px-4 py-3">
-        <button
-          onClick={onClose}
-          className="platform-btn-pill report-toolbar-btn border border-[var(--color-questionnaire-multi)] px-4 py-2 text-[var(--color-questionnaire-multi)] hover:bg-[var(--color-questionnaire-open-bg)]"
-        >
+        <Button varinat="theme" size="sm" onClick={onClose}>
           Apply
-        </button>
-        <button
-          onClick={onClear}
-          className="platform-btn-pill report-toolbar-btn border border-[var(--color-study-progress)] px-4 py-2 text-[var(--color-study-progress)] hover:bg-[var(--color-home-panel-soft)]"
-        >
+        </Button>
+        <Button varinat="cancel" size="sm" onClick={onClear}>
           Clear
-        </button>
+        </Button>
       </div>
     </div>
   );
