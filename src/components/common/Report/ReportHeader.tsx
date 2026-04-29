@@ -4,14 +4,12 @@ import PageSubheader from '../../ui/PageSubheader'
 
 type ReportHeaderProps = {
   Title:string,
-  Type: string,
   showTableView: boolean
   setShowTableView: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ReportHeader: React.FC<ReportHeaderProps> = ({
   Title,
-  Type,
   showTableView,
   setShowTableView,
 }) => {

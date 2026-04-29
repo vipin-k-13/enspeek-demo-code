@@ -7,7 +7,6 @@ import { useState } from "react";
 import { useStudyInfo } from "./CrossTab.Api";
 import Input from "../../ui/Input";
 import HistoryModal from "../Report/HistoryModal";
-import PageBreadcrumbs from "../../ui/PageBreadcrumbs";
 import PageSubheader from "../../ui/PageSubheader";
 
 interface CrosstabHeaderProps {

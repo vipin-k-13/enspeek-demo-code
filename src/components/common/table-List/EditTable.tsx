@@ -8,7 +8,6 @@ import { useLocation } from "react-router";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdDeleteForever } from "react-icons/md";
 import CrosstabInput from "../../global/CrosstabInput";
-import ModalInstruction from "../../ui/ModalInstruction";
 import Button from "../../ui/Button";
 
 interface EditTableModalProps {

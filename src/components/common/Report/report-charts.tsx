@@ -33,7 +33,7 @@ export default function Report() {
     retry: 1,
   });
 
-  const { data: StudyInfo } = useSuspenseQuery({
+  useSuspenseQuery({
     queryKey: ["studyInfo", state.studyID],
     queryFn: async () => {
       const res = await apiRequest("post", "study/info", {
@@ -61,7 +61,6 @@ export default function Report() {
     <div className="report-page-bg flex h-full min-h-0 flex-col overflow-hidden">
       <ReportHeader
         Title=""
-        Type={StudyInfo.whichquestionnaire}
         showTableView={showTableView}
         setShowTableView={setShowTableView}
       />
