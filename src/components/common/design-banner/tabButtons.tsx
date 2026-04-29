@@ -2,6 +2,7 @@ import { LuCircle, LuPlus } from "react-icons/lu";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setBannerPointer } from "../../../store/CrossTabDataSlice";
+import Button from "../../ui/Button";
 
 interface TabButtonsProps {
   activeTab: number;
@@ -43,29 +44,33 @@ const TabButtons: React.FC<TabButtonsProps> = ({
     <div className="crosstab-surface mt-4 flex flex-col gap-3 px-4 py-4 md:flex-row md:items-center md:justify-between">
       <div className="flex flex-wrap gap-2">
         {BannerPointer.map((point, index) => (
-          <button
+          <Button
             key={point.title}
+            type="button"
+            varinat={activeTab === index ? "theme" : "secondary"}
             onClick={() => setActiveTab(index)}
-            className={`platform-btn-pill report-toolbar-btn inline-flex items-center gap-2 px-4 py-2.5 transition-colors ${
+            className={`report-toolbar-btn px-4 ${
               activeTab === index
-                ? "bg-[var(--color-brand-primary-softest)] text-login-primary"
-                : "bg-white text-[var(--color-text-supporting)] hover:bg-[var(--color-home-panel-soft)]"
+                ? "bg-[var(--color-brand-primary-softest)] text-login-primary hover:bg-[var(--color-brand-primary-softest)]"
+                : "text-[var(--color-text-supporting)] hover:bg-[var(--color-home-panel-soft)]"
             }`}
             disabled={isBannerPointerListPending}
           >
             <LuCircle className="h-3 w-3 fill-current" />
             {point.title}
-          </button>
+          </Button>
         ))}
       </div>
-      <button
+      <Button
+        type="button"
+        varinat="theme"
         onClick={addBannerPoint}
-        className="platform-btn-pill report-toolbar-btn inline-flex items-center gap-2 bg-login-primary px-4 py-2.5 text-white hover:bg-login-primary-hover"
+        className="report-toolbar-btn px-4"
         disabled={isBannerPointerListPending}
       >
         <LuPlus className="h-4 w-4" />
         Add point
-      </button>
+      </Button>
     </div>
   );
 };

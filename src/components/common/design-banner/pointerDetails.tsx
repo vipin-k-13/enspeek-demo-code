@@ -6,6 +6,7 @@ import BannerLogic from "../../global/BannerLogic";
 import { LuTrash2 } from "react-icons/lu";
 import { MdDeleteForever } from "react-icons/md";
 import { Skeleton } from "../../global/skeleton";
+import Button from "../../ui/Button";
 
 interface pointDetailsProps {
   activeTab: number;
@@ -169,13 +170,15 @@ const PointDetails: React.FC<pointDetailsProps> = ({
               </div>
 
               {BannerPointer.length > 1 && (
-                <button
+                <Button
+                  type="button"
+                  varinat="danger"
                   onClick={() => deleteBannerPoint(activeTab!)}
-                  className="platform-btn-pill report-toolbar-btn inline-flex items-center gap-2 border border-[var(--color-questionnaire-stop)] px-4 py-2 text-[var(--color-questionnaire-stop)] hover:bg-[var(--color-questionnaire-stop-bg)]"
+                  className="report-toolbar-btn px-4"
                 >
                   <LuTrash2 className="h-4 w-4" />
                   Delete
-                </button>
+                </Button>
               )}
             </div>
 

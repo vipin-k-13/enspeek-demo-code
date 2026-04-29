@@ -9,6 +9,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdDeleteForever } from "react-icons/md";
 import CrosstabInput from "../../global/CrosstabInput";
 import ModalInstruction from "../../ui/ModalInstruction";
+import Button from "../../ui/Button";
 
 interface EditTableModalProps {
   qid: string;
@@ -195,9 +196,9 @@ export default function EditTableModal({
                 {rows.map((row) => (
                   <tr key={row.id}>
                     <td className="border-r home-border-soft px-3 py-3 align-middle text-center">
-                      <button className="crosstab-muted cursor-all-scroll">
+                      <Button type="button" varinat="secondary" size="icon" className="crosstab-muted cursor-all-scroll shadow-none">
                         <LuArrowUpDown />
-                      </button>
+                      </Button>
                     </td>
                     <td className="border-r home-border-soft px-3 py-3 align-middle text-center">
                       <input
@@ -234,12 +235,15 @@ export default function EditTableModal({
                       ) : null}
                     </td>
                     <td className="px-3 py-3">
-                      <button
+                      <Button
+                        type="button"
+                        varinat="danger"
+                        size="icon"
                         onClick={() => handleDeleteRow(row.id)}
-                        className="questionnaire-clickable h-8 w-8 rounded-full border border-transparent text-[var(--color-questionnaire-stop)] hover:bg-[var(--color-questionnaire-stop-bg)]"
+                        className="shadow-none"
                       >
                         <LuTrash2 className="h-4 w-4" />
-                      </button>
+                      </Button>
                     </td>
                   </tr>
                 ))}

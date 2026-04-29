@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { handleKeyPress } from "../../utils";
 import Modal from "../ui/Modal";
 import ModalInstruction from "../ui/ModalInstruction";
+import Button from "../ui/Button";
 
 interface DeleteModelProps {
   onClick: () => void;
@@ -51,21 +52,21 @@ const DeleteModel: React.FC<DeleteModelProps> = ({
           onKeyDown={(e)=>handleKeyPress(e, handleClick)}
         />
         <div className="mt-6 flex justify-end gap-3">
-          <button
+          <Button
             type="button"
+            varinat="cancel"
             onClick={onClose}
-            className="platform-btn-modal report-toolbar-btn border questionnaire-border px-5 py-2.5 font-bold questionnaire-heading"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            varinat="danger"
             onClick={handleClick}
             disabled={!isDeleteConfirmed}
-            className="platform-btn-modal report-toolbar-btn bg-red-500 px-5 py-2.5 font-bold text-white hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-55"
           >
             Delete
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../ui/Button";
 import { cn } from "../../utils";
 import Modal from "../ui/Modal";
+import type { ButtonProps } from "../ui/Button";
 
 interface DynamicModelProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ interface DynamicModelProps {
   disable?: boolean;
   className?: string;
   footerContent?: React.ReactNode;
+  buttonVariant?: ButtonProps["varinat"];
 }
 
 const DynamicModel: React.FC<DynamicModelProps> = ({
@@ -25,8 +27,17 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
   disable,
   className = "",
   footerContent,
+  buttonVariant,
 }) => {
   if (!isOpen) return null;
+
+  const resolvedButtonVariant = buttonVariant
+    ? buttonVariant
+    : ButtonText.toLowerCase().includes("delete")
+      ? "danger"
+      : /(save|update|submit)/i.test(ButtonText)
+        ? "success"
+        : "theme";
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className={cn("w-full", className)}>
@@ -48,15 +59,11 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
           {ButtonText && onClick && (
 
           <Button
-            size={"sm"}
+            size="default"
+            varinat={resolvedButtonVariant}
             onClick={onClick}
             data-test-id="MODEL_BUTTON"
-            className={cn(
-              "platform-btn-modal min-w-[180px] px-6 text-white",
-              ButtonText.toLowerCase().includes("delete")
-                ? "questionnaire-delete-btn"
-                : "bg-login-primary hover:bg-login-primary-hover"
-            )}
+            className="min-w-[180px]"
             disabled={disable}
           >
             {ButtonText}

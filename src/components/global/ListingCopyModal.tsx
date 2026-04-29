@@ -7,6 +7,7 @@ import { useCopy } from "../common/list/Api";
 import { setCopyModel } from "../../store/TriggerSlice";
 import Modal from "../ui/Modal";
 import ModalInstruction from "../ui/ModalInstruction";
+import Button from "../ui/Button";
 
 const ListingCopyModel: React.FC = () => {
   const { selectedStudyName, copyModel, selectedId } = useSelector(
@@ -60,24 +61,24 @@ const ListingCopyModel: React.FC = () => {
           Click <span className="font-semibold">Copy Study</span> and wait a moment while the duplicated study is created.
         </ModalInstruction>
         <div className="mt-6 flex justify-end gap-3">
-          <button
+          <Button
             type="button"
+            varinat="cancel"
             onClick={handleClose}
-            className="platform-btn-modal report-toolbar-btn border home-border px-5 py-2.5 font-bold home-heading"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            varinat="theme"
             onClick={() => {
               Copy({ studyId: selectedId, studyName: draftValue });
               setValue("");
             }}
             disabled={isPending || draftValue.trim() === ""}
-            className="platform-btn-modal report-toolbar-btn bg-login-primary px-5 py-2.5 font-bold text-white hover:bg-login-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             Copy Study
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

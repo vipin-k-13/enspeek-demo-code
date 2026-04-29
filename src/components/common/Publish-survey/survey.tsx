@@ -14,6 +14,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Quota from "./Quota";
 import { useOverQuotaReport } from "./SurveyApi";
 import { LuCheck, LuCopy, LuExternalLink } from "react-icons/lu";
+import Button from "../../ui/Button";
 
 export default function PublishSurvey() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -181,19 +182,20 @@ export default function PublishSurvey() {
                           />
                         </>
                       )}
-                      <button
+                      <Button
                         data-test-id="ACTIVATE"
+                        varinat="theme"
                         onClick={() => {
                           setIsOpen(true);
                         }}
                         className={cn(
-                          "platform-btn-pill questionnaire-action-btn relative bg-login-primary px-5 py-3 text-white transition hover:bg-login-primary-hover",
+                          "relative",
                           highlightActivate &&
                             "shadow-[0_0_0_6px_rgba(79,86,230,0.12),0_14px_28px_rgba(79,86,230,0.24)]"
                         )}
                       >
                         Activate Study
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>

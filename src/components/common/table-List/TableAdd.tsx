@@ -53,9 +53,9 @@ export default function AddCustomTableListModal({ rows, setRows }: Props) {
     <div className="crosstab-surface overflow-hidden">
       <div className="home-panel-soft-bg flex justify-end border-b home-border-soft px-4 py-3">
         <Button
-          varinat="outline"
+          varinat="theme"
           onClick={handleCreateRow}
-          className="report-toolbar-btn ml-4 border border-login-primary text-login-primary hover:bg-login-primary hover:text-white"
+          className="report-toolbar-btn ml-4"
         >
           <LuPlus className="mr-1" />
           Create Row
@@ -98,12 +98,15 @@ export default function AddCustomTableListModal({ rows, setRows }: Props) {
               </td>
               {rows.length > 1 && (
                 <td className="px-4 py-3 text-center align-middle">
-                  <button
+                  <Button
+                    type="button"
+                    varinat="danger"
+                    size="icon"
                     onClick={() => handleDeleteRow(rowIndex)}
-                    className="questionnaire-clickable rounded-full p-2 hover:bg-[var(--color-questionnaire-stop-bg)]"
+                    className="shadow-none"
                   >
                     <LuTrash2 className="text-[var(--color-questionnaire-stop)]" />
-                  </button>
+                  </Button>
                 </td>
               )}
             </tr>

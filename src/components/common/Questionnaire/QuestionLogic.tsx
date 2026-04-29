@@ -542,8 +542,10 @@ export default function QuestionLogic({
                   {selectedConditions[groupId] && (
                     <Tooltip content="Add condition" position="top">
                       <Button
+                        varinat="secondary"
+                        size="icon"
                         onClick={() => addConditionRow(groupId)}
-                        className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 text-[var(--color-brand-primary)] shadow-none"
+                        className="rounded-[16px] text-[var(--color-brand-primary)] shadow-none"
                       >
                         <AiOutlineArrowsAlt />
                       </Button>
@@ -551,8 +553,10 @@ export default function QuestionLogic({
                   )}
                   <Tooltip content="Reset group" position="top">
                     <Button
+                      varinat="cancel"
+                      size="icon"
                       onClick={() => resetAllGroupRows(groupId)}
-                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none"
+                      className="rounded-[16px] questionnaire-muted shadow-none"
                     >
                       <FaRotateLeft />
                     </Button>
@@ -561,8 +565,10 @@ export default function QuestionLogic({
                   {groupId === lastGroupId && (
                     <Tooltip content="Add new logic block" position="top">
                       <Button
+                        varinat="secondary"
+                        size="icon"
                         onClick={addNewLogicGroup}
-                        className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-heading shadow-none"
+                        className="rounded-[16px] questionnaire-heading shadow-none"
                       >
                         <FaPlus />
                       </Button>
@@ -572,8 +578,10 @@ export default function QuestionLogic({
                   {index > 0 && (
                     <Tooltip content="Delete group" position="top">
                       <Button
+                        varinat="danger"
+                        size="icon"
                         onClick={() => deleteGroup(groupId)}
-                        className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none"
+                        className="rounded-[16px] questionnaire-delete shadow-none"
                       >
                         <FaTrash />
                       </Button>
@@ -670,16 +678,20 @@ export default function QuestionLogic({
                 <div className="flex items-center gap-2">
                   <Tooltip content="Reset" position="top">
                     <Button
+                      varinat="cancel"
+                      size="icon"
                       onClick={() => resetRow(row.id)}
-                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none"
+                      className="rounded-[16px] questionnaire-muted shadow-none"
                     >
                       <FaRotateLeft />
                     </Button>
                   </Tooltip>
                   <Tooltip content="Delete" position="top">
                     <Button
+                      varinat="danger"
+                      size="icon"
                       onClick={() => deleteRow(row.id)}
-                      className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none"
+                      className="rounded-[16px] questionnaire-delete shadow-none"
                     >
                       <FaTrash />
                     </Button>

@@ -29,6 +29,7 @@ import {
   LuWandSparkles,
 } from "react-icons/lu";
 import PageSubheader from "../../ui/PageSubheader";
+import Button from "../../ui/Button";
 
 export default function QuestionList() {
   const navigate = useNavigate();
@@ -225,9 +226,9 @@ export default function QuestionList() {
           }
           right={
             submitItems.length > 0 ? (
-              <button
+              <Button
                 data-test-id="NEXTTOSURVEY"
-                className="platform-btn-pill questionnaire-action-btn inline-flex items-center gap-2 bg-login-primary px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-login-primary-hover"
+                varinat="theme"
                 onClick={() => {
                   navigate("/publish-survey", {
                     state: { studyID: studyID },
@@ -235,7 +236,7 @@ export default function QuestionList() {
                 }}
               >
                 Next <MdArrowForwardIos />
-              </button>
+              </Button>
             ) : null
           }
           rightClassName="justify-between md:justify-end"

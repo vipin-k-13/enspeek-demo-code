@@ -10,6 +10,7 @@ import DropDown from "./DropDown";
 import Modal from "../ui/Modal";
 import { Tooltip } from "../ui/Tooltip";
 import { getFullName, getInitials } from "../../utils";
+import Button from "../ui/Button";
 
 const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -116,20 +117,20 @@ const Header = () => {
             Are you sure you want to log out from your Enspeek account?
           </p>
           <div className="mt-6 flex justify-end gap-3">
-            <button
+            <Button
               type="button"
+              varinat="cancel"
               onClick={() => setLogoutModalOpen(false)}
-              className="platform-btn-modal report-toolbar-btn border home-border px-5 py-2.5 home-heading"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              varinat="theme"
               onClick={handleLogout}
-              className="platform-btn-modal report-toolbar-btn bg-login-primary px-5 py-2.5 text-white hover:bg-login-primary-hover"
             >
               Logout
-            </button>
+            </Button>
           </div>
         </div>
       </Modal>

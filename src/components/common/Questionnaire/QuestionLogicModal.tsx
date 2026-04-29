@@ -86,7 +86,7 @@ export default function QuesLogicModal({
       footerContent={
         <div className="flex flex-wrap items-center justify-end gap-3">
           <Button
-            className="platform-btn-modal questionnaire-action-btn border questionnaire-border bg-white px-5 py-2.5 questionnaire-heading shadow-none"
+            varinat="cancel"
             onClick={() => {
               handleReset();
             }}
@@ -94,7 +94,7 @@ export default function QuesLogicModal({
             Reset Logic
           </Button>
           <Button
-            className="platform-btn-modal questionnaire-save-btn questionnaire-action-btn px-5 py-2.5 shadow-none"
+            varinat="success"
             onClick={handleSave}
           >
             Save Logic

@@ -51,6 +51,7 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
     <DynamicModel
       Title="Confirmation"
       ButtonText={studyInfo.closed === 1 ? "Relaunch" : "Initiate Sample Collection"}
+      buttonVariant="theme"
       isOpen={isOpen}
       onClick={handleInitiate}
       onClose={Closed}
