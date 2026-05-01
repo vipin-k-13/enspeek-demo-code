@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "../../../services/apiService";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../../store/store";
+import { store, type AppDispatch, type RootState } from "../../../store/store";
 import { useLocation, useNavigate } from "react-router";
 import { getPageName } from "../../../utils/getPageName";
 import { queryClient } from "../../../App";
@@ -15,6 +15,8 @@ import { useEffect } from "react";
 import { useProcessHook } from "../Report/ReportMutations";
 import { setSubmitItems } from "../../../store/QuestionSlice";
 
+const MAX_RECALL_CHAIN_CALLS = 10;
+
 export const useChat = () => {
   const { pathname, state } = useLocation();
   const studyID = state?.studyID;
@@ -24,6 +26,88 @@ export const useChat = () => {
   const { followUp, messages } = useSelector((state: RootState) => state.chat);
   const dispatch = useDispatch<AppDispatch>();
   const { Process } = useProcessHook();
+
+  const getLatestMessages = () => store.getState().chat.messages;
+
+  const appendChatMessage = (message: any) => {
+    dispatch(setMessages([...getLatestMessages(), message]));
+  };
+
+  const requestRecallResponse = async () => {
+    const payload = studyID
+      ? { apiToken, studyID, recallFlag: 1 }
+      : { apiToken, recallFlag: 1 };
+    const res = await apiRequest("post", "studychatbot/chatStudy", payload);
+    return res?.response;
+  };
+
+  const shouldRequestRecall = (data: any) => data?.recallFlag === 1;
+
+  const refreshQuestionnaireList = async () => {
+    if (!studyID) return;
+
+    await queryClient.invalidateQueries({
+      queryKey: ["viewCustomList", studyID],
+    });
+    await queryClient.refetchQueries({
+      queryKey: ["viewCustomList", studyID],
+      type: "all",
+    });
+  };
+
+  const processChatResponse = async (data: any) => {
+    if (!data) return;
+
+    if (data.showGraph) {
+      appendChatMessage({
+        type: "surveydata",
+        sdata: data.sdata,
+        text: data.message,
+        studyID: data.studyID,
+      });
+      return;
+    }
+
+    const aiMessage: any = {
+      text: data.message || "AI responded with no message.",
+      sender: "ai",
+      questions: data.questions,
+      instruction: data.instruction,
+      response: data.response || {},
+      liveLink: data.liveLink,
+    };
+    appendChatMessage(aiMessage);
+
+    if (data.opt === true && data.qid) {
+      submit(data.qid);
+    }
+
+    if (data.active && data.route) {
+      navigate(data.route, { state: { studyID: data?.studyId } });
+    }
+
+    if (data.add && !data.questions) {
+      await refreshQuestionnaireList();
+    }
+
+    if (data.add && data.liveLink && studyID) {
+      await queryClient.invalidateQueries({ queryKey: ["studyInfo", studyID] });
+      await queryClient.refetchQueries({
+        queryKey: ["studyInfo", studyID],
+        type: "all",
+      });
+    }
+
+    dispatch(setFollowUp(data.followUp));
+
+    if (data.questions?.questions?.length > 0 && data.add) {
+      await refreshQuestionnaireList();
+    }
+
+    if (data.download === true && data?.pid) {
+      Process({ studyID: data.studyID, pid: data.pid });
+    }
+  };
 
   const { mutate: submit } = useMutation({
     mutationKey: ["questions", state?.studyID],
@@ -55,74 +139,26 @@ export const useChat = () => {
       return res.response;
     },
     onSuccess: async (data) => {
-      const refreshQuestionnaireList = async () => {
-        if (!studyID) return;
+      let currentResponse = data;
+      let totalCallsCompleted = 1;
 
-        await queryClient.invalidateQueries({
-          queryKey: ["viewCustomList", studyID],
-        });
-        await queryClient.refetchQueries({
-          queryKey: ["viewCustomList", studyID],
-          type: "all",
-        });
-      };
+      await processChatResponse(currentResponse);
+
+      while (
+        totalCallsCompleted < MAX_RECALL_CHAIN_CALLS &&
+        shouldRequestRecall(currentResponse)
+      ) {
+        const recallResponse = await requestRecallResponse();
+        if (!recallResponse) {
+          break;
+        }
+
+        totalCallsCompleted += 1;
+        currentResponse = recallResponse;
+        await processChatResponse(currentResponse);
+      }
 
       dispatch(setIsTyping(false));
-
-      if (data.showGraph) {
-        dispatch(
-          setMessages([
-            ...messages,
-            {
-              type: "surveydata",
-              sdata: data.sdata,
-              text: data.message,
-              studyID: data.studyID,
-            },
-          ])
-        );
-        return;
-      }
-
-      const aiMessage: any = {
-        text: data.message || "AI responded with no message.",
-        sender: "ai",
-        questions: data.questions,
-        instruction: data.instruction,
-        response: data.response || {},
-        liveLink: data.liveLink,
-      };
-      dispatch(setMessages([...messages, aiMessage]));
-
-      if (data.opt === true && data.qid) {
-        submit(data.qid);
-      }
-
-      if (data.active && data.route) {
-        navigate(data.route, { state: { studyID: data?.studyId } });
-      }
-
-      if (data.add && !data.questions) {
-        await refreshQuestionnaireList();
-      }
-
-      if (data.add && data.liveLink && studyID) {
-        await queryClient.invalidateQueries({ queryKey: ["studyInfo", studyID] });
-        await queryClient.refetchQueries({
-          queryKey: ["studyInfo", studyID],
-          type: "all",
-        });
-      }
-
-      dispatch(setFollowUp(data.followUp));
-
-      if (data.questions?.questions?.length > 0 && data.add) {
-        await refreshQuestionnaireList();
-      }
-
-      if (data.download === true && data?.pid) {
-        Process({ studyID: data.studyID, pid: data.pid });
-      }
     },
 
     onError: () => {

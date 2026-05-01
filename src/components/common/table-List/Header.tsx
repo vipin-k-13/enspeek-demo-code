@@ -133,6 +133,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
               <Button
                 type="button"
                 varinat="theme"
+                size="sm"
                 onClick={() =>
                   navigate("/crosstab/table-list", {
                     state: {
@@ -141,7 +142,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
                     },
                   })
                 }
-                className="ml-2 px-3"
+                className="ml-2 px-2.5 py-1.5 text-xs"
               >
                 Go <LuArrowRight className="ml-1 h-3.5 w-3.5" />
               </Button>

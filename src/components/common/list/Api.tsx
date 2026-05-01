@@ -94,7 +94,7 @@ export const useCopy = () => {
       return data;
     },
     onSuccess: async () => {
-      await refreshStudyList();
+      window.dispatchEvent(new CustomEvent("copy-study-success"));
       dispatch(setCopyModel(false));
       toast.success("Study copied successfully");
     },

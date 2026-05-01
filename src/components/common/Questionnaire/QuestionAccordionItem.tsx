@@ -10,7 +10,7 @@ import {
   LuCopy,
   LuGripVertical,
   LuGitBranchPlus,
-  LuPencil,
+  LuPencilLine,
   LuTrash2,
 } from "react-icons/lu";
 import Input from "../../ui/Input";
@@ -21,6 +21,7 @@ import { cn } from "../../../utils";
 import { formatQuestionTypeLabel } from "../../../utils/questionnaireTheme";
 import { useAccordionContext } from "../../ui/Accrodion/Accordion";
 import { Tooltip } from "../../ui/Tooltip";
+import IconActionButton from "../../ui/IconActionButton";
 
 interface QuestionAccordionItem {
   Data: Question;
@@ -109,10 +110,8 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
                 onClick={(e) => e.stopPropagation()}
               >
                 <Tooltip content="Edit question" position="top">
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    className="questionnaire-clickable transition hover:text-login-primary"
+                  <IconActionButton
+                    tone="primary"
                     data-test-id={`${Data.qID}_EDIT`}
                     onClick={() => setEditData()}
                     onKeyDown={(e) => {
@@ -122,14 +121,12 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
                       }
                     }}
                   >
-                    <LuPencil className="h-4 w-4" />
-                  </span>
+                    <LuPencilLine className="h-4 w-4" />
+                  </IconActionButton>
                 </Tooltip>
                 <Tooltip content="Copy question" position="top">
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    className="questionnaire-clickable transition hover:text-login-primary"
+                  <IconActionButton
+                    tone="primary"
                     data-test-id={`${Data.qID}_COPY`}
                     onClick={() => setIsCopyOpen(Data.qID, Data.qLabel)}
                     onKeyDown={(e) => {
@@ -140,13 +137,11 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
                     }}
                   >
                     <LuCopy className="h-4 w-4" />
-                  </span>
+                  </IconActionButton>
                 </Tooltip>
                 <Tooltip content="Delete question" position="top">
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    className="questionnaire-delete questionnaire-clickable transition hover:opacity-80"
+                  <IconActionButton
+                    tone="danger"
                     data-test-id={`${Data.qID}_DELETE`}
                     onClick={() => setIsDeleteOpen()}
                     onKeyDown={(e) => {
@@ -157,7 +152,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
                     }}
                   >
                     <LuTrash2 className="h-4 w-4" />
-                  </span>
+                  </IconActionButton>
                 </Tooltip>
               </div>
             )}

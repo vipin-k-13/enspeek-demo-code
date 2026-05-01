@@ -62,6 +62,7 @@
   --color-home-dropdown-search-text: var(--color-text-default);
   --color-home-dropdown-search-placeholder: var(--color-text-subtle);
   --color-study-progress: #f59e0b;
+  --color-study-progress-bg: #fff4df;
   --color-study-launched: var(--color-brand-info);
   --color-study-activated: #16a34a;
   --color-study-collecting: #22c55e;

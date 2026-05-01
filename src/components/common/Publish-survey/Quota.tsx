@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useSetQuota } from "./SurveyApi";
 import { LuCircleCheck, LuCircleX, LuClock3, LuPencilLine } from "react-icons/lu";
 import { Tooltip } from "../../ui/Tooltip";
+import IconActionButton from "../../ui/IconActionButton";
 
 interface QuotaProps {
   studyID: string;
@@ -56,12 +57,12 @@ const Quota: React.FC<QuotaProps> = ({
                   {isSetQuotaPending ? "Updating..." : editTotal}
                 </span>
                 <Tooltip content="Edit total quota" position="top">
-                  <button
+                  <IconActionButton
+                    tone="primary"
                     onClick={() => setIsEditingTotal(true)}
-                    className="questionnaire-clickable questionnaire-muted transition hover:text-login-primary"
                   >
                     <LuPencilLine size={16} />
-                  </button>
+                  </IconActionButton>
                 </Tooltip>
               </div>
             ) : (
@@ -81,12 +82,12 @@ const Quota: React.FC<QuotaProps> = ({
                   </button>
                 </Tooltip>
                 <Tooltip content="Cancel" position="top">
-                  <button
+                  <IconActionButton
+                    tone="danger"
                     onClick={() => setIsEditingTotal(false)}
-                    className="questionnaire-clickable questionnaire-delete transition hover:opacity-80"
                   >
                     <MdCancel size={18} />
-                  </button>
+                  </IconActionButton>
                 </Tooltip>
               </div>
             )}
@@ -128,7 +129,7 @@ const Quota: React.FC<QuotaProps> = ({
                 {disqualified}
               </p>
             </div>
-            <div className="rounded-[20px] bg-[var(--color-home-panel-soft)] p-4">
+            <div className="rounded-[20px] bg-[var(--color-study-progress-bg)] p-4">
               <div className="mb-3 flex items-center gap-2 text-[var(--color-study-progress)]">
                 <LuClock3 className="h-4 w-4" />
                 <p className="text-sm font-medium">Incomplete</p>
@@ -158,7 +159,7 @@ const Quota: React.FC<QuotaProps> = ({
                 {disqualified}
               </p>
             </div>
-            <div className="rounded-[20px] bg-[var(--color-home-panel-soft)] p-4">
+            <div className="rounded-[20px] bg-[var(--color-study-progress-bg)] p-4">
               <div className="mb-3 flex items-center gap-2 text-[var(--color-study-progress)]">
                 <LuClock3 className="h-4 w-4" />
                 <p className="text-sm font-medium">Incomplete</p>

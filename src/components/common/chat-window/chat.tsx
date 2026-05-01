@@ -59,13 +59,16 @@ const ChatWindow: React.FC<{
   }, [messages]);
 
   React.useEffect(() => {
-    if (!hasLoadedFromStorage.current) {
-      const chat = localStorage.getItem(CHAT_HISTORY_KEY);
-      if (chat) {
-        dispatch(setMessages(JSON.parse(chat)));
-      }
+    if (hasLoadedFromStorage.current || messages.length > 0) {
       hasLoadedFromStorage.current = true;
+      return;
     }
+
+    const chat = localStorage.getItem(CHAT_HISTORY_KEY);
+    if (chat) {
+      dispatch(setMessages(JSON.parse(chat)));
+    }
+    hasLoadedFromStorage.current = true;
   }, []);
 
   React.useEffect(() => {

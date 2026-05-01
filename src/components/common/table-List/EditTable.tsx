@@ -6,9 +6,10 @@ import BannerLogic from "../../global/BannerLogic";
 import { useEditTableListQuestion, useOpList } from "../Crosstab/CrossTab.Api";
 import { useLocation } from "react-router";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { MdDeleteForever } from "react-icons/md";
 import CrosstabInput from "../../global/CrosstabInput";
 import Button from "../../ui/Button";
+import IconActionButton from "../../ui/IconActionButton";
+import { Tooltip } from "../../ui/Tooltip";
 
 interface EditTableModalProps {
   qid: string;
@@ -147,16 +148,20 @@ export default function EditTableModal({
                       <span className="crosstab-title">{index + 1}.</span>{" "}
                       {item.pointLogic}
                     </span>
-                    <MdDeleteForever
-                      className="questionnaire-clickable h-5 w-5"
-                      onClick={() =>
-                        setLogics((prev) =>
-                          prev.filter(
-                            (logic) => logic.pointLogic !== item.pointLogic
+                    <Tooltip content="Delete logic" position="top">
+                      <IconActionButton
+                        tone="danger"
+                        onClick={() =>
+                          setLogics((prev) =>
+                            prev.filter(
+                              (logic) => logic.pointLogic !== item.pointLogic
+                            )
                           )
-                        )
-                      }
-                    />
+                        }
+                      >
+                        <LuTrash2 className="h-4 w-4" />
+                      </IconActionButton>
+                    </Tooltip>
                   </div>
                 ))}
               </div>
@@ -232,15 +237,14 @@ export default function EditTableModal({
                       ) : null}
                     </td>
                     <td className="px-3 py-3">
-                      <Button
-                        type="button"
-                        varinat="danger"
-                        size="icon"
-                        onClick={() => handleDeleteRow(row.id)}
-                        className="shadow-none"
-                      >
-                        <LuTrash2 className="h-4 w-4" />
-                      </Button>
+                      <Tooltip content="Delete row" position="top">
+                        <IconActionButton
+                          tone="danger"
+                          onClick={() => handleDeleteRow(row.id)}
+                        >
+                          <LuTrash2 className="h-4 w-4" />
+                        </IconActionButton>
+                      </Tooltip>
                     </td>
                   </tr>
                 ))}

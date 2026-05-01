@@ -5,19 +5,17 @@ const decrypt = (data: string): User => JSON.parse(atob(data));
 
 const saved = localStorage.getItem("user");
 
-const initialState: User = saved
-  ? decrypt(saved)
-  : {
-      apiToken: "",
-      firstName: "",
-      lastName: "",
-      userType: "",
-      grp: "",
-      suggest_login_password: 0,
-      updated_on: "",
-      enabled: 0,
-    };
-    
+const initialState: User = saved ? decrypt(saved) : {
+  apiToken: "",
+  firstName: "",
+  lastName: "",
+  userType: "",
+  grp: "",
+  suggest_login_password: 0,
+  updated_on: "",
+  enabled: 0,
+};
+
 const userSlice = createSlice({
   name: "user",
   initialState,

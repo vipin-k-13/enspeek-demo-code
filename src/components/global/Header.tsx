@@ -9,7 +9,7 @@ import { setMessages } from "../../store/ChatSlice";
 import DropDown from "./DropDown";
 import Modal from "../ui/Modal";
 import { Tooltip } from "../ui/Tooltip";
-import { getFullName, getInitials } from "../../utils";
+import { cn, getFullName, getInitials } from "../../utils";
 import Button from "../ui/Button";
 
 const Header = () => {
@@ -63,7 +63,12 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="home-surface sticky top-0 z-40 flex h-[62px] items-center justify-between gap-6 border-b home-border px-6">
+    <div
+      className={cn(
+        "home-surface sticky top-0 flex h-[62px] items-center justify-between gap-6 border-b home-border px-6",
+        logoutModalOpen ? "z-[130]" : "z-40"
+      )}
+    >
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <Link to={"/"}>
           <img src={ICON} alt="Enspeek" className="h-11 w-auto" />
