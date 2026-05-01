@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { FaPlus, FaRotateLeft, FaTrash } from "react-icons/fa6";
+import { FaPlus, FaRotateLeft } from "react-icons/fa6";
+import { LuTrash2 } from "react-icons/lu";
 import Button from "../ui/Button";
 import { useLogicOpts, useLogicVar } from "../common/Crosstab/CrossTab.Api";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +9,7 @@ import type { AppDispatch, RootState } from "../../store/store";
 import { setLogicData } from "../../store/CrossTabDataSlice";
 import { useLocation } from "react-router";
 import { Tooltip } from "../ui/Tooltip";
+import IconActionButton from "./../ui/IconActionButton";
 
 export interface LogicRow {
   id: string;
@@ -277,24 +279,24 @@ export default function BannerLogic({
                     <FaRotateLeft />
                   </button>
                 </Tooltip>
-                <Tooltip content="Delete this row" position="top">
-                  <button
+                <Tooltip content="Delete row" position="top">
+                  <IconActionButton
+                    tone="danger"
                     onClick={() => deleteRow(row.id)}
-                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none transition-colors"
                   >
-                    <FaTrash />
-                  </button>
+                    <LuTrash2 className="h-4 w-4" />
+                  </IconActionButton>
                 </Tooltip>
               </>
             )}
             {row.type === "simple" && (
-              <Tooltip content="Delete this row" position="top">
-                <button
+              <Tooltip content="Delete row" position="top">
+                <IconActionButton
+                  tone="danger"
                   onClick={() => deleteRow(row.id)}
-                  className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-delete shadow-none transition-colors"
                 >
-                  <FaTrash />
-                </button>
+                  <LuTrash2 className="h-4 w-4" />
+                </IconActionButton>
               </Tooltip>
             )}
           </div>

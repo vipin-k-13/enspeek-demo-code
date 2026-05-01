@@ -1,7 +1,8 @@
 import Button from "../../ui/Button";
 import { useEffect, useState } from "react";
 import { AiOutlineArrowsAlt } from "react-icons/ai";
-import { FaPlus, FaRotateLeft, FaTrash } from "react-icons/fa6";
+import { FaPlus, FaRotateLeft } from "react-icons/fa6";
+import { LuTrash2 } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogic, setValidateLogic } from "../../../store/CrosstabSlice";
 import type { AppDispatch, RootState } from "../../../store/store";
@@ -12,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "../../../services/apiService";
 import { cn } from "../../../utils";
 import { Tooltip } from "../../ui/Tooltip";
+import IconActionButton from "../../ui/IconActionButton";
 
 export interface LogicRow {
   id: string;
@@ -577,14 +579,12 @@ export default function QuestionLogic({
 
                   {index > 0 && (
                     <Tooltip content="Delete group" position="top">
-                      <Button
-                        varinat="danger"
-                        size="icon"
+                      <IconActionButton
+                        tone="danger"
                         onClick={() => deleteGroup(groupId)}
-                        className="rounded-[16px] questionnaire-delete shadow-none"
                       >
-                        <FaTrash />
-                      </Button>
+                        <LuTrash2 className="h-4 w-4" />
+                      </IconActionButton>
                     </Tooltip>
                   )}
                 </div>
@@ -687,14 +687,12 @@ export default function QuestionLogic({
                     </Button>
                   </Tooltip>
                   <Tooltip content="Delete" position="top">
-                    <Button
-                      varinat="danger"
-                      size="icon"
+                    <IconActionButton
+                      tone="danger"
                       onClick={() => deleteRow(row.id)}
-                      className="rounded-[16px] questionnaire-delete shadow-none"
                     >
-                      <FaTrash />
-                    </Button>
+                      <LuTrash2 className="h-4 w-4" />
+                    </IconActionButton>
                   </Tooltip>
                 </div>
               </div>

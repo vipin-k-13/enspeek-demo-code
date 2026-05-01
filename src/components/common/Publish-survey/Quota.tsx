@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useSetQuota } from "./SurveyApi";
 import { LuCircleCheck, LuCircleX, LuClock3, LuPencilLine } from "react-icons/lu";
 import { Tooltip } from "../../ui/Tooltip";
+import IconActionButton from "../../ui/IconActionButton";
 
 interface QuotaProps {
   studyID: string;
@@ -56,12 +57,12 @@ const Quota: React.FC<QuotaProps> = ({
                   {isSetQuotaPending ? "Updating..." : editTotal}
                 </span>
                 <Tooltip content="Edit total quota" position="top">
-                  <button
+                  <IconActionButton
+                    tone="primary"
                     onClick={() => setIsEditingTotal(true)}
-                    className="questionnaire-clickable questionnaire-muted transition hover:text-login-primary"
                   >
                     <LuPencilLine size={16} />
-                  </button>
+                  </IconActionButton>
                 </Tooltip>
               </div>
             ) : (
@@ -81,12 +82,12 @@ const Quota: React.FC<QuotaProps> = ({
                   </button>
                 </Tooltip>
                 <Tooltip content="Cancel" position="top">
-                  <button
+                  <IconActionButton
+                    tone="danger"
                     onClick={() => setIsEditingTotal(false)}
-                    className="questionnaire-clickable questionnaire-delete transition hover:opacity-80"
                   >
                     <MdCancel size={18} />
-                  </button>
+                  </IconActionButton>
                 </Tooltip>
               </div>
             )}

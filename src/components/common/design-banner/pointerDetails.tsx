@@ -4,9 +4,9 @@ import type { AppDispatch, RootState } from "../../../store/store";
 import { setBannerPointer } from "../../../store/CrossTabDataSlice";
 import BannerLogic from "../../global/BannerLogic";
 import { LuTrash2 } from "react-icons/lu";
-import { MdDeleteForever } from "react-icons/md";
 import { Skeleton } from "../../global/skeleton";
 import Button from "../../ui/Button";
+import IconActionButton from "../../ui/IconActionButton";
 
 interface pointDetailsProps {
   activeTab: number;
@@ -205,10 +205,12 @@ const PointDetails: React.FC<pointDetailsProps> = ({
                         <span className="crosstab-title">{index + 1}.</span>{" "}
                         {item.pointLogic}
                       </span>
-                      <MdDeleteForever
-                        className="questionnaire-clickable h-5 w-5"
+                      <IconActionButton
+                        tone="danger"
                         onClick={() => handleDeleteLogic(item.pointLogic)}
-                      />
+                      >
+                        <LuTrash2 className="h-4 w-4" />
+                      </IconActionButton>
                     </div>
                   );
                 })}
