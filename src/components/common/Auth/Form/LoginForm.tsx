@@ -15,14 +15,10 @@ import { Login } from "../../../../store/UserSlice";
 import { ColoredLogo } from "../../../../assets/icons";
 
 const LoginForm = () => {
-  const [isPasswordVisible, setIsPasswordVisible] =
-    React.useState<boolean>(false);
+  const [isPasswordVisible, setIsPasswordVisible] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
-  const [errors, setErrors] = React.useState<{
-    email?: string;
-    password?: string;
-  }>({});
+  const [errors, setErrors] = React.useState<{ email?: string; password?: string; }>({});
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -90,35 +86,15 @@ const LoginForm = () => {
       </div>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
-          <Input
-            id="email"
-            data-test-id="EMAIL"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            className="h-12 rounded-xl border-0 bg-login-input px-4 text-base text-login-input-text placeholder:text-[#a5a8bf] focus-visible:ring-2 focus-visible:ring-login-primary/40"
-          />
+          <Input id="email" data-test-id="EMAIL" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="h-12 rounded-xl border-0 bg-login-input px-4 text-base text-login-input-text placeholder:text-[#a5a8bf] focus-visible:ring-2 focus-visible:ring-login-primary/40" />
           {errors.email && (
             <p className="mt-1 text-sm text-red-600">{errors.email}</p>
           )}
         </div>
         <div>
           <div className="relative">
-            <Input
-              id="password"
-              type={isPasswordVisible ? "text" : "password"}
-              data-test-id="PASSWORD"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              className="h-12 rounded-xl border-0 bg-login-input px-4 pr-11 text-base text-login-input-text placeholder:text-[#a5a8bf] focus-visible:ring-2 focus-visible:ring-login-primary/40"
-            />
-            <button
-              type="button"
-              className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#a2a6be] hover:text-[#7f839f]"
-              onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-            >
+            <Input id="password" type={isPasswordVisible ? "text" : "password"} data-test-id="PASSWORD" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="h-12 rounded-xl border-0 bg-login-input px-4 pr-11 text-base text-login-input-text placeholder:text-[#a5a8bf] focus-visible:ring-2 focus-visible:ring-login-primary/40" />
+            <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#a2a6be] hover:text-[#7f839f]" onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
               {isPasswordVisible ? <LuEyeOff size={18} /> : <LuEye size={18} />}
             </button>
           </div>
@@ -126,13 +102,9 @@ const LoginForm = () => {
             <p className="mt-1 text-sm text-red-600">{errors.password}</p>
           )}
         </div>
-        <Button
-          type="submit"
-          data-test-id="SUBMIT"
-          className={cn(
-            "h-12 w-full rounded-xl bg-gradient-to-r from-login-primary to-login-bg-end text-base font-semibold text-white transition-all duration-300 hover:from-login-primary-hover hover:to-login-primary",
-          )}
-        >
+        <Button type="submit" data-test-id="SUBMIT" className={cn(
+          "h-12 w-full rounded-xl bg-gradient-to-r from-login-primary to-login-bg-end text-base font-semibold text-white transition-all duration-300 hover:from-login-primary-hover hover:to-login-primary",
+        )}>
           <span className="flex items-center justify-center">
             Sign in
             <LuArrowRight className="ml-2 h-4 w-4" />
@@ -146,20 +118,12 @@ const LoginForm = () => {
             <span className="bg-login-card px-3 text-login-muted">or</span>
           </div>
         </div>
-        <Button
-          varinat={"social"}
-          className="h-12 rounded-xl border border-[#e2e4f1] bg-white text-[15px] font-medium text-[#30334d] shadow-none hover:bg-[#f8f8fd] cursor-not-allowed"
-          disabled
-        >
+        <Button varinat={"social"} className="h-12 rounded-xl border border-[#e2e4f1] bg-white text-[15px] font-medium text-[#30334d] shadow-none hover:bg-[#f8f8fd] cursor-not-allowed" disabled>
           <GoogleIcon />
           <span>Continue with Google</span>
         </Button>
         <div className="text-center">
-          <Button
-            varinat={"link"}
-            className="text-sm text-[#5f63e9] hover:text-[#4f56e6] transition-colors cursor-not-allowed"
-            disabled
-          >
+          <Button varinat={"link"} className="text-sm text-[#5f63e9] hover:text-[#4f56e6] transition-colors cursor-not-allowed" disabled>
             Forgot password?
           </Button>
         </div>
