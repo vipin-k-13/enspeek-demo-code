@@ -129,7 +129,7 @@ const Quota: React.FC<QuotaProps> = ({
                 {disqualified}
               </p>
             </div>
-            <div className="rounded-[20px] bg-[var(--color-home-panel-soft)] p-4">
+            <div className="rounded-[20px] bg-[var(--color-study-progress-bg)] p-4">
               <div className="mb-3 flex items-center gap-2 text-[var(--color-study-progress)]">
                 <LuClock3 className="h-4 w-4" />
                 <p className="text-sm font-medium">Incomplete</p>
@@ -159,7 +159,7 @@ const Quota: React.FC<QuotaProps> = ({
                 {disqualified}
               </p>
             </div>
-            <div className="rounded-[20px] bg-[var(--color-home-panel-soft)] p-4">
+            <div className="rounded-[20px] bg-[var(--color-study-progress-bg)] p-4">
               <div className="mb-3 flex items-center gap-2 text-[var(--color-study-progress)]">
                 <LuClock3 className="h-4 w-4" />
                 <p className="text-sm font-medium">Incomplete</p>

@@ -9,7 +9,7 @@ import type { AppDispatch, RootState } from "../../store/store";
 import { setLogicData } from "../../store/CrossTabDataSlice";
 import { useLocation } from "react-router";
 import { Tooltip } from "../ui/Tooltip";
-import IconActionButton from "./../ui/IconActionButton";
+import IconActionButton from "../ui/IconActionButton";
 
 export interface LogicRow {
   id: string;
@@ -252,32 +252,32 @@ export default function BannerLogic({
             {row.type === "main" && (
               <>
                 <Tooltip content="Reset all" position="top">
-                  <Button
+                  <IconActionButton
+                    tone="neutral"
                     onClick={resetAllValues}
-                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none focus:outline-none"
                   >
                     <FaRotateLeft />
-                  </Button>
+                  </IconActionButton>
                 </Tooltip>
                 <Tooltip content="Add simple row" position="top">
-                  <Button
+                  <IconActionButton
+                    tone="primary"
                     onClick={addSimpleRow}
-                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-heading shadow-none focus:outline-none"
                   >
                     <FaPlus />
-                  </Button>
+                  </IconActionButton>
                 </Tooltip>
               </>
             )}
             {row.type === "condition" && (
               <>
                 <Tooltip content="Reset this row" position="top">
-                  <button
+                  <IconActionButton
+                    tone="neutral"
                     onClick={() => resetRow(row.id)}
-                    className="questionnaire-action-btn rounded-[16px] border questionnaire-border bg-white px-3 py-3 questionnaire-muted shadow-none transition-colors"
                   >
                     <FaRotateLeft />
-                  </button>
+                  </IconActionButton>
                 </Tooltip>
                 <Tooltip content="Delete row" position="top">
                   <IconActionButton

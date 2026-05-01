@@ -1,4 +1,3 @@
-import Button from "../../ui/Button";
 import { useEffect, useState } from "react";
 import { AiOutlineArrowsAlt } from "react-icons/ai";
 import { FaPlus, FaRotateLeft } from "react-icons/fa6";
@@ -543,37 +542,31 @@ export default function QuestionLogic({
                 <div className="flex items-center gap-2">
                   {selectedConditions[groupId] && (
                     <Tooltip content="Add condition" position="top">
-                      <Button
-                        varinat="secondary"
-                        size="icon"
+                      <IconActionButton
+                        tone="primary"
                         onClick={() => addConditionRow(groupId)}
-                        className="rounded-[16px] text-[var(--color-brand-primary)] shadow-none"
                       >
                         <AiOutlineArrowsAlt />
-                      </Button>
+                      </IconActionButton>
                     </Tooltip>
                   )}
                   <Tooltip content="Reset group" position="top">
-                    <Button
-                      varinat="cancel"
-                      size="icon"
+                    <IconActionButton
+                      tone="neutral"
                       onClick={() => resetAllGroupRows(groupId)}
-                      className="rounded-[16px] questionnaire-muted shadow-none"
                     >
                       <FaRotateLeft />
-                    </Button>
+                    </IconActionButton>
                   </Tooltip>
 
                   {groupId === lastGroupId && (
                     <Tooltip content="Add new logic block" position="top">
-                      <Button
-                        varinat="secondary"
-                        size="icon"
+                      <IconActionButton
+                        tone="primary"
                         onClick={addNewLogicGroup}
-                        className="rounded-[16px] questionnaire-heading shadow-none"
                       >
                         <FaPlus />
-                      </Button>
+                      </IconActionButton>
                     </Tooltip>
                   )}
 
@@ -677,14 +670,12 @@ export default function QuestionLogic({
 
                 <div className="flex items-center gap-2">
                   <Tooltip content="Reset" position="top">
-                    <Button
-                      varinat="cancel"
-                      size="icon"
+                    <IconActionButton
+                      tone="neutral"
                       onClick={() => resetRow(row.id)}
-                      className="rounded-[16px] questionnaire-muted shadow-none"
                     >
                       <FaRotateLeft />
-                    </Button>
+                    </IconActionButton>
                   </Tooltip>
                   <Tooltip content="Delete" position="top">
                     <IconActionButton
