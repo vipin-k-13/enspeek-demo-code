@@ -12,8 +12,7 @@ import {
   setSelectedId,
   setSelectedStudyName,
 } from "../../store/TriggerSlice";
-import { cn } from "../../utils";
-import { getInitials } from "../../utils";
+import { cn, getInitials, normalizeDisplayName } from "../../utils";
 import {
   LuArchive,
   LuChartColumn,
@@ -57,6 +56,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
   const questionMatch = (status || "").match(/(\d+)\s*questions?/i);
   const questionCount = questionMatch?.[1];
   const stateTheme = getStudyStateTheme(studystate || cleanStatus);
+  const displayOwnerName = normalizeDisplayName(owner, "Study Owner");
   const initials = getInitials(owner, "ST");
   const isOwner = Boolean(share);
 
@@ -143,7 +143,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
         <div className={cn("absolute bottom-3 left-0 top-3 w-[3px] rounded-r-full opacity-0 transition-opacity duration-200 group-hover:opacity-100", stateTheme.accentClass)} />
         <div className="mb-2 flex items-start justify-between gap-2">
           <div className="flex items-start gap-2">
-            <Tooltip content={owner || "Study Owner"} position="right">
+            <Tooltip content={displayOwnerName} position="right">
               <span
                 className={cn(
                   "mt-0.5 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-semibold uppercase shadow-sm",

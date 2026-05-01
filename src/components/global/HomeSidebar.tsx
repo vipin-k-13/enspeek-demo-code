@@ -154,7 +154,7 @@ const HomeSidebar: React.FC = () => {
             "px-2 text-center text-[13px] leading-none",
             activeTab === "myactive"
               ? "shadow-sm hover:bg-login-primary-hover"
-              : "home-muted shadow-none hover:bg-white hover:text-[var(--color-text-strong)]"
+              : "home-muted border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-text-strong)]"
           )}
           onClick={() => setActiveTab("myactive")}
         >
@@ -166,7 +166,7 @@ const HomeSidebar: React.FC = () => {
             "px-2 text-center text-[13px] leading-none",
             activeTab === "allactive"
               ? "shadow-sm hover:bg-login-primary-hover"
-              : "home-muted shadow-none hover:bg-white hover:text-[var(--color-text-strong)]"
+              : "home-muted border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-text-strong)]"
           )}
           onClick={() => setActiveTab("allactive")}
         >
@@ -178,7 +178,7 @@ const HomeSidebar: React.FC = () => {
             "px-2 text-center text-[13px] leading-none",
             activeTab === "isarchived"
               ? "shadow-sm hover:bg-login-primary-hover"
-              : "home-muted shadow-none hover:bg-white hover:text-[var(--color-text-strong)]"
+              : "home-muted border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-text-strong)]"
           )}
           onClick={() => setActiveTab("isarchived")}
         >
