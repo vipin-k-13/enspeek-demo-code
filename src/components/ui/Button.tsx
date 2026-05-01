@@ -58,10 +58,11 @@ const Button: FC<ButtonProps> = ({
 }) => {
   return (
     <button className={cn(
-      buttonToneVariants({ varinat }),
-      className,
       buttonBaseClasses,
+      buttonToneVariants({ varinat }),
       buttonSizeVariants({ size })
+      ,
+      className
     )}
       {...props}>
       {children}
