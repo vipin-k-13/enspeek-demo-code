@@ -1,6 +1,6 @@
 import { Card, CardContent } from "../../ui/Card";
 import Button from "../../ui/Button";
-import { LiaEdit } from "react-icons/lia";
+import { LuPencilLine } from "react-icons/lu";
 import { FaChevronDown } from "react-icons/fa6";
 import { useEffect, useRef, useState, type FC } from "react";
 import DropDown from "../../global/DropDown";
@@ -81,7 +81,7 @@ const UserCard: FC<UserProps> = ({ name, email, role, status, lastActive }) => {
               size={"sm"}
               className="flex text-md items-center"
             >
-              <LiaEdit className="h-4 w-4 mr-2" />
+              <LuPencilLine className="h-4 w-4 mr-2" />
               Edit
             </Button>
 

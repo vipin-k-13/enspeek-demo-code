@@ -10,7 +10,7 @@ import {
   LuCopy,
   LuGripVertical,
   LuGitBranchPlus,
-  LuPencil,
+  LuPencilLine,
   LuTrash2,
 } from "react-icons/lu";
 import Input from "../../ui/Input";
@@ -121,7 +121,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
                       }
                     }}
                   >
-                    <LuPencil className="h-4 w-4" />
+                    <LuPencilLine className="h-4 w-4" />
                   </IconActionButton>
                 </Tooltip>
                 <Tooltip content="Copy question" position="top">

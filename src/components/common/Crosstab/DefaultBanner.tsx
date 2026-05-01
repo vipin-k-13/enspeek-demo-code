@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   LuCopy,
   LuDownload,
-  LuFilePenLine,
+  LuPencilLine,
   LuSettings2,
   LuTable2,
   LuTrash2,
@@ -159,7 +159,7 @@ export default function DefaultBanner({
                 });
               }}
             >
-              <LuFilePenLine size={18} />
+              <LuPencilLine size={18} />
             </IconActionButton>
             <IconActionButton
               data-test-id={`${Title}_DELETE`}
