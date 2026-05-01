@@ -54,9 +54,18 @@ const HomeSidebar: React.FC = () => {
       refetch();
     };
 
+    const handleCopyStudySuccess = () => {
+      setPage(1);
+      setPageInput("1");
+      setSearchTerm("");
+      setActiveTab((prev) => (prev === "myactive" ? prev : "myactive"));
+    };
+
     window.addEventListener("refresh-study-list", handleRefreshStudyList);
+    window.addEventListener("copy-study-success", handleCopyStudySuccess);
     return () => {
       window.removeEventListener("refresh-study-list", handleRefreshStudyList);
+      window.removeEventListener("copy-study-success", handleCopyStudySuccess);
     };
   }, [refetch]);
 
