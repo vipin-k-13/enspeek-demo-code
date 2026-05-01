@@ -59,6 +59,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
   const displayOwnerName = normalizeDisplayName(owner, "Study Owner");
   const initials = getInitials(owner, "ST");
   const isOwner = Boolean(share);
+  const canOpenQuestionnaire = activeTab !== "isarchived";
 
   const baseDropdownItems = [
     {
@@ -139,7 +140,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
 
   return (
     <>
-      <div className="home-surface group relative w-full cursor-pointer overflow-visible rounded-[22px] border home-border-soft px-4 py-4 shadow-md transition-shadow duration-200 hover:shadow-lg">
+      <div className="home-surface group relative w-full cursor-default overflow-visible rounded-[22px] border home-border-soft px-4 py-4 shadow-md transition-shadow duration-200 hover:shadow-lg">
         <div className={cn("absolute bottom-3 left-0 top-3 w-[3px] rounded-r-full opacity-0 transition-opacity duration-200 group-hover:opacity-100", stateTheme.accentClass)} />
         <div className="mb-2 flex items-start justify-between gap-2">
           <div className="flex items-start gap-2">
@@ -156,10 +157,14 @@ export const StudyCard: React.FC<StudyCardProps> = ({
             <div className="min-w-0 flex-1">
                 <h3
                   data-test-id={name}
-                  className="home-heading break-words pr-1 text-[15px] font-semibold leading-5 whitespace-normal"
-                  onClick={() =>
-                    navigate("/questionnaire", { state: { studyID: id } })
-                  }
+                  className={cn(
+                    "home-heading break-words pr-1 text-[15px] font-semibold leading-5 whitespace-normal",
+                    canOpenQuestionnaire ? "cursor-pointer" : "cursor-default"
+                  )}
+                  onClick={() => {
+                    if (!canOpenQuestionnaire) return;
+                    navigate("/questionnaire", { state: { studyID: id } });
+                  }}
                 >
                   {name}
                 </h3>
@@ -182,7 +187,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
               trigger={
                 <div
                   data-test-id={`${name}_CLICK`}
-                  className="home-muted hover:bg-home-panel flex h-9 w-9 items-center justify-center rounded-full transition-colors"
+                  className="home-muted hover:bg-home-panel flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-colors"
                 >
                   <HiOutlineDotsVertical className="h-5 w-5" />
                 </div>
