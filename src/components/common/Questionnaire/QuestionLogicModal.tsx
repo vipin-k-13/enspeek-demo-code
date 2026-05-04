@@ -8,6 +8,7 @@ import { useLocation } from "react-router";
 import Button from "../../ui/Button";
 import LogicModel from "../../global/LogicModal";
 import { useState } from "react";
+import { LuSave } from "react-icons/lu";
 
 interface QuesLogicModalProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export default function QuesLogicModal({
   const logicPayload = useSelector(
     (state: RootState) => state.question.logicPayload
   );
-  const { mutate: QuesLogic } = useMutation({
+  const { mutate: QuesLogic, isPending } = useMutation({
     mutationKey: ["quesLogic"],
     mutationFn: async (qlPayload: QuesLogicPayload) => {
       const response = await apiRequest(
@@ -46,10 +47,14 @@ export default function QuesLogicModal({
       return response.response;
     },
     onSuccess: () => {
-      if (!isResetting) {
-        toast.success("Logic saved successfully");
+      if (isResetting) {
+        toast.success("Logic reset successfully");
+        setIsResetting(false);
+        if (qID) onSubmit(qID);
+        return;
       }
-      setIsResetting(false);
+
+      toast.success("Logic saved successfully");
       if (qID) onSubmit(qID);
       onClose();
     },
@@ -73,7 +78,6 @@ export default function QuesLogicModal({
 
     setTimeout(() => {
       handleSave();
-      toast.success("Logic reset successfully");
     }, 100);
   };
 
@@ -81,24 +85,58 @@ export default function QuesLogicModal({
     <LogicModel
       isOpen={isOpen}
       onClose={onClose}
-      Title="Edit or Add logic"
+      Title="Add/Edit Question Logic"
       description="Configure logic rules for this question. Save when the conditions, skip path, or termination behavior are ready."
-      className="max-w-[min(92vw,1320px)]"
+      className="max-w-[90vw]"
       footerContent={
         <div className="flex flex-wrap items-center justify-end gap-3">
           <Button
             varinat="cancel"
+            className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
             onClick={() => {
               handleReset();
             }}
+            disabled={isPending}
           >
-            Reset Logic
+            {isPending && isResetting ? (
+              <>
+                <span className="h-4 w-4 rounded-full border-2 border-[var(--color-text-strong)]/25 border-t-[var(--color-text-strong)] animate-spin" />
+                <span>
+                  Resetting
+                  <span className="copying-dots ml-0.5 inline-flex w-[1.5em] justify-start">
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                  </span>
+                </span>
+              </>
+            ) : (
+              "Reset Logic"
+            )}
           </Button>
           <Button
             varinat="success"
             onClick={handleSave}
+            disabled={isPending}
           >
-            Save Logic
+            {isPending ? (
+              <>
+                <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+                <span>
+                  Saving
+                  <span className="copying-dots ml-0.5 inline-flex w-[1.5em] justify-start">
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                  </span>
+                </span>
+              </>
+            ) : (
+              <>
+                <LuSave className="h-4 w-4" />
+                Save Logic
+              </>
+            )}
           </Button>
         </div>
       }

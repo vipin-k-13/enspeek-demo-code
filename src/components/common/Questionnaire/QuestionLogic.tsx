@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { AiOutlineArrowsAlt } from "react-icons/ai";
 import { FaPlus, FaRotateLeft } from "react-icons/fa6";
-import { LuTrash2 } from "react-icons/lu";
+import { LuGitBranchPlus, LuTrash2 } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogic, setValidateLogic } from "../../../store/CrosstabSlice";
 import type { AppDispatch, RootState } from "../../../store/store";
@@ -11,8 +10,8 @@ import { setLogicPayload } from "../../../store/QuestionSlice";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "../../../services/apiService";
 import { cn } from "../../../utils";
-import { Tooltip } from "../../ui/Tooltip";
 import IconActionButton from "../../ui/IconActionButton";
+import { Tooltip } from "../../ui/Tooltip";
 
 export interface LogicRow {
   id: string;
@@ -432,15 +431,6 @@ export default function QuestionLogic({
 
   return (
     <div>
-      <div className="mb-5">
-        <label
-          htmlFor="condition"
-          className="questionnaire-label block"
-        >
-          Question logic
-        </label>
-      </div>
-
       {uniqueGroupIds.map((groupId, index) => {
         const groupRows = rows.filter((r) => r.groupId === groupId);
         const mainRow = groupRows.find((r) => r.type === "main");
@@ -452,23 +442,26 @@ export default function QuestionLogic({
             className="questionnaire-card questionnaire-border mb-4 w-full rounded-[22px] border px-4 py-4 shadow-sm"
           >
             {mainRow && (
-              <div className="mb-4 flex flex-wrap items-center gap-3">
-                <Tooltip content="Conditions" position="top">
-                  <select
-                    name="condition"
-                    className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
-                    value={selectedConditions[groupId] || ""}
-                    onChange={(e) => handleFirstChange(groupId, e.target.value)}
-                  >
-                    <option value="">Select condition</option>
-                    {varsData?.condition?.length > 0 &&
-                      varsData.condition.map((cond: any, index: number) => (
-                        <option key={index} value={cond.code}>
-                          {cond.show}
-                        </option>
-                      ))}
-                  </select>
-                </Tooltip>
+              <div
+                className={cn(
+                  "flex flex-wrap items-center gap-3",
+                  conditionRows.length > 0 && "mb-4"
+                )}
+              >
+                <select
+                  name="condition"
+                  className="questionnaire-logic-select min-w-[220px] rounded-lg px-4 py-3 focus:outline-none"
+                  value={selectedConditions[groupId] || ""}
+                  onChange={(e) => handleFirstChange(groupId, e.target.value)}
+                >
+                  <option value="">Select condition</option>
+                  {varsData?.condition?.length > 0 &&
+                    varsData.condition.map((cond: any, index: number) => (
+                      <option key={index} value={cond.code}>
+                        {cond.show}
+                      </option>
+                    ))}
+                </select>
 
                 {selectedConditions[groupId] && (
                   <select
@@ -476,7 +469,7 @@ export default function QuestionLogic({
                     onChange={(e) =>
                       handleVariableChange(mainRow.id, e.target.value)
                     }
-                    className="questionnaire-logic-select min-w-[220px] rounded-[16px] px-4 py-3 focus:outline-none"
+                    className="questionnaire-logic-select min-w-[220px] rounded-lg px-4 py-3 focus:outline-none"
                   >
                     <option value="">Select variables</option>
                     {varsData?.variables?.survey?.length > 0 && (
@@ -503,7 +496,7 @@ export default function QuestionLogic({
                       onChange={(e) =>
                         handleOptionChange(mainRow.id, e.target.value)
                       }
-                      className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
+                      className="questionnaire-logic-select min-w-[200px] rounded-lg px-4 py-3 focus:outline-none"
                     >
                       <option value="">Select option</option>
                       {optsData[mainRow.variable].map(
@@ -522,7 +515,7 @@ export default function QuestionLogic({
                     onChange={(e) =>
                       handleValueChange(mainRow.id, e.target.value)
                     }
-                    className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
+                    className="questionnaire-logic-select min-w-[200px] rounded-lg px-4 py-3 focus:outline-none"
                   >
                     <option value="">Select value</option>
                     {optsData[mainRow.variable]
@@ -546,7 +539,7 @@ export default function QuestionLogic({
                         tone="primary"
                         onClick={() => addConditionRow(groupId)}
                       >
-                        <AiOutlineArrowsAlt />
+                        <LuGitBranchPlus className="h-4 w-4" />
                       </IconActionButton>
                     </Tooltip>
                   )}
@@ -560,14 +553,12 @@ export default function QuestionLogic({
                   </Tooltip>
 
                   {groupId === lastGroupId && (
-                    <Tooltip content="Add new logic block" position="top">
-                      <IconActionButton
-                        tone="primary"
-                        onClick={addNewLogicGroup}
-                      >
-                        <FaPlus />
-                      </IconActionButton>
-                    </Tooltip>
+                    <IconActionButton
+                      tone="primary"
+                      onClick={addNewLogicGroup}
+                    >
+                      <FaPlus />
+                    </IconActionButton>
                   )}
 
                   {index > 0 && (
@@ -592,24 +583,26 @@ export default function QuestionLogic({
                   rowIndex !== conditionRows.length - 1 && "mb-4"
                 )}
               >
-                <select
-                  value={row.connector || "AND"}
-                  onChange={(e) =>
-                    handleConnectorChange(row.id, e.target.value)
-                  }
-                  className="questionnaire-logic-select min-w-[120px] rounded-[16px] px-4 py-3 focus:outline-none"
-                >
-                  {connectors.map((connector) => (
-                    <option key={connector} value={connector}>
-                      {connector}
-                    </option>
-                  ))}
-                </select>
+                <Tooltip content="AND/OR condition" position="top">
+                  <select
+                    value={row.connector || "AND"}
+                    onChange={(e) =>
+                      handleConnectorChange(row.id, e.target.value)
+                    }
+                    className="questionnaire-logic-select min-w-[140px] rounded-lg px-4 py-3 focus:outline-none"
+                  >
+                    {connectors.map((connector) => (
+                      <option key={connector} value={connector}>
+                        {connector}
+                      </option>
+                    ))}
+                  </select>
+                </Tooltip>
 
                 <select
                   value={row.variable || ""}
                   onChange={(e) => handleVariableChange(row.id, e.target.value)}
-                  className="questionnaire-logic-select min-w-[220px] rounded-[16px] px-4 py-3 focus:outline-none"
+                  className="questionnaire-logic-select min-w-[220px] rounded-lg px-4 py-3 focus:outline-none"
                 >
                   <option value="">Select variables</option>
                   {varsData?.variables?.survey?.length > 0 && (
@@ -636,7 +629,7 @@ export default function QuestionLogic({
                       onChange={(e) =>
                         handleOptionChange(row.id, e.target.value)
                       }
-                      className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
+                      className="questionnaire-logic-select min-w-[200px] rounded-lg px-4 py-3 focus:outline-none"
                     >
                       <option value="">Select option</option>
                       {optsData[row.variable].map((opt: any, index: number) => (
@@ -651,7 +644,7 @@ export default function QuestionLogic({
                   <select
                     value={String(row.value) || ""}
                     onChange={(e) => handleValueChange(row.id, e.target.value)}
-                    className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
+                    className="questionnaire-logic-select min-w-[200px] rounded-lg px-4 py-3 focus:outline-none"
                   >
                     <option value="">Select value</option>
                     {optsData[row.variable]
@@ -669,7 +662,7 @@ export default function QuestionLogic({
                 )}
 
                 <div className="flex items-center gap-2">
-                  <Tooltip content="Reset" position="top">
+                  <Tooltip content="Reset row" position="top">
                     <IconActionButton
                       tone="neutral"
                       onClick={() => resetRow(row.id)}
@@ -677,7 +670,7 @@ export default function QuestionLogic({
                       <FaRotateLeft />
                     </IconActionButton>
                   </Tooltip>
-                  <Tooltip content="Delete" position="top">
+                  <Tooltip content="Delete row" position="top">
                     <IconActionButton
                       tone="danger"
                       onClick={() => deleteRow(row.id)}

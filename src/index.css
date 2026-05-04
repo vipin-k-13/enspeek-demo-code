@@ -454,6 +454,8 @@ body{
   color: var(--color-questionnaire-heading);
   font-weight: 600;
   box-shadow: 0 10px 24px rgba(79, 86, 230, 0.04);
+  padding-right: 3.25rem;
+  background-position: right 1rem center;
 }
 
 .questionnaire-logic-select-active {
