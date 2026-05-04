@@ -10,6 +10,7 @@ interface DynamicModelProps {
   Title: string;
   headerIcon?: React.ReactNode;
   description?: React.ReactNode;
+  descriptionClassName?: string;
   ButtonText: string;
   buttonIcon?: React.ReactNode;
   children: React.ReactNode;
@@ -18,6 +19,7 @@ interface DynamicModelProps {
   className?: string;
   bodyClassName?: string;
   footerContent?: React.ReactNode;
+  secondaryAction?: React.ReactNode;
   buttonVariant?: ButtonProps["varinat"];
 }
 
@@ -27,6 +29,7 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
   Title,
   headerIcon,
   description,
+  descriptionClassName,
   ButtonText,
   buttonIcon,
   children,
@@ -35,6 +38,7 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
   className = "",
   bodyClassName = "questionnaire-page-bg",
   footerContent,
+  secondaryAction,
   buttonVariant,
 }) => {
   if (!isOpen) return null;
@@ -58,7 +62,12 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
             </h3>
           </div>
           {description ? (
-            <p className="report-muted mt-3 text-sm leading-6">
+            <p
+              className={cn(
+                "mt-3 text-sm leading-6 text-[var(--color-text-muted)]",
+                descriptionClassName
+              )}
+            >
               {description}
             </p>
           ) : null}
@@ -72,20 +81,22 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
               {footerContent}
             </div>
           )}
-          {ButtonText && onClick && (
-
-          <Button
-            size="default"
-            varinat={resolvedButtonVariant}
-            onClick={onClick}
-            data-test-id="MODEL_BUTTON"
-            className="min-w-[180px]"
-            disabled={disable}
-          >
-            {buttonIcon}
-            {ButtonText}
-          </Button>
-          )}
+          <div className="flex items-center gap-3">
+            {secondaryAction}
+            {ButtonText && onClick && (
+              <Button
+                size="default"
+                varinat={resolvedButtonVariant}
+                onClick={onClick}
+                data-test-id="MODEL_BUTTON"
+                className="min-w-[180px]"
+                disabled={disable}
+              >
+                {buttonIcon}
+                {ButtonText}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </Modal>

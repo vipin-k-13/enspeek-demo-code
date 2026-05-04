@@ -28,7 +28,7 @@ import {
 import LoaderSpinner from "../../global/LoaderSpinner";
 import DropDown from "../../global/DropDown";
 import SetSubgroupModal from "./SetSubGroupModal";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "../../../services/apiService";
 import type { RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -68,6 +68,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   const { state } = useLocation();
   const [showSubgroupModal, setshowSubgroupModal] = useState(false);
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const { Process } = useProcessHook();
   const { DownloadExcel, isDownloadExcelPending } = useExcelDownload({
@@ -176,7 +177,12 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     retry: 1,
   });
 
-  const handleSave = () => {
+  const handleSave = async (selectedValue: string) => {
+    dispatch(setSelected(selectedValue));
+    await queryClient.refetchQueries({
+      queryKey: ["ReportView"],
+      type: "active",
+    });
     setshowSubgroupModal(false);
   };
 

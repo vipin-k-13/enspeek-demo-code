@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import DynamicModel from "../../global/DynamicModel";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../../store/store";
-import { setSelected } from "../../../store/FiltersSlice";
-import ModalInstruction from "../../ui/ModalInstruction";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store/store";
+import { LuListFilter, LuSave } from "react-icons/lu";
+import Button from "../../ui/Button";
 
 interface SetSubgroupModalProps {
   options: Record<string, any>[];
-  onSave: (selected: string) => void;
+  onSave: (selected: string) => void | Promise<void>;
   onClose: () => void;
 }
 
@@ -17,29 +17,61 @@ const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
   onClose,
 }) => {
   const { selected } = useSelector((state: RootState) => state.filter);
-  const [select, setSelect] = useState<string>(selected)
-  const dispatch = useDispatch<AppDispatch>();
+  const [select, setSelect] = useState<string>(selected);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await Promise.resolve(onSave(select));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <DynamicModel
       isOpen={true}
       onClose={onClose}
       Title="Choose Subgroup"
-      ButtonText="Save"
-      onClick={() => {
-        dispatch(setSelected(select))
-        onSave(selected)
-      }}
+      headerIcon={
+        <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
+          <LuListFilter className="h-5 w-5" />
+        </span>
+      }
+      description="Choose the subgroup variable you want to apply in the report view."
+      descriptionClassName="text-black [color:#000000]"
+      ButtonText={isSaving ? "Saving..." : "Save"}
+      buttonIcon={
+        isSaving ? (
+          <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+        ) : (
+          <LuSave className="h-4 w-4" />
+        )
+      }
+      onClick={handleSave}
+      disable={isSaving}
+      secondaryAction={
+        <Button
+          type="button"
+          varinat="cancel"
+          className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
+          onClick={onClose}
+          disabled={isSaving}
+        >
+          Cancel
+        </Button>
+      }
+      buttonVariant="success"
       className="max-w-lg"
+      bodyClassName="questionnaire-page-bg max-h-[calc(100vh-300px)]"
     >
-      <ModalInstruction>
-        Choose the subgroup variable you want to apply in the report view.
-      </ModalInstruction>
-      <div className="max-h-[60vh] px-4">
+      <div className="px-4">
         <div className="space-y-2">
           {options.map((option, index) => (
             <label
               key={index}
-              className="flex cursor-pointer items-center space-x-3 rounded-[16px] bg-white px-4 py-3 shadow-sm"
+              className="flex cursor-pointer items-center space-x-3 rounded-lg bg-white px-4 py-3 shadow-sm"
             >
               <input
                 type="radio"
