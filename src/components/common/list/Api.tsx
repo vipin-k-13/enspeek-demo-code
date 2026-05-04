@@ -90,10 +90,15 @@ export const useCopy = () => {
         studyID: studyId,
         studyName: studyName,
       });
-      const data = await res.response;
-      return data;
+      if (!res) {
+        return null;
+      }
+      return res.response;
     },
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      if (!data) {
+        return;
+      }
       window.dispatchEvent(new CustomEvent("copy-study-success"));
       dispatch(setCopyModel(false));
       toast.success("Study copied successfully");

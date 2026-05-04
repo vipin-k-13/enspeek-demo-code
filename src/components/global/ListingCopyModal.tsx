@@ -17,15 +17,6 @@ const ListingCopyModel: React.FC = () => {
   const [value, setValue] = useState<string>("");
   const { Copy, isPending } = useCopy();
 
-  if (isPending) {
-    return <LoaderSpinner />;
-  }
-
-  const handleClose = () => {
-    dispatch(setCopyModel(false));
-    setValue("");
-  };
-
   const defaultCopyName = selectedStudyName
     ? `${selectedStudyName} (copy)`
     : "";
@@ -36,6 +27,15 @@ const ListingCopyModel: React.FC = () => {
       setValue(defaultCopyName);
     }
   }, [copyModel, defaultCopyName]);
+
+  if (isPending) {
+    return <LoaderSpinner />;
+  }
+
+  const handleClose = () => {
+    dispatch(setCopyModel(false));
+    setValue("");
+  };
 
   return (
     <Modal isOpen={copyModel} onClose={handleClose} className="max-w-2xl">
