@@ -64,7 +64,7 @@ const FacebookModal: React.FC<FacebookModalProps> = ({ onClose }) => {
           </div>
         </div>
 
-        <div className="h-[calc(100vh-300px)] overflow-auto py-5 md:px-12">
+        <div className="max-h-[calc(100vh-300px)] overflow-auto py-5 md:px-12">
           <div className="flex flex-col gap-5">
             {data?.short_url ? (
               <>
