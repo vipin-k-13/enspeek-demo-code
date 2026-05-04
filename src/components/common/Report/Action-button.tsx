@@ -242,7 +242,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
               <Button
                 data-test-id="GROUP_TOGGLE_ON"
                 size="icon"
-                className="report-toolbar-btn bg-[var(--color-study-progress)] text-white hover:opacity-90"
+                className="report-toolbar-btn bg-[var(--color-study-progress)] text-white hover:bg-[var(--color-study-progress)] hover:text-white hover:opacity-90"
                 onClick={() => {
                   setshowSubgroupModal(true);
                 }}
@@ -278,7 +278,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
           <Button
             data-test-id="TABLE"
             size="icon"
-            className="report-toolbar-btn report-title border home-border-soft bg-white"
+            className="report-toolbar-btn report-title border home-border-soft bg-white hover:bg-white hover:text-[var(--color-text-strong)]"
             onClick={() => setShowTableView((prev) => !prev)}
           >
             {showTableView ? <LuChartColumnBig /> : <LuTable2 />}
@@ -301,7 +301,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
             <Button
               data-test-id="MORE_ACTIONS"
               size="icon"
-              className="report-toolbar-btn bg-[var(--color-questionnaire-multi)] text-white hover:opacity-90"
+              className="report-toolbar-btn bg-[var(--color-questionnaire-multi)] text-white hover:bg-[var(--color-questionnaire-multi)] hover:text-white hover:opacity-90"
               onClick={() => {
                 setShowMoreDropdown((prev) => !prev);
               }}
