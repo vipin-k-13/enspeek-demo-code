@@ -133,7 +133,7 @@ const DataList: FC<DataListProps> = ({
 
   return (
     <div className="w-full px-3 py-4 md:px-6 md:py-6">
-      {(isPending || DeleteIsPending) && (
+      {isPending && (
         <div className="flex items-center justify-center w-full h-full">
           <AiOutlineLoading3Quarters
             size={34}
@@ -179,13 +179,16 @@ const DataList: FC<DataListProps> = ({
         ))}
 
         <DeleteModel
+          qID={qId}
           label={oldLabel}
           isOpen={isDeleteOpen}
           onClose={() => setIsDeleteOpen(false)}
           onClick={() => QuestionDelete(qId)}
+          isPending={DeleteIsPending}
         />
 
         <CopyModel
+          qID={qId}
           label={oldLabel}
           isOpen={isCopyOpen}
           onClose={() => setIsCopyOpen(false)}

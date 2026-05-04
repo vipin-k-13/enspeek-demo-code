@@ -8,6 +8,7 @@ interface CopyModelProps {
   isOpen: boolean;
   onClick: (id: string, value: string) => void;
   onClose: () => void;
+  qID?: string;
   label: string;
   isPending?: boolean;
 }
@@ -16,6 +17,7 @@ const CopyModel: React.FC<CopyModelProps> = ({
   isOpen,
   onClick,
   onClose,
+  qID,
   label,
   isPending = false,
 }) => {
@@ -23,6 +25,13 @@ const CopyModel: React.FC<CopyModelProps> = ({
   const [QLabel, setQlabel] = React.useState<string>("");
   const displayLabel =
     label?.replace(/^[A-Za-z0-9_-]+\s*:\s*/, "").trim() || label;
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setQID("");
+      setQlabel("");
+    }
+  }, [isOpen, qID, label]);
 
   const handleClick = () => {
     if (QID !== "" && QLabel !== "") {
@@ -41,7 +50,7 @@ const CopyModel: React.FC<CopyModelProps> = ({
         </div>
         <p className="mt-4 text-[15px] leading-6 text-black">
           Create a copy of
-          <span className="font-semibold text-login-primary">{` ${displayLabel || "this question"}`}</span>
+          <span className="font-semibold text-login-primary">{` ${qID ? `${qID}: ` : ""}${displayLabel || "this question"}`}</span>
           {" "}with a new question ID and label.
         </p>
 
@@ -53,7 +62,7 @@ const CopyModel: React.FC<CopyModelProps> = ({
             <span className="questionnaire-heading text-base font-semibold">CQ</span>
             <input
               data-test-id="COPY_QUESTIONNAIRE_MODEL_1"
-              className="questionnaire-input questionnaire-heading w-full rounded-[18px] border border-login-primary/35 bg-white px-4 py-3 shadow-[0_8px_20px_rgba(85,90,230,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-login-primary/20"
+              className="home-text mt-3 w-full rounded-[18px] border border-login-primary/35 bg-white px-4 py-3 shadow-[0_8px_20px_rgba(85,90,230,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-login-primary/20"
               placeholder="Enter QID"
               value={QID}
               onChange={(e) => setQID(e.target.value)}
@@ -67,7 +76,7 @@ const CopyModel: React.FC<CopyModelProps> = ({
           </label>
           <input
             data-test-id="COPY_QUESTIONNAIRE_MODEL_2"
-            className="questionnaire-input questionnaire-heading w-full rounded-[18px] border border-login-primary/35 bg-white px-4 py-3 shadow-[0_8px_20px_rgba(85,90,230,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-login-primary/20"
+            className="home-text mt-3 w-full rounded-[18px] border border-login-primary/35 bg-white px-4 py-3 shadow-[0_8px_20px_rgba(85,90,230,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-login-primary/20"
             placeholder="Enter copied question label"
             value={QLabel}
             onChange={(e) => setQlabel(e.target.value)}
@@ -75,7 +84,7 @@ const CopyModel: React.FC<CopyModelProps> = ({
           />
         </div>
 
-        <div className="mt-4 flex items-start gap-3 rounded-[16px] home-panel-soft-bg px-4 py-3">
+        <div className="mt-4 flex items-center gap-3 rounded-[16px] home-panel-soft-bg px-4 py-3">
           <LuInfo className="mt-0.5 h-4 w-4 shrink-0 text-login-primary" />
           <p className="text-sm leading-6 text-black">
             Click <span className="font-semibold text-login-primary">Copy Question</span> and wait a moment while the duplicated question is created.

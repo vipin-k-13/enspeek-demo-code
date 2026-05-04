@@ -54,7 +54,7 @@ const DeleteModel = () => {
           <span className="font-semibold text-[var(--color-questionnaire-stop)]">{` ${selectedStudyName || "this study"}`}</span>
           ? This action cannot be undone.
         </p>
-        <div className="mt-4 flex items-start gap-3 rounded-[16px] home-panel-soft-bg px-4 py-3">
+        <div className="mt-4 flex items-center gap-3 rounded-[16px] home-panel-soft-bg px-4 py-3">
           <LuInfo className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-questionnaire-stop)]" />
           <p className="text-sm leading-6 text-black">
             Type <span className="font-semibold text-[var(--color-questionnaire-stop)]">delete</span> to confirm this action.

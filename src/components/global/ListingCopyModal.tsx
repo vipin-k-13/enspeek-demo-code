@@ -62,7 +62,7 @@ const ListingCopyModel: React.FC = () => {
             })
           }
         />
-        <div className="mt-4 flex items-start gap-3 rounded-[16px] home-panel-soft-bg px-4 py-3">
+        <div className="mt-4 flex items-center gap-3 rounded-[16px] home-panel-soft-bg px-4 py-3">
           <LuInfo className="mt-0.5 h-4 w-4 shrink-0 text-login-primary" />
           <p className="text-sm leading-6 text-black">
             Click <span className="font-semibold text-login-primary">Copy Study</span> and wait a moment while the duplicated study is created.
