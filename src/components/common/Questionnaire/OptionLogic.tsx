@@ -179,6 +179,17 @@ export default function OptionLogic({
       {logic.map((row, idx) => (
         <div key={row.row} className="flex items-center">
           <div className="flex flex-wrap items-center gap-3">
+             {(row.value || row.terminate) && (
+              <Tooltip content="Reset logic" position="top">
+                <button
+                  type="button"
+                  onClick={() => handleReset(idx)}
+                  className="questionnaire-clickable inline-flex h-9 w-9 items-center justify-center rounded-full border questionnaire-border bg-white questionnaire-muted transition-colors hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-questionnaire-danger)] focus:outline-none"
+                >
+                  <TbRefresh className="h-4 w-4" />
+                </button>
+              </Tooltip>
+            )}
             <Tooltip
               content={
                 row.terminate ? "Remove termination" : "Apply termination"
@@ -223,18 +234,6 @@ export default function OptionLogic({
                 <LuChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 questionnaire-muted" />
               </div>
             </Tooltip>
-
-            {(row.value || row.terminate) && (
-              <Tooltip content="Reset logic" position="top">
-                <button
-                  type="button"
-                  onClick={() => handleReset(idx)}
-                  className="questionnaire-clickable inline-flex h-9 w-9 items-center justify-center rounded-full border questionnaire-border bg-white questionnaire-muted transition-colors hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-questionnaire-danger)] focus:outline-none"
-                >
-                  <TbRefresh className="h-4 w-4" />
-                </button>
-              </Tooltip>
-            )}
           </div>
         </div>
       ))}

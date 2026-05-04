@@ -41,6 +41,8 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
   const { isExpanded } = useAccordionContext();
   const { launch, output } = useSelector((state: RootState) => state.study);
   const disableActions = launch === 1 && output === 1;
+  const displayLabel =
+    Data.qLabel?.replace(/^[A-Za-z0-9_-]+\s*:\s*/, "").trim() || Data.qLabel;
   const logic2Skip = useSelector(
     (state: RootState) => state.question.logic2Skip?.[Data.qID]
   );
@@ -70,7 +72,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
             </span>
             <div className="min-w-0 flex-1 pr-1">
               <p className="questionnaire-heading truncate text-left text-[18px] font-semibold">
-                {Data.qText}
+                {displayLabel}
               </p>
             </div>
             <div className="hidden items-center gap-3 md:flex">
