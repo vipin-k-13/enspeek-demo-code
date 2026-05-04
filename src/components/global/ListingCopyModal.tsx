@@ -6,8 +6,8 @@ import { handleKeyPress } from "../../utils";
 import { useCopy } from "../common/list/Api";
 import { setCopyModel } from "../../store/TriggerSlice";
 import Modal from "../ui/Modal";
-import ModalInstruction from "../ui/ModalInstruction";
 import Button from "../ui/Button";
+import { LuCopy, LuInfo } from "react-icons/lu";
 
 const ListingCopyModel: React.FC = () => {
   const { selectedStudyName, copyModel, selectedId } = useSelector(
@@ -29,15 +29,26 @@ const ListingCopyModel: React.FC = () => {
   const defaultCopyName = selectedStudyName
     ? `${selectedStudyName} (copy)`
     : "";
-  const draftValue = value.trim() !== "" ? value : defaultCopyName;
+  const draftValue = value;
+
+  React.useEffect(() => {
+    if (copyModel) {
+      setValue(defaultCopyName);
+    }
+  }, [copyModel, defaultCopyName]);
 
   return (
-    <Modal isOpen={copyModel} onClose={handleClose} className="max-w-md">
+    <Modal isOpen={copyModel} onClose={handleClose} className="max-w-2xl">
       <div className="p-6">
-        <h3 className="home-heading text-[22px] font-bold">Copy Study</h3>
-        <p className="home-muted mt-3 text-[15px] leading-6">
+        <div className="flex items-center gap-3">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
+            <LuCopy className="h-5 w-5" />
+          </span>
+          <h3 className="home-heading text-[24px] font-extrabold">Copy Study</h3>
+        </div>
+        <p className="mt-4 text-[15px] leading-6 text-black">
           Create a copy of
-          <span className="home-heading font-semibold">{` ${selectedStudyName || "this study"}`}</span>
+          <span className="font-semibold text-login-primary">{` ${selectedStudyName || "this study"}`}</span>
           {" "}with a new study name.
         </p>
         <label className="home-heading mt-5 block text-[15px] font-semibold">
@@ -48,7 +59,7 @@ const ListingCopyModel: React.FC = () => {
           onChange={(e) => {
             setValue(e.target.value);
           }}
-          className="questionnaire-input home-text mt-3 w-full rounded-[18px] border questionnaire-border px-4 py-3 focus-visible:outline-none"
+          className="home-text mt-3 w-full rounded-[18px] border border-login-primary/35 bg-white px-4 py-3 shadow-[0_8px_20px_rgba(85,90,230,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-login-primary/20"
           placeholder="Enter copied study name"
           onKeyDown={(e) =>
             handleKeyPress(e, () => {
@@ -57,13 +68,17 @@ const ListingCopyModel: React.FC = () => {
             })
           }
         />
-        <ModalInstruction>
-          Click <span className="font-semibold">Copy Study</span> and wait a moment while the duplicated study is created.
-        </ModalInstruction>
+        <div className="mt-4 flex items-start gap-3 rounded-[16px] home-panel-soft-bg px-4 py-3">
+          <LuInfo className="mt-0.5 h-4 w-4 shrink-0 text-login-primary" />
+          <p className="text-sm leading-6 text-black">
+            Click <span className="font-semibold text-login-primary">Copy Study</span> and wait a moment while the duplicated study is created.
+          </p>
+        </div>
         <div className="mt-6 flex justify-end gap-3">
           <Button
             type="button"
             varinat="cancel"
+            className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
             onClick={handleClose}
           >
             Cancel
@@ -77,6 +92,7 @@ const ListingCopyModel: React.FC = () => {
             }}
             disabled={isPending || draftValue.trim() === ""}
           >
+            <LuCopy className="h-4 w-4" />
             Copy Study
           </Button>
         </div>
