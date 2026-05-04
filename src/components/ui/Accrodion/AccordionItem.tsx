@@ -77,8 +77,9 @@ export const AccordionTrigger: React.FC<AccordionTriggerProps> = ({
 
   return (
     <h3 id={headingId}>
-      <button
-        type="button"
+      <div
+        role="button"
+        tabIndex={disabled ? -1 : 0}
         aria-expanded={expanded}
         aria-controls={contentId}
         id={headingId}
@@ -87,11 +88,10 @@ export const AccordionTrigger: React.FC<AccordionTriggerProps> = ({
         } ${className}`}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
-        disabled={disabled}
         data-state={expanded ? 'open' : 'closed'}
       >
         {children}
-      </button>
+      </div>
     </h3>
   );
 };

@@ -13,7 +13,7 @@ import { cn } from "../../../utils";
 import { setQType } from "../../../store/TriggerSlice";
 import { setChatOpen } from "../../../store/ChatSlice";
 import { useRI } from "./Api";
-import { LuChevronDown, LuGripVertical } from "react-icons/lu";
+import { LuChevronDown, LuGripVertical, LuSave } from "react-icons/lu";
 import { Tooltip } from "../../ui/Tooltip";
 
 interface QuestionnaireForm {
@@ -53,6 +53,8 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
   const [qInstruction, setQinstruction] = React.useState<string>(
     data?.qNote3 ? data.qNote3 : ""
   );
+  const displayEditLabel =
+    data?.qLabel?.replace(/^[A-Za-z0-9_-]+\s*:\s*/, "").trim() || data?.qLabel;
   const [optionCount, setOptionCount] = React.useState<number>(0);
   const [options, setOptions] = React.useState<Option[]>(
     data?.rowOptionList ? data.rowOptionList : []
@@ -91,7 +93,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
     setOptionCount(0);
   };
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending: isCreatePending } = useMutation({
     mutationKey: ["questionCreate"],
     mutationFn: async (payload: QuestionPayload) => {
       const res = await apiRequest("post", "questionnaire/add", payload);
@@ -105,7 +107,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
     },
   });
 
-  const { mutate: QuestionEdit } = useMutation({
+  const { mutate: QuestionEdit, isPending: isEditPending } = useMutation({
     mutationKey: ["questionsEdit"],
     mutationFn: async (data: Question) => {
       const res = await apiRequest("post", `questionnaire/edit`, {
@@ -252,6 +254,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
     isSelectableType !== "open-end-medium" &&
     isSelectableType !== "text-only" &&
     isSelectableType !== "stop";
+  const isSaving = data ? isEditPending : isCreatePending;
 
   return (
     <div className="questionnaire-page-bg z-50 mb-4 w-full p-2 md:p-6">
@@ -268,7 +271,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
               </span>
               <div className="min-w-0">
                 <h2 className="questionnaire-heading truncate text-lg font-semibold md:text-[22px]">
-                  {qtext || label || data?.qText || "Question"}
+                  {data ? displayEditLabel || qtext || data?.qText || "Question" : qtext || label || "Question"}
                 </h2>
               </div>
             </div>
@@ -278,14 +281,33 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                 varinat="success"
                 className="capitalize"
                 onClick={data ? handleUpdate : handleClick}
+                disabled={isSaving}
               >
-                {data ? "Save" : "Submit"}
+                {isSaving ? (
+                  <>
+                    <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+                    <span>
+                      Saving
+                      <span className="copying-dots ml-0.5 inline-flex w-[1.5em] justify-start">
+                        <span>.</span>
+                        <span>.</span>
+                        <span>.</span>
+                      </span>
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <LuSave className="h-4 w-4" />
+                    {data ? "Save" : "Submit"}
+                  </>
+                )}
               </Button>
               <Button
                 type="button"
                 varinat="cancel"
-                className="px-5"
+                className="border-gray-300 px-5 text-[var(--color-text-strong)] hover:bg-gray-50"
                 onClick={onClose}
+                disabled={isSaving}
               >
                 Close
               </Button>
@@ -433,7 +455,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                   varinat="theme"
                   size="default"
                   onClick={createOption}
-                  disabled={isPending}
+                  disabled={isSaving}
                   >
                     Create
                   </Button>

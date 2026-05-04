@@ -27,7 +27,7 @@ const QuestionsInput: React.FC<QuestionsInput> = ({  error = false,
           value={value}
           onChange={onChange}
           className={cn(
-            "questionnaire-input questionnaire-heading questionnaire-clickable w-full rounded-[18px] border px-4 py-3.5 text-base focus:outline-none",
+            "questionnaire-input questionnaire-heading w-full rounded-[18px] border px-4 py-3.5 text-base focus:outline-none",
             error ? "border-red-400 pr-10" : "questionnaire-border border"
           )}
         />

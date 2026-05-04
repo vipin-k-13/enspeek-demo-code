@@ -19,7 +19,7 @@ const RowOptions:React.FC<RowOptions> = ({optionKey, Value, onChange, onDelete, 
       <label htmlFor={`row`} className="questionnaire-label w-10 shrink-0 text-base font-medium">
         R{optionKey}
       </label>
-      <Input value={Value} onChange={(e)=>onChange(e.target.value)} className={`questionnaire-heading questionnaire-clickable rounded-[18px] border-0 bg-transparent px-1 py-1 text-base focus-visible:ring-0 ${
+      <Input value={Value} onChange={(e)=>onChange(e.target.value)} className={`questionnaire-heading rounded-[18px] border-0 bg-transparent px-1 py-1 text-base focus-visible:ring-0 ${
           error ? "ring-1 ring-red-400" : ""
         }`} required />
       <IconActionButton
