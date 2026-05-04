@@ -5,7 +5,12 @@ import type { AppDispatch, RootState } from "../../../store/store";
 import { toast } from "sonner";
 import { queryClient } from "../../../App";
 import { setFilterStudys } from "../../../store/CrosstabStudySlice";
-import { setCopyModel, setDeleteModel } from "../../../store/TriggerSlice";
+import {
+  setCopyModel,
+  setDeleteModel,
+  setSelectedId,
+  setSelectedStudyName,
+} from "../../../store/TriggerSlice";
 
 const removeStudyFromList = (items: any[], studyId: string) =>
   items.filter((prev) => (prev.studyid ?? prev.studyID) !== studyId);
@@ -51,26 +56,35 @@ export const useDelete = () => {
   const { apiToken } = useSelector((state: RootState) => state.user);
   const { FilterStudys } = useSelector((state: RootState) => state.study);
   const dispatch = useDispatch<AppDispatch>();
-  const { mutate: Delete } = useMutation({
+  const { mutate: Delete, isPending } = useMutation({
     mutationKey: ["studyDelete"],
     mutationFn: async (selectedStudies: string) => {
-      return await apiRequest("post", "study/delete", {
+      const res = await apiRequest("post", "study/delete", {
         apiToken: apiToken,
         study_list: [selectedStudies],
       });
+      if (!res) {
+        return null;
+      }
+      return res;
     },
     onMutate(variables) {
       const newData = removeStudyFromList(FilterStudys, variables);
       dispatch(setFilterStudys(newData));
     },
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      if (!data) {
+        return;
+      }
       await refreshStudyList();
+      dispatch(setSelectedId(""));
+      dispatch(setSelectedStudyName(""));
       dispatch(setDeleteModel(false));
       toast.success("Study deleted successfully");
     },
   });
 
-  return { Delete };
+  return { Delete, isPending };
 };
 
 export const useCopy = () => {
