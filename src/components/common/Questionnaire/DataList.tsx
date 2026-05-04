@@ -58,7 +58,7 @@ const DataList: FC<DataListProps> = ({
       setAllSubmittedItems(newData);
     },
   });
-  const { mutate: QuestionCopy } = useMutation({
+  const { mutate: QuestionCopy, isPending: isCopyPending } = useMutation({
     mutationKey: ["questionsCopy"],
     mutationFn: async (data: {
       CQID: string;
@@ -190,6 +190,7 @@ const DataList: FC<DataListProps> = ({
           isOpen={isCopyOpen}
           onClose={() => setIsCopyOpen(false)}
           onClick={(newId, label) => QuestionCopy({ CQID: qId, newId, label })}
+          isPending={isCopyPending}
         />
         <QuesLogicModal
           isOpen={isLogicOpen}
