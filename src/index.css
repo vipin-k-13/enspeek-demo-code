@@ -236,6 +236,33 @@ body{
 .study-state-progress-accent { background-color: var(--color-study-progress); }
 .study-state-progress-avatar { background-color: var(--color-study-progress); color: white; }
 
+.copying-dots > span {
+  opacity: 0.2;
+  animation: copying-dot-fade 1.2s infinite;
+}
+
+.copying-dots > span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.copying-dots > span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes copying-dot-fade {
+  0%, 20% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
+  }
+}
+
 .study-state-launched-text { color: var(--color-study-launched); }
 .study-state-launched-accent { background-color: var(--color-study-launched); }
 .study-state-launched-avatar { background-color: var(--color-study-launched); color: white; }

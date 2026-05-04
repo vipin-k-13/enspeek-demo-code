@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
-import LoaderSpinner from "./LoaderSpinner";
 import { handleKeyPress } from "../../utils";
 import { useCopy } from "../common/list/Api";
 import { setCopyModel } from "../../store/TriggerSlice";
@@ -27,10 +26,6 @@ const ListingCopyModel: React.FC = () => {
       setValue(defaultCopyName);
     }
   }, [copyModel, defaultCopyName]);
-
-  if (isPending) {
-    return <LoaderSpinner />;
-  }
 
   const handleClose = () => {
     dispatch(setCopyModel(false));
@@ -64,7 +59,6 @@ const ListingCopyModel: React.FC = () => {
           onKeyDown={(e) =>
             handleKeyPress(e, () => {
               Copy({ studyId: selectedId, studyName: draftValue });
-              setValue("");
             })
           }
         />
@@ -88,12 +82,27 @@ const ListingCopyModel: React.FC = () => {
             varinat="theme"
             onClick={() => {
               Copy({ studyId: selectedId, studyName: draftValue });
-              setValue("");
             }}
             disabled={isPending || draftValue.trim() === ""}
           >
-            <LuCopy className="h-4 w-4" />
-            Copy Study
+            {isPending ? (
+              <>
+                <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+                <span>
+                  Copying
+                  <span className="copying-dots ml-0.5 inline-flex w-[1.5em] justify-start">
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                  </span>
+                </span>
+              </>
+            ) : (
+              <>
+                <LuCopy className="h-4 w-4" />
+                Copy Study
+              </>
+            )}
           </Button>
         </div>
       </div>
