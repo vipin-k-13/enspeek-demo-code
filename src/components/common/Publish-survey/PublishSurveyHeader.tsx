@@ -12,7 +12,13 @@ import {
 } from "../../../store/CrosstabSlice";
 import FacebookModal from "./FacebookModal";
 import WhatsaapModal from "./WhatsaapModal";
-import { LuArrowRight, LuDownload } from "react-icons/lu";
+import {
+  LuArrowRight,
+  LuClock3,
+  LuDownload,
+  LuFileSpreadsheet,
+  LuFiles,
+} from "react-icons/lu";
 import PageSubheader from "../../ui/PageSubheader";
 import { Tooltip } from "../../ui/Tooltip";
 import Button from "../../ui/Button";
@@ -50,14 +56,17 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
   const rawDataDropdown = [
     {
       Title: "Download Excel Raw Data",
+      Icon: LuFileSpreadsheet,
       onClick: () => {},
     },
     {
       Title: "Download SPSS Raw Data",
+      Icon: LuFiles,
       onClick: () => {},
     },
     {
       Title: "Download History",
+      Icon: LuClock3,
       onClick: () => {
         dispatch(setIsHistoryModalOpen(true));
       },
@@ -77,18 +86,6 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
               <h1 className="questionnaire-heading text-[18px] font-semibold leading-none md:text-[22px]">
                 Publish Survey
               </h1>
-              {!isSurveyActive && (
-                <div className="questionnaire-question-count inline-flex min-h-[34px] items-center gap-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="questionnaire-question-count-value text-sm font-semibold md:text-base">
-                      Survey
-                    </span>
-                    <span className="questionnaire-question-count-label text-[11px] font-semibold uppercase tracking-[0.16em]">
-                      Not Active
-                    </span>
-                  </div>
-                </div>
-              )}
             </div>
         }
         right={
@@ -181,7 +178,7 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
                   </Button>
                   {open && (
                     <div className="absolute right-0 z-10 rounded-lg shadow-2xl">
-                      <DropDown Data={rawDataDropdown} className="w-52" />
+                      <DropDown Data={rawDataDropdown} className="" />
                     </div>
                   )}
                 </div>
