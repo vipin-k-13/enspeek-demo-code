@@ -92,7 +92,6 @@ export default function HistoryModal({
         <Button
           type="button"
           varinat="cancel"
-          className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
           onClick={() => onOpenChange(false)}
           disabled={isClearHistoryPending}
         >

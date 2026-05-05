@@ -61,13 +61,13 @@ export default function FilterModal({isOpen, setIsOpen}:{isOpen:boolean, setIsOp
       </ModalInstruction>
       <div className="max-h-[60vh] overflow-y-auto">
         {filter.FilterList.map((option) => (
-          <div key={option.id} className="mb-3 flex items-center rounded-[16px] bg-white px-4 py-3 shadow-sm">
+          <div key={option.id} className="modal-card mb-3 flex items-center rounded-[16px] px-4 py-3">
             <input
               type="checkbox"
               id={option.id}
               checked={selectedFilters.includes(option.id)}
               onChange={() => toggleFilter(option.id)}
-              className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary"
+              className="h-4 w-4 cursor-pointer rounded border-[var(--color-border-default)] text-[var(--color-brand-primary)] focus:ring-[var(--color-brand-primary)]"
             />
             <label htmlFor={option.id} className="ml-3 home-text text-sm font-medium">
               {option.label}

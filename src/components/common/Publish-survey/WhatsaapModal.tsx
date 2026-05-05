@@ -14,6 +14,7 @@ import type { RootState } from "../../../store/store";
 import { apiRequest } from "../../../services/apiService";
 import Modal from "../../ui/Modal";
 import Button from "../../ui/Button";
+import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
 
 interface WhatsaapModalProps {
   onSave: (selected: string) => void;
@@ -49,15 +50,15 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
     <Modal
       isOpen={true}
       onClose={onClose}
-      className="max-w-[90vw] md:max-w-[980px] rounded-[36px] border border-white/70 bg-white shadow-[0_40px_100px_rgba(30,41,59,0.22)]"
+      className="max-w-[90vw] md:max-w-[980px]"
     >
-      <div className="bg-white">
+      <div className="theme-surface">
         <div className="questionnaire-border px-6 py-6 pr-16">
           <div className="flex items-center gap-3">
-            <div className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-[#16a34a]">
+            <div className="modal-header-icon text-[var(--color-study-activated)]">
               <FaWhatsapp className="h-5 w-5" />
             </div>
-            <h3 className="home-heading text-[24px] font-extrabold text-[#08144f]">
+            <h3 className="modal-title">
               WhatsApp Link
             </h3>
           </div>
@@ -67,13 +68,13 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
           <div className="flex flex-col gap-5">
             {data?.short_url ? (
               <>
-                <div className="flex items-center gap-5 rounded-lg bg-white px-5 py-5 shadow-[0_12px_28px_rgba(91,77,247,0.07)] border border-[#16a34a]/35">
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-[#16a34a]">
+                <div className="modal-card flex items-center gap-5 px-5 py-5">
+                  <span className="modal-header-icon text-[var(--color-study-activated)]">
                     <LuLink className="h-5 w-5" />
                   </span>
                   <div className="min-w-0 flex-1 text-left">
                     <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap">
-                      <strong className="questionnaire-heading shrink-0 text-[24px] font-extrabold text-[#08144f]">
+                      <strong className="questionnaire-heading shrink-0 text-[24px] font-extrabold text-[var(--color-text-strong)]">
                         Link:
                       </strong>
                       <a
@@ -81,7 +82,7 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
                         href={data.short_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="min-w-0 truncate text-[22px] leading-8 text-[#16a34a] underline decoration-dashed underline-offset-4"
+                        className="min-w-0 truncate text-[22px] leading-8 text-[var(--color-study-activated)] underline decoration-dashed underline-offset-4"
                       >
                         {data.short_url}
                       </a>
@@ -90,16 +91,16 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
                 </div>
 
                 {data.Message && (
-                  <div className="flex items-center gap-5 rounded-lg bg-white px-5 py-5 shadow-[0_12px_28px_rgba(91,77,247,0.07)] border border-login-primary/35">
-                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-[var(--color-brand-info)]">
+                  <div className="modal-card flex items-center gap-5 px-5 py-5">
+                    <span className="modal-header-icon text-[var(--color-study-activated)]">
                       <LuMessageSquareQuote className="h-5 w-5" />
                     </span>
                     <div className="min-w-0 flex-1 text-left">
                       <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap">
-                        <p className="questionnaire-heading shrink-0 text-[24px] font-extrabold text-[#08144f]">
+                        <p className="questionnaire-heading shrink-0 text-[24px] font-extrabold text-[var(--color-text-strong)]">
                           Message:
                         </p>
-                        <p className="min-w-0 truncate text-[22px] leading-8 text-[#1f2c67]">
+                        <p className="min-w-0 truncate text-[22px] leading-8 text-[var(--color-text-default)]">
                           {data.Message}
                         </p>
                       </div>
@@ -108,27 +109,30 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
                 )}
               </>
             ) : (
-              <div className="rounded-lg bg-white px-5 py-8 text-center shadow-[0_12px_28px_rgba(91,77,247,0.07)]">
-                <p className="text-lg text-gray-400">Generating link...</p>
+              <div className="modal-card px-5 py-8 text-center">
+                <p className="text-lg theme-text-muted">Generating link...</p>
               </div>
             )}
 
-            <div className="flex gap-5 items-center px-5 py-5 rounded-lg">
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-[#16a34a]">
+            <ModalInfoBlock
+              className="gap-5 rounded-lg px-5 py-5"
+              icon={
+                <span className="modal-header-icon text-[var(--color-study-activated)]">
                 <LuInfo className="h-5 w-5" />
-              </span>
-              <p className="text-left text-[21px] leading-9 text-[#33406f]">
+                </span>
+              }
+            >
+              <p className="text-left text-[21px] leading-9 text-[var(--color-text-default)]">
                 Copy and paste the message to start the conversation after opening the link
               </p>
-            </div>
+            </ModalInfoBlock>
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 questionnaire-border bg-white px-6 py-6">
+        <div className="flex justify-end gap-3 questionnaire-border theme-surface px-6 py-6">
           <Button
             type="button"
             varinat="cancel"
-            className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
             onClick={onClose}
           >
             Cancel
@@ -136,7 +140,6 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
           <Button
             type="button"
             varinat="success"
-            className="bg-[#16a34a] hover:bg-[#15803d]"
             onClick={() => {
               if (copyContent) {
                 navigator.clipboard.writeText(copyContent);

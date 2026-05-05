@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../../ui/Button";
-import QuestionsInput from "./QuestionsInput";
+import Input from "../../ui/Input";
+import Select from "../../ui/Select";
 import RowOptions from "./RowOptions";
 import { useLocation } from "react-router";
 import { createNullQuestionObject } from "../../../utils/payloadBuilder";
@@ -330,36 +331,42 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
         <div className="px-4 py-5 pr-2 md:px-6 md:pr-3">
           {!data && (
             <div className="mb-6 grid gap-4 md:grid-cols-[1fr_2fr_1fr]">
-              <QuestionsInput
-                className="w-full"
-                value={id}
-                onChange={(e) => {
-                  setId(e.target.value);
-                  if (errors.id && e.target.value.trim() !== "") {
-                    setErrors((prev) => ({ ...prev, id: false }));
-                  }
-                }}
-                min={0}
-                placeholder="Enter QID"
-                lable="QID"
-                require
-                error={errors.id}
-              />
+              <div className="w-full">
+                <label className='questionnaire-label mb-3 block text-[15px]'>
+                  QID <span className='text-[var(--color-core-danger)]'>*</span>
+                </label>
+                <Input
+                  variant="questionnaire"
+                  className={cn(errors.id ? "border-[var(--color-core-danger)] pr-10" : "questionnaire-border border")}
+                  value={id}
+                  onChange={(e) => {
+                    setId(e.target.value);
+                    if (errors.id && e.target.value.trim() !== "") {
+                      setErrors((prev) => ({ ...prev, id: false }));
+                    }
+                  }}
+                  min={0}
+                  placeholder="Enter QID"
+                />
+              </div>
 
-              <QuestionsInput
-                className="w-full"
-                lable="Question label"
-                value={label}
-                onChange={(e) => {
-                  setLabel(e.target.value);
-                  if (errors.label && e.target.value.trim() !== "") {
-                    setErrors((prev) => ({ ...prev, label: false }));
-                  }
-                }}
-                placeholder="Enter question label ..."
-                require
-                error={errors.label}
-              />
+              <div className="w-full">
+                <label className='questionnaire-label mb-3 block text-[15px]'>
+                  Question label <span className='text-[var(--color-core-danger)]'>*</span>
+                </label>
+                <Input
+                  variant="questionnaire"
+                  className={cn(errors.label ? "border-[var(--color-core-danger)] pr-10" : "questionnaire-border border")}
+                  value={label}
+                  onChange={(e) => {
+                    setLabel(e.target.value);
+                    if (errors.label && e.target.value.trim() !== "") {
+                      setErrors((prev) => ({ ...prev, label: false }));
+                    }
+                  }}
+                  placeholder="Enter question label ..."
+                />
+              </div>
               <div className="flex w-full flex-col">
                 <label
                   htmlFor="qType"
@@ -367,50 +374,60 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                 >
                   Question Type
                 </label>
-                <select
+                <Select
+                  variant="questionnaire"
                   id="qType"
                   value={qType}
                   onChange={(e) => dispatch(setQType(e.target.value))}
-                  className={cn(
-                    "questionnaire-input questionnaire-heading questionnaire-border w-full rounded-[18px] border px-4 py-3.5 focus:outline-none"
-                  )}
                 >
                   {qTypeList.filter((item) => item.code !== "stop").map((item) => (
                     <option key={item.code} value={item.code}>
                       {item.show}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
             </div>
           )}
 
-          <QuestionsInput
-            className="mb-5 w-full"
-            value={qtext}
-            lable="Question Text"
-            onChange={(e) => {
-              setQtext(e.target.value);
-              if (errors.qtext && e.target.value.trim() !== "") {
-                setErrors((prev) => ({ ...prev, qtext: false }));
-              }
-            }}
-            placeholder="Enter your question"
-            require
-            error={errors.qtext}
-          />
-          <QuestionsInput
-            className="mb-5 w-full"
-            value={qtext2}
-            lable="Question Text 2 (Optional)"
-            onChange={(e) => setQtext2(e.target.value)}
-            placeholder="Additional context..."
-          />
+          <div className="mb-5 w-full">
+            <label className='questionnaire-label mb-3 block text-[15px]'>
+              Question Text <span className='text-[var(--color-core-danger)]'>*</span>
+            </label>
+            <Input
+              variant="questionnaire"
+              className={cn(errors.qtext ? "border-[var(--color-core-danger)] pr-10" : "questionnaire-border border")}
+              value={qtext}
+              onChange={(e) => {
+                setQtext(e.target.value);
+                if (errors.qtext && e.target.value.trim() !== "") {
+                  setErrors((prev) => ({ ...prev, qtext: false }));
+                }
+              }}
+              placeholder="Enter your question"
+            />
+          </div>
+          <div className="mb-5 w-full">
+            <label className='questionnaire-label mb-3 block text-[15px]'>
+              Question Text 2 (Optional)
+            </label>
+            <Input
+              variant="questionnaire"
+              className="questionnaire-border border"
+              value={qtext2}
+              onChange={(e) => setQtext2(e.target.value)}
+              placeholder="Additional context..."
+            />
+          </div>
           <div className="mb-5">
-            <QuestionsInput
+            <label className='questionnaire-label mb-3 block text-[15px]'>
+              Respondent Instruction
+            </label>
+            <Input
+              variant="questionnaire"
+              className="questionnaire-border border"
               value={qInstruction}
               onChange={(e) => setQinstruction(e.target.value)}
-              lable="Respondent Instruction"
               placeholder={
                 isSelectableType === "stop"
                   ? "Stop the survey"
@@ -421,10 +438,10 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
           {isSelectableType === "stop" && (
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
               <label className="questionnaire-label">Select stop condition</label>
-              <select className="questionnaire-input questionnaire-border rounded-[16px] border px-4 py-2 focus:outline-none">
+              <Select variant="questionnaire" className="max-w-[220px] py-2">
                 <option>Terminated</option>
                 <option>Completed</option>
-              </select>
+              </Select>
             </div>
           )}
           {show && (
@@ -462,24 +479,34 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                 </div>
                 {isSelectableType === "multiple-select" && (
                   <div className="flex flex-wrap items-end gap-3">
-                    <QuestionsInput
-                      className="w-full md:w-32"
-                      type="number"
-                      min={1}
-                      value={minSelection}
-                      onChange={(e) => checkMin(Number(e.target.value))}
-                      lable="Min Selection"
-                      placeholder="Minimum"
-                    />
-                    <QuestionsInput
-                      className="w-full md:w-32"
-                      type="number"
-                      min={1}
-                      value={maxSelection}
-                      onChange={(e) => checkMax(Number(e.target.value))}
-                      lable="Max Selection"
-                      placeholder="Maximum"
-                    />
+                    <div className="w-full md:w-32">
+                      <label className='questionnaire-label mb-3 block text-[15px]'>
+                        Min Selection
+                      </label>
+                      <Input
+                        variant="questionnaire"
+                        className="questionnaire-border border"
+                        type="number"
+                        min={1}
+                        value={minSelection}
+                        onChange={(e) => checkMin(Number(e.target.value))}
+                        placeholder="Minimum"
+                      />
+                    </div>
+                    <div className="w-full md:w-32">
+                      <label className='questionnaire-label mb-3 block text-[15px]'>
+                        Max Selection
+                      </label>
+                      <Input
+                        variant="questionnaire"
+                        className="questionnaire-border border"
+                        type="number"
+                        min={1}
+                        value={maxSelection}
+                        onChange={(e) => checkMax(Number(e.target.value))}
+                        placeholder="Maximum"
+                      />
+                    </div>
                   </div>
                 )}
               </div>

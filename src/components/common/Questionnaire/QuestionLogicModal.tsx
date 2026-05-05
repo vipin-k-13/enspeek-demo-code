@@ -92,7 +92,6 @@ export default function QuesLogicModal({
         <div className="flex flex-wrap items-center justify-end gap-3">
           <Button
             varinat="cancel"
-            className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
             onClick={() => {
               handleReset();
             }}

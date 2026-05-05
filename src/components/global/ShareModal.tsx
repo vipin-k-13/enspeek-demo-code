@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Button from "../ui/Button";
+import Input from "../ui/Input";
 import DynamicModel from "./DynamicModel";
-import QuestionsInput from "../common/Questionnaire/QuestionsInput";
 import EmailPermissionsTable from "../common/list/shareModaltable";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
@@ -112,7 +112,7 @@ export default function ShareStudyModal({
       onClose={onClose}
       className="max-w-4xl max-h-screen overflow-y-auto"
       footerContent={
-        <p className="text-sm text-gray-700">
+        <p className="text-sm theme-text-default">
           * Output shared will be visible to users only when{" "}
           <strong>{studyName}</strong> is initiated for sample collection.
         </p>
@@ -120,27 +120,28 @@ export default function ShareStudyModal({
     >
       <div className="mb-4">
         <label className="block mb-2">Enter name or email</label>
-        <QuestionsInput
+        <Input
+          variant="questionnaire"
+          className="questionnaire-border border"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="eg. abc@ke.com ..."
-          lable=""
         />
 
         {suggestions.length > 0 && (
           <div className="relative">
-            <div className="mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-10 max-h-42 overflow-y-auto">
+            <div className="theme-surface theme-border mt-1 z-10 max-h-42 overflow-y-auto rounded-lg border shadow-lg">
               {suggestions.map((email, index) => (
                 <div
                   onClick={() => addEmail(email)}
                   key={index}
-                  className="flex items-center justify-between p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+                  className="theme-border flex items-center justify-between border-b p-3 hover:bg-[var(--color-surface-soft)] last:border-b-0"
                 >
-                  <span className="text-sm text-gray-900">{email}</span>
+                  <span className="text-sm theme-text-strong">{email}</span>
                   <Button
                     size="sm"
                     onClick={() => addEmail(email)}
-                    className="bg-slate-700 hover:bg-slate-800 text-white px-3 py-1 text-xs"
+                    className="px-3 py-1 text-xs"
                   >
                     Add
                   </Button>

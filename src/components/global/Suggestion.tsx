@@ -9,6 +9,12 @@ import {
   setMessages,
 } from "../../store/ChatSlice";
 import { useChat } from "../common/chat-window/Api";
+import Button from "../ui/Button";
+
+type SuggestionAction = {
+  label: string;
+  onClick: () => void;
+};
 
 const Suggestion = () => {
   const { pathname } = useLocation();
@@ -18,162 +24,138 @@ const Suggestion = () => {
 
   const { Chat } = useChat();
 
-  const HandleDirectCall = (e: string) => {
+  const handleDirectCall = (prompt: string) => {
     const userMessage: any = {
-      text: e,
+      text: prompt,
       sender: "user",
     };
     dispatch(setMessages([...messages, userMessage]));
     dispatch(setIsTyping(true));
-    Chat({ prompt: e });
+    Chat({ prompt });
   };
 
+  const renderSuggestionRow = (actions: SuggestionAction[]) => (
+    <div className="hidden gap-1 md:flex lg:gap-3">
+      {actions.map((action) => (
+        <Button
+          key={action.label}
+          type="button"
+          varinat="chip"
+          size="xs"
+          className="h-7 rounded-lg font-medium"
+          onClick={action.onClick}
+        >
+          {action.label}
+        </Button>
+      ))}
+    </div>
+  );
+
   if (pathname === "/questionnaire") {
-    return (
-      <div className="hidden md:flex gap-1 lg:gap-3">
-        <button
-          onClick={() => {
-            dispatch(setIsAddingQuestion(true));
-            dispatch(setQType("text-only"));
-            dispatch(setChatOpen(false));
-          }}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-         ✏️ Create New Question
-        </button>
-        <button
-          onClick={() => dispatch(setMessage("Generate questions [subject]"))}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-         ⚙️ Generate
-        </button>
-        <button
-          onClick={() => dispatch(setMessage("Delete question [Q.no]"))}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-         🗑️ Remove
-        </button>
-        <button
-          onClick={() => dispatch(setMessage("Move [Q3] to [position/Q4]"))}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-        🔀 Re-arrange
-        </button>
-      </div>
-    );
+    return renderSuggestionRow([
+      {
+        label: "Create New Question",
+        onClick: () => {
+          dispatch(setIsAddingQuestion(true));
+          dispatch(setQType("text-only"));
+          dispatch(setChatOpen(false));
+        },
+      },
+      {
+        label: "Generate",
+        onClick: () => dispatch(setMessage("Generate questions [subject]")),
+      },
+      {
+        label: "Remove",
+        onClick: () => dispatch(setMessage("Delete question [Q.no]")),
+      },
+      {
+        label: "Re-arrange",
+        onClick: () => dispatch(setMessage("Move [Q3] to [position/Q4]")),
+      },
+    ]);
   }
 
   if (pathname === "/publish-survey") {
-    return (
-      <div className="hidden md:flex gap-1 lg:gap-3">
-        {!link && (
-          <button
-            onClick={() => dispatch(setMessage("Activate study"))}
-            className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-          >
-            ✅ Activate
-          </button>
-        )}
-        <button
-          onClick={() => HandleDirectCall("Give survey link")}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-         🔗 Survey Link
-        </button>
-        <button
-          onClick={() => HandleDirectCall("Give me test link")}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-        🧪 Test Link
-        </button>
-      </div>
+    const actions: SuggestionAction[] = [];
+
+    if (!link) {
+      actions.push({
+        label: "Activate",
+        onClick: () => dispatch(setMessage("Activate study")),
+      });
+    }
+
+    actions.push(
+      {
+        label: "Survey Link",
+        onClick: () => handleDirectCall("Give survey link"),
+      },
+      {
+        label: "Test Link",
+        onClick: () => handleDirectCall("Give me test link"),
+      }
     );
+
+    return renderSuggestionRow(actions);
   }
 
   if (pathname === "/report") {
-    return (
-      <div className="hidden md:flex gap-1 lg:gap-3">
-           <button
-          onClick={() => dispatch(setMessage("Download PPT"))}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-        📊 Download PPT
-        </button>
-        <button
-          onClick={() => dispatch(setMessage("Download Excel"))}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-        📈 Download Excel
-        </button>
-        <button
-          onClick={() => dispatch(setMessage("Download SPSS"))}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-       📉 Download SPSS
-        </button>
-        <button
-          onClick={() => dispatch(setMessage("Download table raw data"))}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-       📅 Download Table
-        </button>
-        <button
-          onClick={() => dispatch(setMessage("Get data of [Qid]"))}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-        📥 Get Data
-        </button>
-      </div>
-    );
+    return renderSuggestionRow([
+      {
+        label: "Download PPT",
+        onClick: () => dispatch(setMessage("Download PPT")),
+      },
+      {
+        label: "Download Excel",
+        onClick: () => dispatch(setMessage("Download Excel")),
+      },
+      {
+        label: "Download SPSS",
+        onClick: () => dispatch(setMessage("Download SPSS")),
+      },
+      {
+        label: "Download Table",
+        onClick: () => dispatch(setMessage("Download table raw data")),
+      },
+      {
+        label: "Get Data",
+        onClick: () => dispatch(setMessage("Get data of [Qid]")),
+      },
+    ]);
   }
 
   if (!pathname.split("/")[1]) {
-    return (
-      <div className="hidden md:flex gap-1 lg:gap-3">
-        <button
-          onClick={() => dispatch(setMessage("create study [study name]"))}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-         ➕ Create Study
-        </button>
-        <button
-          onClick={() => HandleDirectCall("archived study count")}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-         📦 Archived Study Count
-        </button>
-        <button
-          onClick={() => HandleDirectCall("total study")}
-          className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-        >
-         📊 Total Study
-        </button>
-      </div>
-    );
+    return renderSuggestionRow([
+      {
+        label: "Create Study",
+        onClick: () => dispatch(setMessage("create study [study name]")),
+      },
+      {
+        label: "Archived Study Count",
+        onClick: () => handleDirectCall("archived study count"),
+      },
+      {
+        label: "Total Study",
+        onClick: () => handleDirectCall("total study"),
+      },
+    ]);
   }
 
-  return (
-    <div className="hidden md:flex gap-1 lg:gap-3">
-      <button
-        onClick={() => HandleDirectCall("archived study count")}
-        className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-      >
-       📦 Archived Study Count
-      </button>
-      <button
-        onClick={() => HandleDirectCall(`study info ${name}`)}
-        className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-      >
-        📋 Study Info
-      </button>
-      <button
-        onClick={() => HandleDirectCall("total study")}
-        className="flex h-7 items-center gap-2 rounded-lg px-2 py-0.5 text-[10px] border border-gray-400 text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-ring cursor-pointer"
-      >
-       📊 Total Study
-      </button>
-    </div>
-  );
+  return renderSuggestionRow([
+    {
+      label: "Archived Study Count",
+      onClick: () => handleDirectCall("archived study count"),
+    },
+    {
+      label: "Study Info",
+      onClick: () => handleDirectCall(`study info ${name}`),
+    },
+    {
+      label: "Total Study",
+      onClick: () => handleDirectCall("total study"),
+    },
+  ]);
 };
 
 export default Suggestion;

@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "../../../services/apiService";
 import { cn } from "../../../utils";
 import IconActionButton from "../../ui/IconActionButton";
+import Select from "../../ui/Select";
 import { Tooltip } from "../../ui/Tooltip";
 
 export interface LogicRow {
@@ -448,9 +449,10 @@ export default function QuestionLogic({
                   conditionRows.length > 0 && "mb-4"
                 )}
               >
-                <select
+                <Select
+                  variant="questionnaire"
                   name="condition"
-                  className="questionnaire-logic-select min-w-[220px] rounded-lg px-4 py-3 focus:outline-none"
+                  className="min-w-[220px]"
                   value={selectedConditions[groupId] || ""}
                   onChange={(e) => handleFirstChange(groupId, e.target.value)}
                 >
@@ -461,15 +463,16 @@ export default function QuestionLogic({
                         {cond.show}
                       </option>
                     ))}
-                </select>
+                </Select>
 
                 {selectedConditions[groupId] && (
-                  <select
+                  <Select
+                    variant="questionnaire"
                     value={mainRow.variable || ""}
                     onChange={(e) =>
                       handleVariableChange(mainRow.id, e.target.value)
                     }
-                    className="questionnaire-logic-select min-w-[220px] rounded-lg px-4 py-3 focus:outline-none"
+                    className="min-w-[220px]"
                   >
                     <option value="">Select variables</option>
                     {varsData?.variables?.survey?.length > 0 && (
@@ -486,17 +489,18 @@ export default function QuestionLogic({
                         )}
                       </optgroup>
                     )}
-                  </select>
+                  </Select>
                 )}
                 {mainRow.variable &&
                   optsData[mainRow.variable] &&
                   optsData[mainRow.variable].length > 0 && (
-                    <select
+                    <Select
+                      variant="questionnaire"
                       value={mainRow.option || ""}
                       onChange={(e) =>
                         handleOptionChange(mainRow.id, e.target.value)
                       }
-                      className="questionnaire-logic-select min-w-[200px] rounded-lg px-4 py-3 focus:outline-none"
+                      className="min-w-[200px]"
                     >
                       <option value="">Select option</option>
                       {optsData[mainRow.variable].map(
@@ -506,16 +510,17 @@ export default function QuestionLogic({
                           </option>
                         )
                       )}
-                    </select>
+                    </Select>
                   )}
 
                 {mainRow.option !== "" && (
-                  <select
+                  <Select
+                    variant="questionnaire"
                     value={String(mainRow.value) || ""}
                     onChange={(e) =>
                       handleValueChange(mainRow.id, e.target.value)
                     }
-                    className="questionnaire-logic-select min-w-[200px] rounded-lg px-4 py-3 focus:outline-none"
+                    className="min-w-[200px]"
                   >
                     <option value="">Select value</option>
                     {optsData[mainRow.variable]
@@ -529,7 +534,7 @@ export default function QuestionLogic({
                           {opt.show}
                         </option>
                       ))}
-                  </select>
+                  </Select>
                 )}
 
                 <div className="flex items-center gap-2">
@@ -584,25 +589,27 @@ export default function QuestionLogic({
                 )}
               >
                 <Tooltip content="AND/OR condition" position="top">
-                  <select
+                  <Select
+                    variant="questionnaire"
                     value={row.connector || "AND"}
                     onChange={(e) =>
                       handleConnectorChange(row.id, e.target.value)
                     }
-                    className="questionnaire-logic-select min-w-[140px] rounded-lg px-4 py-3 focus:outline-none"
+                    className="min-w-[140px]"
                   >
                     {connectors.map((connector) => (
                       <option key={connector} value={connector}>
                         {connector}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </Tooltip>
 
-                <select
+                <Select
+                  variant="questionnaire"
                   value={row.variable || ""}
                   onChange={(e) => handleVariableChange(row.id, e.target.value)}
-                  className="questionnaire-logic-select min-w-[220px] rounded-lg px-4 py-3 focus:outline-none"
+                  className="min-w-[220px]"
                 >
                   <option value="">Select variables</option>
                   {varsData?.variables?.survey?.length > 0 && (
@@ -619,17 +626,18 @@ export default function QuestionLogic({
                       )}
                     </optgroup>
                   )}
-                </select>
+                </Select>
 
                 {row.variable &&
                   optsData[row.variable] &&
                   optsData[row.variable].length > 0 && (
-                    <select
+                    <Select
+                      variant="questionnaire"
                       value={row.option || ""}
                       onChange={(e) =>
                         handleOptionChange(row.id, e.target.value)
                       }
-                      className="questionnaire-logic-select min-w-[200px] rounded-lg px-4 py-3 focus:outline-none"
+                      className="min-w-[200px]"
                     >
                       <option value="">Select option</option>
                       {optsData[row.variable].map((opt: any, index: number) => (
@@ -637,14 +645,15 @@ export default function QuestionLogic({
                           {opt.show}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   )}
 
                 {row.option !== "" && (
-                  <select
+                  <Select
+                    variant="questionnaire"
                     value={String(row.value) || ""}
                     onChange={(e) => handleValueChange(row.id, e.target.value)}
-                    className="questionnaire-logic-select min-w-[200px] rounded-lg px-4 py-3 focus:outline-none"
+                    className="min-w-[200px]"
                   >
                     <option value="">Select value</option>
                     {optsData[row.variable]
@@ -658,7 +667,7 @@ export default function QuestionLogic({
                           {opt.show}
                         </option>
                       ))}
-                  </select>
+                  </Select>
                 )}
 
                 <div className="flex items-center gap-2">

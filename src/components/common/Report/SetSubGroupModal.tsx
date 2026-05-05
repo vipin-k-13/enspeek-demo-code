@@ -40,7 +40,7 @@ const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
         </span>
       }
       description="Choose the subgroup variable you want to apply in the report view."
-      descriptionClassName="text-black [color:#000000]"
+      descriptionClassName="theme-text-default"
       ButtonText={isSaving ? "Saving..." : "Save"}
       buttonIcon={
         isSaving ? (
@@ -55,7 +55,6 @@ const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
         <Button
           type="button"
           varinat="cancel"
-          className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
           onClick={onClose}
           disabled={isSaving}
         >

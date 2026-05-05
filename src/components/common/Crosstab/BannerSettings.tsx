@@ -8,8 +8,9 @@ import BannerLogic from "../../global/BannerLogic";
 import { useLocation } from "react-router";
 import { setSelectedQuestions } from "../../../store/CrosstabSlice";
 import { toast } from "sonner";
-import CrosstabInput from "../../global/CrosstabInput";
 import Button from "../../ui/Button";
+import Input from "../../ui/Input";
+import Checkbox from "../../ui/Checkbox";
 import { LuPanelsTopLeft, LuSave } from "react-icons/lu";
 
 interface BannerSettingsProps {
@@ -140,8 +141,12 @@ export default function BannerSettings({
     >
       <div className="space-y-4">
         <div>
-          <CrosstabInput
-            label="Banner Name"
+          <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+            Banner Name
+          </label>
+          <Input
+            variant="crosstab"
+            className="mt-2"
             data-test-id="BANNER_NAME"
             placeholder="Enter label"
             value={value.title}
@@ -152,9 +157,13 @@ export default function BannerSettings({
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <CrosstabInput
+            <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+              Banner Description
+            </label>
+            <Input
+              variant="crosstab"
+              className="mt-2"
               data-test-id="BANNER_DESCRIPTION"
-              label="Banner Description"
               placeholder="Enter Description"
               value={value.description}
               onChange={(e) =>
@@ -165,8 +174,12 @@ export default function BannerSettings({
             />
           </div>
           <div>
-            <CrosstabInput
-              label="Stat Testing"
+            <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+              Stat Testing
+            </label>
+            <Input
+              variant="crosstab"
+              className="mt-2"
               placeholder="eg. AB,C-F"
               onChange={() => {}}
             />
@@ -176,9 +189,7 @@ export default function BannerSettings({
           <label className="crosstab-title mb-2 block text-sm font-semibold">Select View Type</label>
           <div className="flex items-center gap-4">
             <label className="home-text inline-flex items-center">
-              <input
-                type="checkbox"
-                className="form-checkbox questionnaire-clickable"
+              <Checkbox
                 checked={Boolean(value.percent)}
                 onChange={(e) =>
                   setValue((prev) => ({
@@ -214,9 +225,8 @@ export default function BannerSettings({
           <h3 className="crosstab-title mb-3 text-base font-semibold">Question list</h3>
           <div>
             <div className="border border-[#e2e4f1] rounded-lg flex items-center px-4 py-3 mb-2">
-              <input
-                type="checkbox"
-                className="questionnaire-clickable mr-3"
+              <Checkbox
+                className="mr-3"
                 checked={isAllSelected}
                 onChange={toggleAll}
               />
@@ -231,10 +241,9 @@ export default function BannerSettings({
                   key={idx}
                   className="border border-[#e2e4f1] rounded-lg mb-2 flex items-center px-4 py-3 last:mb-0"
                 >
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     data-test-id={`Q_${idx}`}
-                    className="questionnaire-clickable mr-3"
+                    className="mr-3"
                     checked={selectedQuestions.includes(question.qID)}
                     onChange={() => toggleQuestion(question.qID)}
                   />

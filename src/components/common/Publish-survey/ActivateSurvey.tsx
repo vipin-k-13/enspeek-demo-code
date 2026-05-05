@@ -3,7 +3,9 @@ import DynamicModel from "../../global/DynamicModel";
 import { toast } from "sonner";
 import { handleKeyPress } from "../../../utils";
 import Button from "../../ui/Button";
+import Input from "../../ui/Input";
 import { LuBadgeCheck, LuInfo, LuPower } from "react-icons/lu";
+import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
 
 interface ActivateSurveyProps {
   isOpen: boolean;
@@ -62,7 +64,6 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
         <Button
           type="button"
           varinat="cancel"
-          className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
           onClick={onClose}
           disabled={isPending}
         >
@@ -78,23 +79,24 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
           </span>
           ?
         </p>
-        <div className="rounded-[20px] border questionnaire-border bg-white px-4 py-4 shadow-[0_8px_24px_rgba(79,70,229,0.08)]">
-          <div className="flex items-start gap-3">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
+        <ModalInfoBlock
+          className="modal-card rounded-[20px] bg-[var(--color-surface-base)] px-4 py-4"
+          icon={
+            <span className="modal-header-icon h-10 w-10 text-[var(--color-brand-primary)]">
               <LuInfo className="h-4 w-4" />
             </span>
-            <p className="text-sm leading-6 text-[var(--color-text-strong)]">
-              Type <strong className="text-login-primary">activate</strong> in
-              the input box to confirm.
-            </p>
-          </div>
-        </div>
+          }
+        >
+          Type <strong className="text-login-primary">activate</strong> in the
+          input box to confirm.
+        </ModalInfoBlock>
       </div>
-      <input
+      <Input
+        variant="modal"
         type="text"
         data-test-id="ACTIVATE_INPUT"
         placeholder="eg. activate"
-        className="questionnaire-input questionnaire-heading questionnaire-border mt-4 w-full rounded-[18px] border border-login-primary/30 px-4 py-3 text-sm shadow-[0_8px_24px_rgba(79,70,229,0.08)] focus:outline-none"
+        className="questionnaire-heading mt-4 rounded-[18px]"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={(e)=>handleKeyPress(e, handleActivateSurvey)}

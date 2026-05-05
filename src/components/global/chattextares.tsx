@@ -16,6 +16,7 @@ import NewDropdown from "./NewDropDown";
 import PromptsList from "./PromptsList";
 import { CiCircleList } from "react-icons/ci";
 import { useChat } from "../common/chat-window/Api";
+import Button from "../ui/Button";
 
 interface ChatTextAreaProps {
   placement?: "floating" | "panel";
@@ -83,12 +84,14 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
       {!isChatOpen && !isPanelPlacement && (
         <div className="fixed bottom-8 right-8 z-50">
           <Tooltip content="Open Chat" position="left">
-            <button
+            <Button
               onClick={handleOpen}
-              className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition-all duration-300 hover:bg-blue-700 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              varinat="theme"
+              size="icon"
+              className="h-14 w-14 text-white shadow-lg transition-all duration-300 hover:scale-110"
             >
               <LuMessageCircle className="w-6 h-6" />
-            </button>
+            </Button>
           </Tooltip>
         </div>
       )}
@@ -118,9 +121,14 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
             searchPlaceholder="Search commands..."
             trigger={
               <Tooltip content="Quick Commands" position="top">
-                <button className="home-dropdown-icon-wrap flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors hover:opacity-90 cursor-pointer shadow-sm">
+                <Button
+                  type="button"
+                  varinat="ghost"
+                  size="icon"
+                  className="home-dropdown-icon-wrap h-10 w-10 shrink-0 rounded-full shadow-sm hover:opacity-90"
+                >
                   <CiCircleList className="w-5 h-5" />
-                </button>
+                </Button>
               </Tooltip>
             }
             items={PromptsList()}
@@ -143,12 +151,15 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
           />
           <div className="ml-auto flex items-center gap-2">
             <Tooltip content="Send" position="bottom">
-              <button
+              <Button
+                type="button"
+                varinat="theme"
+                size="icon"
                 disabled={isTyping}
                 data-test-id="SEND"
                 onClick={handleSubmit}
                 className={cn(
-                  "flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-r from-login-primary to-login-bg-end text-sm font-medium transition-all hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-75 cursor-pointer shadow-[0_10px_24px_rgba(85,90,230,0.28)]",
+                  "h-11 w-11 border-0 bg-gradient-to-r from-login-primary to-login-bg-end text-sm font-medium transition-all hover:brightness-95 disabled:opacity-75 shadow-[0_10px_24px_rgba(85,90,230,0.28)]",
                   isPanelPlacement && "h-12 w-12 shadow-[0_12px_28px_rgba(85,90,230,0.24)]"
                 )}
               >
@@ -158,7 +169,7 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
                   <IoMdSend className="h-5 w-5 text-white" />
                 )}
                 <span className="sr-only">Send message</span>
-              </button>
+              </Button>
             </Tooltip>
           </div>
         </div>

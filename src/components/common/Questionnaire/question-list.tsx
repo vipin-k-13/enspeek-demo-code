@@ -292,30 +292,33 @@ export default function QuestionList() {
                           your first set of questions in plain language.
                         </p>
 
-                        <button
+                        <Button
                           type="button"
+                          varinat="outline"
+                          size="sm"
                           onClick={() => {
                             dispatch(setChatOpen(true));
                             dispatch(setMessage("Generate 5 questions about my study."));
                           }}
-                          className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-full border questionnaire-border bg-white px-4 py-2 text-sm home-muted shadow-sm transition-colors hover:border-login-primary/30 hover:bg-login-primary/5"
+                          className="mt-4 rounded-full home-muted shadow-sm hover:border-login-primary/30 hover:bg-login-primary/5"
                         >
                           Try:
                           <span className="font-semibold text-login-primary">
                             "Generate 5 questions about my study."
                           </span>
-                        </button>
+                        </Button>
 
                         <div className="mt-3.5 grid gap-3 md:grid-cols-2">
                           {emptyStatePrompts.map((prompt) => (
-                            <button
+                            <Button
                               key={prompt.title}
                               type="button"
+                              varinat="outline"
                               onClick={() => {
                                 dispatch(setChatOpen(true));
                                 dispatch(setMessage(prompt.text));
                               }}
-                              className="home-panel-soft-bg questionnaire-border group flex w-full cursor-pointer items-start gap-3 rounded-[20px] border px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                              className="home-panel-soft-bg questionnaire-border group w-full items-start justify-start rounded-[20px] px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                             >
                               <span className="home-dropdown-icon-wrap flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl">
                                 {prompt.icon}
@@ -328,7 +331,7 @@ export default function QuestionList() {
                                   {prompt.text}
                                 </span>
                               </span>
-                            </button>
+                            </Button>
                           ))}
                         </div>
                       </div>

@@ -1,6 +1,8 @@
 import type React from "react";
 import { useState } from "react";
 import Button from "../../ui/Button";
+import Input from "../../ui/Input";
+import Select from "../../ui/Select";
 import Textarea from "../../ui/Textarea";
 import { useLocation, useNavigate } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -184,36 +186,36 @@ export default function CreationProject() {
             <label htmlFor="projectName" className="block mb-2 font-medium">
               Project Name <span className="text-red-500">*</span>
             </label>
-            <input
+            <Input
+              variant="default"
               id="projectName"
               name="projectName"
               value={StudyInfo ? StudyInfo.studyName : formData.projectName}
               onChange={handleChange}
-              className={`w-full outline-none border px-3 py-2 rounded-md bg-white ${
-                errors.projectName ? "border-red-500" : "border-gray-300"
+              className={`${
+                errors.projectName ? "border-[var(--color-core-danger)]" : ""
               }`}
             />
             {errors.projectName && (
-              <p className="text-red-500 text-sm mt-1">{errors.projectName}</p>
+              <p className="mt-1 text-sm text-[var(--color-core-danger)]">{errors.projectName}</p>
             )}
           </div>
           <div>
             <label htmlFor="panelProvider" className="block mb-2 font-medium">
               Panel Provider <span className="text-red-500">*</span>
             </label>
-            <select
+            <Select
+              variant="default"
               id="panelProvider"
               name="panelProvider"
               value={StudyInfo ? StudyInfo.panel : formData.panelProvider}
               onChange={handleChange}
-              className="w-full h-10 rounded-md px-3 py-2 text-sm text-gray-800
-               bg-white border focus:outline-none border-gray-300"
             >
               <option value="">Choose Panel</option>
               <option value="Dynata">Dynata</option>
               <option value="DISQO">DISQO</option>
               <option value="None (Multi-use Link)">None (Multi-use Link)</option>
-            </select>
+            </Select>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -225,6 +227,7 @@ export default function CreationProject() {
               Project Description <span className="text-red-500">*</span>
             </label>
             <Textarea
+              variant="default"
               id="projectDescription"
               name="projectDescription"
               value={
@@ -233,7 +236,7 @@ export default function CreationProject() {
                   : formData.projectDescription
               }
               onChange={handleChange}
-              className="w-full h-32 border bg-white border-gray-300 rounded-md"
+              className="h-32"
             />
           </div>
           <div>
@@ -241,13 +244,14 @@ export default function CreationProject() {
               Meta Description
             </label>
             <Textarea
+              variant="default"
               id="metaDescription"
               name="metaDescription"
               value={formData.metaDescription}
               onChange={handleChange}
-              className="w-full h-32 border bg-white border-gray-300 rounded-md"
+              className="h-32"
             />
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="mt-1 text-sm theme-text-muted">
               Use comma to separate keywords.
             </p>
           </div>

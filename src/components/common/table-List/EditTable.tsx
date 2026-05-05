@@ -6,10 +6,12 @@ import BannerLogic from "../../global/BannerLogic";
 import { useEditTableListQuestion, useOpList } from "../Crosstab/CrossTab.Api";
 import { useLocation } from "react-router";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import CrosstabInput from "../../global/CrosstabInput";
 import Button from "../../ui/Button";
+import Input from "../../ui/Input";
+import Select from "../../ui/Select";
 import IconActionButton from "../../ui/IconActionButton";
 import { Tooltip } from "../../ui/Tooltip";
+import Checkbox from "../../ui/Checkbox";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import { useQuery } from "@tanstack/react-query";
@@ -212,21 +214,27 @@ export default function EditTableModal({
       ) : (
         <div className="space-y-6">
           <div className="space-y-2">
-            <CrosstabInput
-              label="Table Label"
-              required
+            <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+              Table Label <span className="text-[var(--color-core-danger)]">*</span>
+            </label>
+            <Input
+              variant="crosstab"
+              className="mt-2"
               placeholder="Enter label"
               value={tableLabel}
               onChange={(e) => setTableLabel(e.target.value)}
             />
           </div>
           <div className="space-y-2">
-            <CrosstabInput
-              label="Table Text"
+            <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+              Table Text <span className="text-[var(--color-core-danger)]">*</span>
+            </label>
+            <Input
+              variant="crosstab"
+              className="mt-2"
               placeholder="Enter text"
               value={tableText}
               onChange={(e: any) => setTableText(e.target.value)}
-              required
             />
           </div>
           {opListData.logic.length !== 0 &&
@@ -304,9 +312,7 @@ export default function EditTableModal({
                       </Button>
                     </td>
                     <td className="border-r home-border-soft px-3 py-3 align-middle text-center">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox questionnaire-clickable"
+                      <Checkbox
                         checked={Boolean(row.op_show)}
                         onChange={(e) =>
                           handleSelectOption(row.id, e.target.checked)
@@ -317,24 +323,27 @@ export default function EditTableModal({
                       {row.id}
                     </td>
                     <td className="border-r home-border-soft px-3 py-3">
-                      <input
-                        type="text"
+                      <Input
+                        variant="crosstab"
                         value={row.optionText}
                         onChange={(e) =>
                           handleRowTitleChange(row.id, e.target.value)
                         }
-                        className="questionnaire-input questionnaire-heading w-full rounded-[14px] border questionnaire-border p-2.5"
+                        className="rounded-lg px-2.5 py-2"
                       />
                     </td>
                     <td className="border-r home-border-soft px-3 py-3">
                       {row.id === "" ? (
-                        <select className="questionnaire-input questionnaire-heading w-full rounded-[14px] border questionnaire-border p-2.5 focus:outline-none">
+                        <Select
+                          variant="crosstab"
+                          className="rounded-lg px-2.5 py-2"
+                        >
                           <option value="">Select</option>
                           <option value="option1">Net</option>
                           <option value="option2">Mean</option>
                           <option value="option2">Median</option>
                           <option value="option2">Standard Deviation</option>
-                        </select>
+                        </Select>
                       ) : null}
                     </td>
                     <td className="px-3 py-3">

@@ -8,7 +8,9 @@ import { useLocation } from "react-router";
 import { toast } from "sonner";
 import { queryClient } from "../../../App";
 import Button from "../../ui/Button";
+import Input from "../../ui/Input";
 import { LuInfo, LuPlay, LuUsers } from "react-icons/lu";
+import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
 
 interface SampleCollectionModelProps {
   isOpen: boolean;
@@ -83,7 +85,6 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
         <Button
           type="button"
           varinat="cancel"
-          className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
           onClick={Closed}
           disabled={isPending}
         >
@@ -97,23 +98,24 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
           <span className="font-semibold text-login-primary">{studyName}</span>
           ?
         </p>
-        <div className="rounded-[20px] border questionnaire-border bg-white px-4 py-4 shadow-[0_8px_24px_rgba(79,70,229,0.08)]">
-          <div className="flex items-start gap-3">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
+        <ModalInfoBlock
+          className="modal-card rounded-[20px] bg-[var(--color-surface-base)] px-4 py-4"
+          icon={
+            <span className="modal-header-icon h-10 w-10 text-[var(--color-brand-primary)]">
               <LuInfo className="h-4 w-4" />
             </span>
-            <p className="text-sm leading-6 text-[var(--color-text-strong)]">
-              Please type <strong className="text-login-primary">collect</strong>{" "}
-              in the box below to confirm.
-            </p>
-          </div>
-        </div>
+          }
+        >
+          Please type <strong className="text-login-primary">collect</strong>{" "}
+          in the box below to confirm.
+        </ModalInfoBlock>
       </div>
-      <input
+      <Input
+        variant="modal"
         type="text"
         data-test-id="Initiate_INPUT"
         placeholder="eg. collect"
-        className="questionnaire-input questionnaire-heading questionnaire-border mt-4 w-full rounded-[18px] border border-login-primary/30 px-4 py-3 text-sm shadow-[0_8px_24px_rgba(79,70,229,0.08)] focus:outline-none"
+        className="questionnaire-heading mt-4 rounded-[18px]"
         value={inputValueInitiate}
         onChange={(e) => setInputValueInitiate(e.target.value)}
         disabled={isPending}

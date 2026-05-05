@@ -5,6 +5,7 @@ import { setSelectedQuestions } from "../../../store/CrosstabSlice";
 import { useLocation } from "react-router";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { cn } from "../../../utils";
+import Checkbox from "../../ui/Checkbox";
 
 export default function QuestionsList() {
   const { state } = useLocation();
@@ -54,12 +55,10 @@ export default function QuestionsList() {
       <div className="crosstab-surface px-3 py-3">
         <div className="border border-[var(--color-text-strong)]/25 flex items-center px-4 py-3 font-semibold mb-2 rounded-lg">
           <div>
-            <input
+            <Checkbox
               data-test-id="CHECKBOX"
-              type="checkbox"
               checked={allSelected}
               onChange={(e) => toggleSelectAll(e.target.checked)}
-              className="questionnaire-clickable"
             />
           </div>
           <div className="crosstab-title ml-4">Select All Questions</div>
@@ -68,11 +67,9 @@ export default function QuestionsList() {
         {QListData.map((question: any, i: number) => (
           <div key={i} className="border border-[var(--color-text-strong)]/25 mb-2 flex items-center px-4 py-3 rounded-lg">
             <div className="mr-8 ">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={selectedQuestions.includes(question.qID)}
                 onChange={() => toggleSelect(question.qID)}
-                className="questionnaire-clickable"
               />
             </div>
             <div className="home-text">{question.qLabel}</div>

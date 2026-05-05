@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setBannerName } from "../../../store/CrosstabSlice";
 import BannerLogic from "../../global/BannerLogic";
 import type { RootState } from "../../../store/store";
-import CrosstabInput from "../../global/CrosstabInput";
 import Button from "../../ui/Button";
+import Input from "../../ui/Input";
+import Checkbox from "../../ui/Checkbox";
 import { LuCirclePlus, LuPanelsTopLeft } from "react-icons/lu";
 
 interface AddBannerModalProps {
@@ -98,7 +99,7 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
         </span>
       }
       description="Add the banner details and optional overall filter, then continue to banner design."
-      descriptionClassName="text-black [color:#000000]"
+      descriptionClassName="theme-text-default"
       ButtonText={isPending || isCreating ? "Creating..." : "Design Banner"}
       buttonIcon={
         isPending || isCreating ? (
@@ -115,7 +116,6 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
         <Button
           type="button"
           varinat="cancel"
-          className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
           onClick={handleClose}
           disabled={isPending || isCreating}
         >
@@ -127,31 +127,35 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
     >
       <div className="space-y-4">
         <div>
-          <CrosstabInput
-            label="Banner Name"
-            labelClassName="text-base font-medium text-login-primary"
+          <label className="questionnaire-label text-base font-medium text-login-primary">
+            Banner Name <span className="text-[var(--color-core-danger)]">*</span>
+          </label>
+          <Input
+            variant="crosstab"
+            className="mt-2"
             data-test-id="BANNER_NAME"
-            required
             placeholder="Enter Banner Title"
             value={bannerName}
             onChange={(e) => setBannerNameInput(e.target.value)}
           />
           {errors.bannerName && (
-            <p className="mt-1 text-sm text-red-600">{errors.bannerName}</p>
+            <p className="mt-1 text-sm text-[var(--color-questionnaire-stop)]">{errors.bannerName}</p>
           )}
         </div>
         <div>
-          <CrosstabInput
-            label="Banner Description"
-            labelClassName="text-base font-medium text-login-primary"
+          <label className="questionnaire-label text-base font-medium text-login-primary">
+            Banner Description <span className="text-[var(--color-core-danger)]">*</span>
+          </label>
+          <Input
+            variant="crosstab"
+            className="mt-2"
             data-test-id="BANNER_DESCRIPTION"
-            required
             placeholder="Enter banner description ..."
             value={bannerDescription}
             onChange={(e) => setBannerDescription(e.target.value)}
           />
           {errors.bannerDescription && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-[var(--color-questionnaire-stop)]">
               {errors.bannerDescription}
             </p>
           )}
@@ -162,11 +166,9 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
           </p>
           <div className="flex space-x-8">
             <label className="home-text flex items-center space-x-2">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={percentage}
                 onChange={(e) => setPercentage(e.target.checked)}
-                className="questionnaire-clickable"
               />
               <span>Percentage</span>
             </label>

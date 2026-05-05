@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "../../utils";
+import Checkbox from "../ui/Checkbox";
 interface DropdownData {
   Title: string;
   Icon?: React.ElementType;
@@ -35,8 +36,7 @@ const DropDown: React.FC<DropDownProps> = ({ className, Data, showCheckbox = fal
             tabIndex={0}
           >
             {showCheckbox && (
-              <input
-                type="checkbox"
+              <Checkbox
                 data-test-id={`${Title}_BOX`}
                 checked={checked}
                 onChange={onClick}

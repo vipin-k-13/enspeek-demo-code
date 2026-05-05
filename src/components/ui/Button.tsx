@@ -2,24 +2,25 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { type ButtonHTMLAttributes, type FC, type ReactNode } from "react";
 import { cn } from "../../utils";
 
-const buttonBaseClasses = "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-full border border-transparent font-bold leading-none align-middle transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
+const buttonBaseClasses = "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-full border border-transparent font-bold leading-none align-middle transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
 
 const buttonToneVariants = cva(
   "",
   {
     variants: {
       varinat: {
-        default: "bg-login-primary text-white shadow-sm hover:bg-login-primary-hover",
-        theme: "bg-login-primary text-white shadow-sm hover:bg-login-primary-hover",
-        success: "bg-[var(--color-study-activated)] text-white shadow-sm hover:brightness-95",
-        danger: "bg-red-500 text-white shadow-sm hover:opacity-95",
-        cancel: "border-black bg-white text-black shadow-sm hover:bg-black/[0.03]",
-        destructive: "bg-red-500 text-white shadow-sm hover:opacity-95",
-        outline: "border-black bg-white text-black shadow-sm hover:bg-black/[0.03]",
-        secondary: "border home-border bg-white home-heading shadow-sm hover:bg-[var(--color-home-panel-soft)]",
-        ghost: "bg-transparent text-[var(--color-text-strong)] hover:bg-gray-100",
-        link: "text-primary underline-offset-4 hover:underline",
-        social: "w-full flex items-center justify-center gap-2 bg-white border border-gray-200 rounded-full p-2 hover:bg-gray-50 transition-all duration-300 text-gray-700 shadow-sm",
+        default: "bg-[var(--color-brand-primary)] text-[var(--color-core-text-inverse)] shadow-sm hover:bg-[var(--color-brand-primary-hover)] focus-visible:ring-2 focus-visible:ring-[color:var(--color-brand-primary)]/20",
+        theme: "bg-[var(--color-brand-primary)] text-[var(--color-core-text-inverse)] shadow-sm hover:bg-[var(--color-brand-primary-hover)] focus-visible:ring-2 focus-visible:ring-[color:var(--color-brand-primary)]/20",
+        success: "bg-[var(--color-study-activated)] text-[var(--color-core-text-inverse)] shadow-sm hover:brightness-95 focus-visible:ring-2 focus-visible:ring-[color:var(--color-study-activated)]/20",
+        danger: "bg-[var(--color-questionnaire-stop)] text-[var(--color-core-text-inverse)] shadow-sm hover:opacity-95 focus-visible:ring-2 focus-visible:ring-[color:var(--color-questionnaire-stop)]/20",
+        cancel: "border-[var(--color-border-strong)] bg-[var(--color-surface-base)] text-[var(--color-text-strong)] shadow-sm hover:bg-[var(--color-surface-soft)] focus-visible:ring-2 focus-visible:ring-[color:var(--color-brand-primary)]/14",
+        destructive: "bg-[var(--color-questionnaire-stop)] text-[var(--color-core-text-inverse)] shadow-sm hover:opacity-95 focus-visible:ring-2 focus-visible:ring-[color:var(--color-questionnaire-stop)]/20",
+        outline: "border-[var(--color-border-strong)] bg-[var(--color-surface-base)] text-[var(--color-text-strong)] shadow-sm hover:bg-[var(--color-surface-soft)] focus-visible:ring-2 focus-visible:ring-[color:var(--color-brand-primary)]/14",
+        secondary: "border home-border bg-[var(--color-surface-base)] home-heading shadow-sm hover:bg-[var(--color-home-panel-soft)] focus-visible:ring-2 focus-visible:ring-[color:var(--color-brand-primary)]/14",
+        chip: "border-[var(--color-border-strong)] bg-[var(--color-surface-base)] text-[var(--color-text-strong)] shadow-none hover:bg-[var(--color-surface-soft)] focus-visible:ring-2 focus-visible:ring-[color:var(--color-brand-primary)]/14",
+        ghost: "bg-transparent text-[var(--color-text-strong)] hover:bg-[var(--color-surface-soft)] focus-visible:ring-2 focus-visible:ring-[color:var(--color-brand-primary)]/14",
+        link: "text-[var(--color-brand-primary)] underline-offset-4 hover:text-[var(--color-brand-primary-hover)] hover:underline",
+        social: "w-full flex items-center justify-center gap-2 rounded-full border border-[var(--color-border-default)] bg-[var(--color-surface-base)] p-2 text-[var(--color-text-default)] shadow-sm transition-all duration-300 hover:bg-[var(--color-surface-soft)]",
       },
     },
     defaultVariants: {
@@ -32,6 +33,7 @@ const buttonSizeVariants = cva("", {
   variants: {
     size: {
       default: "px-5 py-2.5 text-sm",
+      xs: "px-2.5 py-1 text-[10px]",
       sm: "px-4 py-2 text-sm",
       lg: "px-6 py-3 text-sm",
       icon: "aspect-square p-2.5 text-2xl",

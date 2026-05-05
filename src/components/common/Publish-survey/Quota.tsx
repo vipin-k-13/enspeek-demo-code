@@ -6,6 +6,7 @@ import { useSetQuota } from "./SurveyApi";
 import { LuCircleCheck, LuCircleX, LuClock3, LuPencilLine } from "react-icons/lu";
 import { Tooltip } from "../../ui/Tooltip";
 import IconActionButton from "../../ui/IconActionButton";
+import Input from "../../ui/Input";
 
 interface QuotaProps {
   studyID: string;
@@ -67,19 +68,20 @@ const Quota: React.FC<QuotaProps> = ({
               </div>
             ) : (
               <div className="flex items-center justify-end gap-2">
-                <input
+                <Input
+                  variant="questionnaire"
                   type="number"
                   value={editTotal}
                   onChange={(e) => setEditTotal(Number(e.target.value))}
-                  className="questionnaire-input questionnaire-heading w-20 rounded-xl border questionnaire-border px-3 py-2 text-sm focus:outline-none"
+                  className="w-20 rounded-xl px-3 py-2 text-sm"
                 />
                 <Tooltip content="Set total quota" position="top">
-                  <button
+                  <IconActionButton
+                    tone="success"
                     onClick={handleSaveTotal}
-                    className="questionnaire-clickable text-[var(--color-questionnaire-multi)] transition hover:opacity-80"
                   >
                     <AiOutlineSave size={18} />
-                  </button>
+                  </IconActionButton>
                 </Tooltip>
                 <Tooltip content="Cancel" position="top">
                   <IconActionButton

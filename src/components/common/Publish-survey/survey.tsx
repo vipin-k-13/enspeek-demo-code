@@ -15,6 +15,8 @@ import Quota from "./Quota";
 import { useOverQuotaReport } from "./SurveyApi";
 import { LuCheck, LuCopy, LuExternalLink } from "react-icons/lu";
 import Button from "../../ui/Button";
+import IconActionButton from "../../ui/IconActionButton";
+import { Tooltip } from "../../ui/Tooltip";
 
 export default function PublishSurvey() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -145,22 +147,26 @@ export default function PublishSurvey() {
                         {studyInfo.livelink || "Generating link..."}
                       </p>
                       <div className="flex items-center gap-4 self-end md:self-auto">
-                        <button
-                          type="button"
-                          aria-label="Copy survey link"
-                          className="questionnaire-clickable home-highlight transition hover:opacity-80"
-                          onClick={() => handleCopy(studyInfo.livelink)}
-                        >
-                          <LuCopy className="h-6 w-6" />
-                        </button>
-                        <button
-                          type="button"
-                          aria-label="Open survey link"
-                          className="questionnaire-clickable home-highlight transition hover:opacity-80"
-                          onClick={() => handleLinkClick(studyInfo.livelink)}
-                        >
-                          <LuExternalLink className="h-6 w-6" />
-                        </button>
+                        <Tooltip content="Copy survey link" position="top">
+                          <IconActionButton
+                            aria-label="Copy survey link"
+                            tone="primary"
+                            onClick={() => handleCopy(studyInfo.livelink)}
+                            className="home-highlight"
+                          >
+                            <LuCopy className="h-6 w-6" />
+                          </IconActionButton>
+                        </Tooltip>
+                        <Tooltip content="Open survey link" position="top">
+                          <IconActionButton
+                            aria-label="Open survey link"
+                            tone="primary"
+                            onClick={() => handleLinkClick(studyInfo.livelink)}
+                            className="home-highlight"
+                          >
+                            <LuExternalLink className="h-6 w-6" />
+                          </IconActionButton>
+                        </Tooltip>
                       </div>
                     </div>
                   </section>

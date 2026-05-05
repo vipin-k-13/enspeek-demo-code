@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 import type { RootState } from "../../../store/store";
 import Button from "../../ui/Button";
+import Select from "../../ui/Select";
 import { LuArrowRight, LuDownload, LuSave, LuSettings2 } from "react-icons/lu";
 import {
   setIsBannerSettingsOpen,
@@ -119,17 +120,18 @@ const Header: React.FC<CrosstabHeaderProps> = ({
               )}
             </div>
             <div className="crosstab-soft-panel flex h-10 items-center rounded-[16px] px-3">
-              <select
+              <Select
+                variant="bare"
                 value={selectedBanner}
                 onChange={(e) => setSelectedBanner(e.target.value)}
-                className="home-text h-full bg-transparent pr-2 leading-none focus:outline-none"
+                className="home-text h-full pr-2 leading-none"
               >
                 {BannersAll.map((banner) => (
                   <option key={banner.bannerid} value={banner.bannerid}>
                     {banner.title}
                   </option>
                 ))}
-              </select>
+              </Select>
               <Button
                 type="button"
                 varinat="theme"
