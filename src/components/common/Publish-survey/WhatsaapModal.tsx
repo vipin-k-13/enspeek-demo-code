@@ -9,7 +9,6 @@ import {
   LuInfo,
   LuLink,
   LuMessageSquareQuote,
-  LuSparkle,
 } from "react-icons/lu";
 import type { RootState } from "../../../store/store";
 import { apiRequest } from "../../../services/apiService";

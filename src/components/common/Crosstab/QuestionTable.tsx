@@ -48,11 +48,11 @@ export default function QuestionsList() {
 
   return (
     <div>
-      <p className="crosstab-title my-3 text-base font-semibold">
+      <p className="crosstab-title mb-3 text-base font-semibold">
         Please add questions to table list
       </p>
-      <div className="crosstab-surface max-h-[70vh] overflow-auto px-3 py-3">
-        <div className="crosstab-soft-panel flex items-center px-4 py-3 font-semibold">
+      <div className="crosstab-surface px-3 py-3">
+        <div className="border border-[var(--color-text-strong)]/25 flex items-center px-4 py-3 font-semibold mb-2 rounded-lg">
           <div>
             <input
               data-test-id="CHECKBOX"
@@ -66,7 +66,7 @@ export default function QuestionsList() {
         </div>
 
         {QListData.map((question: any, i: number) => (
-          <div key={i} className="crosstab-soft-panel mb-2 flex items-center px-4 py-3">
+          <div key={i} className="border border-[var(--color-text-strong)]/25 mb-2 flex items-center px-4 py-3 rounded-lg">
             <div className="mr-8 ">
               <input
                 type="checkbox"

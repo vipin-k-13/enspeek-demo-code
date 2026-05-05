@@ -165,7 +165,7 @@ export default function BannerLogic({
               <select
                 value={row.connector || "AND"}
                 onChange={(e) => handleConnectorChange(row.id, e.target.value)}
-                className="questionnaire-logic-select min-w-[120px] rounded-[16px] px-4 py-3 focus:outline-none"
+                className="questionnaire-logic-select min-w-[120px] rounded-lg px-4 py-3 focus:outline-none"
               >
                 {connectors.map((connector) => (
                   <option key={connector} value={connector}>
@@ -179,7 +179,7 @@ export default function BannerLogic({
             value={row.variable || ""}
             data-test-id={`TAB_SELECTED_1`}
             onChange={(e) => handleVariableChange(row.id, e.target.value)}
-            className="questionnaire-logic-select min-w-[220px] rounded-[16px] px-4 py-3 focus:outline-none"
+            className="questionnaire-logic-select min-w-[220px] rounded-lg px-4 py-3 focus:outline-none"
           >
             <option value="">Select variables</option>
             {/* {varsData?.variables?.access?.length > 0 && (
@@ -212,7 +212,7 @@ export default function BannerLogic({
                 value={row.option || ""}
                 data-test-id={`TAB_SELECTED_2`}
                 onChange={(e) => handleOptionChange(row.id, e.target.value)}
-                className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
+                className="questionnaire-logic-select min-w-[180px] rounded-lg px-4 py-3 focus:outline-none"
               >
                 <option value="">Select option</option>
                 {optsData[row.variable].map((opt: any, index: number) => (
@@ -231,7 +231,7 @@ export default function BannerLogic({
               value={row.value || ""}
               data-test-id={`TAB_SELECTED_3`}
               onChange={(e) => handleValueChange(row.id, e.target.value)}
-              className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
+              className="questionnaire-logic-select min-w-[180px] rounded-lg px-4 py-3 focus:outline-none"
             >
               <option value="">Select value</option>
               {optsData[row.variable]

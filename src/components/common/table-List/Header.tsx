@@ -28,7 +28,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedBanner, setSelectedBanner] = useState<string>("");
-  const { tableListAddMutate } = useTableListAdd(
+  const { tableListAddMutate, isTableListAddPending } = useTableListAdd(
     location.state?.bannerID,
     location.state.studyID
   );
@@ -163,8 +163,25 @@ const Header: React.FC<CrosstabHeaderProps> = ({
               tableListAddMutate();
               dispatch(setSelectedQuestions(selectedQuestions));
             }}
+            disabled={isTableListAddPending}
           >
-            <LuSave /> Save Question
+            {isTableListAddPending ? (
+              <>
+                <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+                <span>
+                  Saving
+                  <span className="copying-dots ml-0.5 inline-flex w-[1.5em] justify-start">
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                  </span>
+                </span>
+              </>
+            ) : (
+              <>
+                <LuSave /> Save Question
+              </>
+            )}
           </Button>
         )
       }

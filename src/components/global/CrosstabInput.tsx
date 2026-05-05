@@ -4,6 +4,7 @@ import { cn } from '../../utils';
 interface CrosstabInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   label: string;
+  labelClassName?: string;
   required?: boolean;
   error?: boolean;
 }
@@ -12,6 +13,7 @@ const CrosstabInput: React.FC<CrosstabInputProps> = ({
   error = false,
   className,
   label,
+  labelClassName,
   value,
   onChange,
   required,
@@ -19,7 +21,12 @@ const CrosstabInput: React.FC<CrosstabInputProps> = ({
 }) => {
   return (
     <div className={cn(className)}>
-      <label className='crosstab-title text-sm font-semibold'>
+      <label
+        className={cn(
+          "questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]",
+          labelClassName
+        )}
+      >
         {label} {required && <span className='text-red-500'>*</span>}
       </label>
       <div className="relative mt-2">

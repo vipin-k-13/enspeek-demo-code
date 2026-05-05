@@ -4,7 +4,7 @@ import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { apiRequest } from "../../../services/apiService";
 import { queryClient } from "../../../App";
 import { toast } from "sonner";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import {
   setBannerPointer,
   setBanners,
@@ -53,14 +53,13 @@ export const useStudyInfo = (studyID: string) => {
 
 export const useBannerList = (studyID: string) => {
   const user = useSelector((state: RootState) => state.user);
-  const { state } = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const {
     data: BannerListData,
     isLoading: isBannerListLoading,
     isError: isBannerListError,
   } = useQuery({
-    queryKey: ["bannerList", state.studyID],
+    queryKey: ["bannerList", studyID],
     queryFn: async () => {
       const res = await apiRequest("post", "crosstab/banner/list", {
         studyID,
@@ -183,8 +182,12 @@ export const useDeleteBanner = ({
       });
       return res.response;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["bannerList"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["bannerList"] });
+      await queryClient.refetchQueries({
+        queryKey: ["bannerList", studyID],
+        type: "active",
+      });
       toast.success("Banner delete successfully");
       cb({});
     },
@@ -218,8 +221,12 @@ export const useReplicateBanner = ({
       });
       return res.response;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["bannerList"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["bannerList"] });
+      await queryClient.refetchQueries({
+        queryKey: ["bannerList", studyID],
+        type: "active",
+      });
       toast.success("Banner copied successfully");
       cb({});
     },

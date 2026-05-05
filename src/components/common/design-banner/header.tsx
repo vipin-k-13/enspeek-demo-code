@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "../../ui/Button";
 import { toast } from "sonner";
 import { resetLogicData } from "../../../store/CrossTabDataSlice";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { cn } from "../../../utils";
+import { LuSendHorizontal } from "react-icons/lu";
 import { useAddBannerPointer } from "./designBanner_Api";
 import PageBreadcrumbs from "../../ui/PageBreadcrumbs";
 import PageSubheader from "../../ui/PageSubheader";
@@ -94,12 +93,22 @@ const DesignBanner_Header = () => {
           disabled={isAddBannerPointerPending}
         >
           {isAddBannerPointerPending ? (
-            <AiOutlineLoading3Quarters
-              size={8}
-              className={cn("animate-spin text-action")}
-            />
+            <>
+              <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+              <span>
+                Submitting
+                <span className="copying-dots ml-0.5 inline-flex w-[1.5em] justify-start">
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
+              </span>
+            </>
           ) : (
-            "Submit"
+            <>
+              <LuSendHorizontal className="h-4 w-4" />
+              Submit
+            </>
           )}
         </Button>
       }

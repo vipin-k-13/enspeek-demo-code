@@ -20,6 +20,7 @@ interface DynamicModelProps {
   bodyClassName?: string;
   footerContent?: React.ReactNode;
   secondaryAction?: React.ReactNode;
+  secondaryActionPosition?: "before" | "after";
   buttonVariant?: ButtonProps["varinat"];
 }
 
@@ -39,6 +40,7 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
   bodyClassName = "questionnaire-page-bg",
   footerContent,
   secondaryAction,
+  secondaryActionPosition = "before",
   buttonVariant,
 }) => {
   if (!isOpen) return null;
@@ -81,8 +83,13 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
               {footerContent}
             </div>
           )}
-          <div className="flex items-center gap-3">
-            {secondaryAction}
+          <div
+            className={cn(
+              "flex items-center gap-3",
+              !footerContent && !ButtonText && "sm:ml-auto"
+            )}
+          >
+            {secondaryActionPosition === "before" ? secondaryAction : null}
             {ButtonText && onClick && (
               <Button
                 size="default"
@@ -96,6 +103,7 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
                 {ButtonText}
               </Button>
             )}
+            {secondaryActionPosition === "after" ? secondaryAction : null}
           </div>
         </div>
       </div>
