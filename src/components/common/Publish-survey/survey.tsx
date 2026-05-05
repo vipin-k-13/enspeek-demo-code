@@ -89,7 +89,7 @@ export default function PublishSurvey() {
     },
   });
 
-  if (isLoading || isPending) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center w-full h-full">
         <AiOutlineLoading3Quarters
@@ -217,6 +217,7 @@ export default function PublishSurvey() {
         onClose={() => setIsOpen(false)}
         activate={activate}
         studyInfo={studyInfo}
+        isPending={isPending}
       />
     </div>
   );
