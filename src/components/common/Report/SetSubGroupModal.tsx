@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import { LuListFilter, LuSave } from "react-icons/lu";
 import Button from "../../ui/Button";
+import Radio from "../../ui/Radio";
 
 interface SetSubgroupModalProps {
   options: Record<string, any>[];
@@ -72,13 +73,11 @@ const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
               key={index}
               className="flex cursor-pointer items-center space-x-3 rounded-lg bg-white px-4 py-3 shadow-sm"
             >
-              <input
-                type="radio"
+              <Radio
                 name="benefit"
                 value={option.qID}
                 checked={select === option.qID}
                 onChange={() => setSelect(option.qID)}
-                className="accent-blue-600"
               />
               <span className="home-text text-sm font-medium">{option.label}</span>
             </label>

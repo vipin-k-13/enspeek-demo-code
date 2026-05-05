@@ -451,7 +451,8 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                   <span className="questionnaire-label pb-3 text-base font-medium">
                     Add options:
                   </span>
-                  <input
+                  <Input
+                    variant="questionnaire"
                     type="number"
                     min={0}
                     max={50}
@@ -466,7 +467,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                       }
                     }}
                     placeholder="0"
-                    className="questionnaire-input questionnaire-heading questionnaire-border h-[46px] w-[82px] rounded-[16px] border px-4 text-center text-base focus:outline-none"
+                    className="h-[46px] w-[82px] rounded-lg border px-4 text-center text-base"
                   />
                   <Button
                   varinat="theme"

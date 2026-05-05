@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import { createPortal } from "react-dom";
+import Input from "../ui/Input";
 
 export interface DropdownItem {
   id: string;
@@ -196,7 +197,8 @@ const NewDropdown: React.FC<DropdownProps> = ({
           <div className="home-surface sticky top-0 z-10 px-3 pb-2 pt-3">
             <div className="home-dropdown-search flex h-11 items-center gap-2 rounded-2xl border px-3">
               <HiOutlineSearch className="home-muted h-4 w-4" />
-              <input
+              <Input
+                variant="bare"
                 ref={searchInputRef}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
