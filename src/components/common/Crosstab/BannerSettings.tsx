@@ -137,8 +137,7 @@ export default function BannerSettings({
         </Button>
       }
       className="max-w-4xl"
-      bodyClassName="max-h-[calc(100vh-300px)]"
-    >
+      >
       <div className="space-y-4">
         <div>
           <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">

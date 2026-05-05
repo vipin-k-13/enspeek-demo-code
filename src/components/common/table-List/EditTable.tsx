@@ -190,7 +190,7 @@ export default function EditTableModal({
       }
       onClick={updateTable}
       className="max-w-6xl"
-      bodyClassName="max-h-[calc(100vh-300px)] bg-white"
+      bodyClassName="bg-white"
       buttonVariant="success"
       secondaryAction={
         <Button

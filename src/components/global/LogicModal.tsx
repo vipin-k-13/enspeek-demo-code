@@ -34,7 +34,6 @@ const LogicModel: React.FC<LogicModelProps> = ({
       icon={<LuGitBranchPlus className="h-5 w-5" />}
       description={description}
       descriptionClassName="text-black"
-      bodyClassName="h-[calc(100vh-300px)]"
       footerRight={footerContent}
     >
       <div tabIndex={-1} className="w-full">

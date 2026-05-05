@@ -123,8 +123,7 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
         </Button>
       }
       className="max-w-5xl"
-      bodyClassName="max-h-[calc(100vh-300px)]"
-    >
+      >
       <div className="space-y-4">
         <div>
           <label className="questionnaire-label text-base font-medium text-login-primary">

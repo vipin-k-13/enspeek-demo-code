@@ -64,7 +64,7 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
           </div>
         </div>
 
-        <div className="max-h-[calc(100vh-300px)] overflow-auto px-8 py-3 md:px-12">
+        <div className="modal-body px-8 py-3 md:px-12">
           <div className="flex flex-col gap-5">
             {data?.short_url ? (
               <>

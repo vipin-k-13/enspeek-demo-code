@@ -85,7 +85,6 @@ export default function HistoryModal({
       }}
       onClose={() => onOpenChange(false)}
       className="max-w-xl"
-      bodyClassName="max-h-[calc(100vh-300px)]"
       disable={isClearHistoryPending}
       secondaryActionPosition={hasHistory ? "before" : "after"}
       secondaryAction={

@@ -63,8 +63,8 @@ const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
       }
       buttonVariant="success"
       className="max-w-lg"
-      bodyClassName="questionnaire-page-bg max-h-[calc(100vh-300px)]"
-    >
+      bodyClassName="questionnaire-page-bg"
+      >
       <div className="px-4">
         <div className="space-y-2">
           {options.map((option, index) => (
