@@ -82,17 +82,20 @@ const CopyModel: React.FC<CopyModelProps> = ({
         <p className="text-[15px] leading-6 theme-text-default">
           Create a copy of{" "}
           <span className="font-semibold text-[var(--color-brand-primary)]">{`${qID ? `${qID}: ` : ""}${displayLabel || "this question"}`}</span>{" "}
-          with a new question ID and label.
+          with a new question Id and label.
         </p>
-        <ModalField label="QID" required>
-          <div className="flex items-center gap-2">
-            <span className="questionnaire-heading text-base font-semibold">CQ</span>
+        <ModalField label="Question Id" required>
+          <div className="relative">
+            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-[var(--color-text-strong)]">
+              CQ
+            </span>
             <Input
               variant="modal"
               data-test-id="COPY_QUESTIONNAIRE_MODEL_1"
-              placeholder="Enter QID"
+              placeholder="Enter question id"
               value={QID}
               onChange={(e) => setQID(e.target.value)}
+              className="pl-10"
             />
           </div>
         </ModalField>
