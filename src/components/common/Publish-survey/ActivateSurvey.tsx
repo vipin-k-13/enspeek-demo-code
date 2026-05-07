@@ -87,15 +87,18 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
             </span>
           }
         >
-          Type <strong className="text-login-primary">activate</strong> in the
-          input box to confirm.
+          <span className="text-[var(--color-text-default)]">Type </span>
+          <span className="font-semibold text-login-primary">activate</span>
+          <span className="text-[var(--color-text-default)]">
+            {" "}to confirm this action.
+          </span>
         </ModalInfoBlock>
       </div>
       <Input
         variant="modal"
         type="text"
         data-test-id="ACTIVATE_INPUT"
-        placeholder="eg. activate"
+        placeholder="Type 'activate' here..."
         className="questionnaire-heading mt-4 rounded-[18px]"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}

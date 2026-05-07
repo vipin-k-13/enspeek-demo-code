@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import PublishSurveyHeader from "./PublishSurveyHeader";
 import ActivateSurvey from "./ActivateSurvey";
 import { cn, handleCopy, handleLinkClick } from "../../../utils";
-import { queryClient } from "../../../App";
 import { setStudyInfo } from "../../../store/CrosstabStudySlice";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Quota from "./Quota";
@@ -36,7 +35,7 @@ export default function PublishSurvey() {
 
   const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
-  const { data: studyInfo, isLoading } = useQuery({
+  const { data: studyInfo, isLoading, refetch: refetchStudyInfo } = useQuery({
     queryKey: ["studyInfo", state?.studyID],
     queryFn: async () => {
       const res = await apiRequest("post", "study/info", {
@@ -82,9 +81,9 @@ export default function PublishSurvey() {
       });
       return res.response;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      await refetchStudyInfo();
       setIsOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["studyInfo", state?.studyID] });
       toast.success(
         `${studyInfo.studyname} Study activated, data collection enabled`
       );
