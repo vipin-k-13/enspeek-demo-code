@@ -7,6 +7,7 @@ import { LuTrash2 } from "react-icons/lu";
 import { Skeleton } from "../../global/skeleton";
 import Button from "../../ui/Button";
 import IconActionButton from "../../ui/IconActionButton";
+import Input from "../../ui/Input";
 
 interface pointDetailsProps {
   activeTab: number;
@@ -133,7 +134,7 @@ const PointDetails: React.FC<pointDetailsProps> = ({
                   <label className="crosstab-title mb-2 block text-sm font-semibold">
                     Banner Point Name
                   </label>
-                  <input
+                  <Input
                     data-test-id="POINTER_NAME"
                     type="text"
                     value={activePoint.title}

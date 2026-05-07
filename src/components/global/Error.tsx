@@ -2,6 +2,7 @@ import React from 'react';
 import { FiAlertCircle } from "react-icons/fi";
 import { LuRefreshCw } from "react-icons/lu";
 import { GoHome } from "react-icons/go";
+import Button from "../ui/Button";
 
 interface ErrorPageProps {
   title?: string;
@@ -38,31 +39,31 @@ const Error: React.FC<ErrorPageProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px] p-8 text-center">
-      <div className="w-16 h-16 mb-6 text-gray-400">
+      <div className="mb-6 h-16 w-16 theme-text-muted">
         <FiAlertCircle className="w-full h-full" />
       </div>
 
-      <h2 className="text-2xl font-semibold text-gray-800 mb-3">
+      <h2 className="mb-3 text-2xl font-semibold theme-text-strong">
         {title}
       </h2>
 
-      <p className="text-gray-600 mb-8 max-w-md leading-relaxed">
+      <p className="mb-8 max-w-md leading-relaxed theme-text-default">
         {message}
       </p>
 
       <div className="flex gap-3">
         {showRetry && (
-          <button onClick={handleRetry} className="inline-flex items-center cursor-pointer gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
+          <Button type="button" varinat="theme" onClick={handleRetry} className="rounded-lg px-6 py-2.5 font-medium">
             <LuRefreshCw className="w-4 h-4" />
             Try Again
-          </button>
+          </Button>
         )}
 
         {showHome && (
-          <button onClick={handleGoHome} className="inline-flex items-center cursor-pointer gap-2 px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors duration-200">
+          <Button type="button" varinat="outline" onClick={handleGoHome} className="rounded-lg px-6 py-2.5 font-medium">
             <GoHome className="w-4 h-4" />
             Go Home
-          </button>
+          </Button>
         )}
       </div>
     </div>

@@ -157,7 +157,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   }, []);
 
   const getArrowClasses = () => {
-    const baseClasses = 'absolute w-2 h-2 bg-gray-900 transform rotate-45';
+    const baseClasses = 'absolute h-2 w-2 transform rotate-45 bg-[var(--color-text-strong)]';
     switch (position) {
       case 'top':
         return `${baseClasses} -bottom-1 left-1/2 -translate-x-1/2`;
@@ -196,7 +196,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
             visibility: isPositioned ? 'visible' : 'hidden',
           }}
           className={`
-            bg-gray-900 text-white text-sm px-3 py-2 rounded-lg shadow-lg
+            rounded-lg bg-[var(--color-text-strong)] px-3 py-2 text-sm text-[var(--color-core-text-inverse)] shadow-lg
             transition-opacity duration-150 ease-out
             ${isVisible && isPositioned ? 'opacity-100' : 'opacity-0'}
             max-w-xs break-words

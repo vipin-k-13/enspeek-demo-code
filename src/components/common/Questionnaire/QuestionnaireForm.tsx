@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../../ui/Button";
-import QuestionsInput from "./QuestionsInput";
+import Input from "../../ui/Input";
+import Select from "../../ui/Select";
 import RowOptions from "./RowOptions";
 import { useLocation } from "react-router";
 import { createNullQuestionObject } from "../../../utils/payloadBuilder";
@@ -13,7 +14,7 @@ import { cn } from "../../../utils";
 import { setQType } from "../../../store/TriggerSlice";
 import { setChatOpen } from "../../../store/ChatSlice";
 import { useRI } from "./Api";
-import { LuChevronDown, LuGripVertical } from "react-icons/lu";
+import { LuChevronDown, LuGripVertical, LuSave } from "react-icons/lu";
 import { Tooltip } from "../../ui/Tooltip";
 
 interface QuestionnaireForm {
@@ -53,6 +54,8 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
   const [qInstruction, setQinstruction] = React.useState<string>(
     data?.qNote3 ? data.qNote3 : ""
   );
+  const displayEditLabel =
+    data?.qLabel?.replace(/^[A-Za-z0-9_-]+\s*:\s*/, "").trim() || data?.qLabel;
   const [optionCount, setOptionCount] = React.useState<number>(0);
   const [options, setOptions] = React.useState<Option[]>(
     data?.rowOptionList ? data.rowOptionList : []
@@ -91,7 +94,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
     setOptionCount(0);
   };
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending: isCreatePending } = useMutation({
     mutationKey: ["questionCreate"],
     mutationFn: async (payload: QuestionPayload) => {
       const res = await apiRequest("post", "questionnaire/add", payload);
@@ -105,7 +108,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
     },
   });
 
-  const { mutate: QuestionEdit } = useMutation({
+  const { mutate: QuestionEdit, isPending: isEditPending } = useMutation({
     mutationKey: ["questionsEdit"],
     mutationFn: async (data: Question) => {
       const res = await apiRequest("post", `questionnaire/edit`, {
@@ -252,6 +255,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
     isSelectableType !== "open-end-medium" &&
     isSelectableType !== "text-only" &&
     isSelectableType !== "stop";
+  const isSaving = data ? isEditPending : isCreatePending;
 
   return (
     <div className="questionnaire-page-bg z-50 mb-4 w-full p-2 md:p-6">
@@ -268,7 +272,7 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
               </span>
               <div className="min-w-0">
                 <h2 className="questionnaire-heading truncate text-lg font-semibold md:text-[22px]">
-                  {qtext || label || data?.qText || "Question"}
+                  {data ? displayEditLabel || qtext || data?.qText || "Question" : qtext || label || "Question"}
                 </h2>
               </div>
             </div>
@@ -278,14 +282,33 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                 varinat="success"
                 className="capitalize"
                 onClick={data ? handleUpdate : handleClick}
+                disabled={isSaving}
               >
-                {data ? "Save" : "Submit"}
+                {isSaving ? (
+                  <>
+                    <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+                    <span>
+                      Saving
+                      <span className="copying-dots ml-0.5 inline-flex w-[1.5em] justify-start">
+                        <span>.</span>
+                        <span>.</span>
+                        <span>.</span>
+                      </span>
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <LuSave className="h-4 w-4" />
+                    {data ? "Save" : "Submit"}
+                  </>
+                )}
               </Button>
               <Button
                 type="button"
                 varinat="cancel"
-                className="px-5"
+                className="border-gray-300 px-5 text-[var(--color-text-strong)] hover:bg-gray-50"
                 onClick={onClose}
+                disabled={isSaving}
               >
                 Close
               </Button>
@@ -308,36 +331,42 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
         <div className="px-4 py-5 pr-2 md:px-6 md:pr-3">
           {!data && (
             <div className="mb-6 grid gap-4 md:grid-cols-[1fr_2fr_1fr]">
-              <QuestionsInput
-                className="w-full"
-                value={id}
-                onChange={(e) => {
-                  setId(e.target.value);
-                  if (errors.id && e.target.value.trim() !== "") {
-                    setErrors((prev) => ({ ...prev, id: false }));
-                  }
-                }}
-                min={0}
-                placeholder="Enter QID"
-                lable="QID"
-                require
-                error={errors.id}
-              />
+              <div className="w-full">
+                <label className='questionnaire-label mb-3 block text-[15px]'>
+                  QID <span className='text-[var(--color-core-danger)]'>*</span>
+                </label>
+                <Input
+                  variant="questionnaire"
+                  className={cn(errors.id ? "border-[var(--color-core-danger)] pr-10" : "questionnaire-border border")}
+                  value={id}
+                  onChange={(e) => {
+                    setId(e.target.value);
+                    if (errors.id && e.target.value.trim() !== "") {
+                      setErrors((prev) => ({ ...prev, id: false }));
+                    }
+                  }}
+                  min={0}
+                  placeholder="Enter QID"
+                />
+              </div>
 
-              <QuestionsInput
-                className="w-full"
-                lable="Question label"
-                value={label}
-                onChange={(e) => {
-                  setLabel(e.target.value);
-                  if (errors.label && e.target.value.trim() !== "") {
-                    setErrors((prev) => ({ ...prev, label: false }));
-                  }
-                }}
-                placeholder="Enter question label ..."
-                require
-                error={errors.label}
-              />
+              <div className="w-full">
+                <label className='questionnaire-label mb-3 block text-[15px]'>
+                  Question label <span className='text-[var(--color-core-danger)]'>*</span>
+                </label>
+                <Input
+                  variant="questionnaire"
+                  className={cn(errors.label ? "border-[var(--color-core-danger)] pr-10" : "questionnaire-border border")}
+                  value={label}
+                  onChange={(e) => {
+                    setLabel(e.target.value);
+                    if (errors.label && e.target.value.trim() !== "") {
+                      setErrors((prev) => ({ ...prev, label: false }));
+                    }
+                  }}
+                  placeholder="Enter question label ..."
+                />
+              </div>
               <div className="flex w-full flex-col">
                 <label
                   htmlFor="qType"
@@ -345,50 +374,60 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                 >
                   Question Type
                 </label>
-                <select
+                <Select
+                  variant="questionnaire"
                   id="qType"
                   value={qType}
                   onChange={(e) => dispatch(setQType(e.target.value))}
-                  className={cn(
-                    "questionnaire-input questionnaire-heading questionnaire-border w-full rounded-[18px] border px-4 py-3.5 focus:outline-none"
-                  )}
                 >
                   {qTypeList.filter((item) => item.code !== "stop").map((item) => (
                     <option key={item.code} value={item.code}>
                       {item.show}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
             </div>
           )}
 
-          <QuestionsInput
-            className="mb-5 w-full"
-            value={qtext}
-            lable="Question Text"
-            onChange={(e) => {
-              setQtext(e.target.value);
-              if (errors.qtext && e.target.value.trim() !== "") {
-                setErrors((prev) => ({ ...prev, qtext: false }));
-              }
-            }}
-            placeholder="Enter your question"
-            require
-            error={errors.qtext}
-          />
-          <QuestionsInput
-            className="mb-5 w-full"
-            value={qtext2}
-            lable="Question Text 2 (Optional)"
-            onChange={(e) => setQtext2(e.target.value)}
-            placeholder="Additional context..."
-          />
+          <div className="mb-5 w-full">
+            <label className='questionnaire-label mb-3 block text-[15px]'>
+              Question Text <span className='text-[var(--color-core-danger)]'>*</span>
+            </label>
+            <Input
+              variant="questionnaire"
+              className={cn(errors.qtext ? "border-[var(--color-core-danger)] pr-10" : "questionnaire-border border")}
+              value={qtext}
+              onChange={(e) => {
+                setQtext(e.target.value);
+                if (errors.qtext && e.target.value.trim() !== "") {
+                  setErrors((prev) => ({ ...prev, qtext: false }));
+                }
+              }}
+              placeholder="Enter your question"
+            />
+          </div>
+          <div className="mb-5 w-full">
+            <label className='questionnaire-label mb-3 block text-[15px]'>
+              Question Text 2 (Optional)
+            </label>
+            <Input
+              variant="questionnaire"
+              className="questionnaire-border border"
+              value={qtext2}
+              onChange={(e) => setQtext2(e.target.value)}
+              placeholder="Additional context..."
+            />
+          </div>
           <div className="mb-5">
-            <QuestionsInput
+            <label className='questionnaire-label mb-3 block text-[15px]'>
+              Respondent Instruction
+            </label>
+            <Input
+              variant="questionnaire"
+              className="questionnaire-border border"
               value={qInstruction}
               onChange={(e) => setQinstruction(e.target.value)}
-              lable="Respondent Instruction"
               placeholder={
                 isSelectableType === "stop"
                   ? "Stop the survey"
@@ -399,10 +438,10 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
           {isSelectableType === "stop" && (
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
               <label className="questionnaire-label">Select stop condition</label>
-              <select className="questionnaire-input questionnaire-border rounded-[16px] border px-4 py-2 focus:outline-none">
+              <Select variant="questionnaire" className="max-w-[220px] py-2">
                 <option>Terminated</option>
                 <option>Completed</option>
-              </select>
+              </Select>
             </div>
           )}
           {show && (
@@ -412,7 +451,8 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                   <span className="questionnaire-label pb-3 text-base font-medium">
                     Add options:
                   </span>
-                  <input
+                  <Input
+                    variant="questionnaire"
                     type="number"
                     min={0}
                     max={50}
@@ -427,37 +467,47 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
                       }
                     }}
                     placeholder="0"
-                    className="questionnaire-input questionnaire-heading questionnaire-border h-[46px] w-[82px] rounded-[16px] border px-4 text-center text-base focus:outline-none"
+                    className="h-[46px] w-[82px] rounded-lg border px-4 text-center text-base"
                   />
                   <Button
                   varinat="theme"
                   size="default"
                   onClick={createOption}
-                  disabled={isPending}
+                  disabled={isSaving}
                   >
                     Create
                   </Button>
                 </div>
                 {isSelectableType === "multiple-select" && (
                   <div className="flex flex-wrap items-end gap-3">
-                    <QuestionsInput
-                      className="w-full md:w-32"
-                      type="number"
-                      min={1}
-                      value={minSelection}
-                      onChange={(e) => checkMin(Number(e.target.value))}
-                      lable="Min Selection"
-                      placeholder="Minimum"
-                    />
-                    <QuestionsInput
-                      className="w-full md:w-32"
-                      type="number"
-                      min={1}
-                      value={maxSelection}
-                      onChange={(e) => checkMax(Number(e.target.value))}
-                      lable="Max Selection"
-                      placeholder="Maximum"
-                    />
+                    <div className="w-full md:w-32">
+                      <label className='questionnaire-label mb-3 block text-[15px]'>
+                        Min Selection
+                      </label>
+                      <Input
+                        variant="questionnaire"
+                        className="questionnaire-border border"
+                        type="number"
+                        min={1}
+                        value={minSelection}
+                        onChange={(e) => checkMin(Number(e.target.value))}
+                        placeholder="Minimum"
+                      />
+                    </div>
+                    <div className="w-full md:w-32">
+                      <label className='questionnaire-label mb-3 block text-[15px]'>
+                        Max Selection
+                      </label>
+                      <Input
+                        variant="questionnaire"
+                        className="questionnaire-border border"
+                        type="number"
+                        min={1}
+                        value={maxSelection}
+                        onChange={(e) => checkMax(Number(e.target.value))}
+                        placeholder="Maximum"
+                      />
+                    </div>
                   </div>
                 )}
               </div>

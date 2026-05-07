@@ -5,7 +5,7 @@ import AddCustomTableListModal from "./TableAdd";
 import BannerLogic from "../../global/BannerLogic";
 import { useAddCustomTable } from "../Crosstab/CrossTab.Api";
 import { useLocation } from "react-router";
-import CrosstabInput from "../../global/CrosstabInput";
+import Input from "../../ui/Input";
 import ModalInstruction from "../../ui/ModalInstruction";
 
 interface ControlItem {
@@ -118,21 +118,27 @@ export default function AddCustomTableModal({
       </ModalInstruction>
       <div className="space-y-4">
         <div>
-          <CrosstabInput
-            label="Table Label"
-            required
+          <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+            Table Label <span className="text-[var(--color-core-danger)]">*</span>
+          </label>
+          <Input
+            variant="crosstab"
+            className="mt-2"
             placeholder="Enter label"
             value={tableLabel}
             onChange={(e) => setTableLabel(e.target.value)}
           />
         </div>
         <div>
-          <CrosstabInput
-            label="Table Text"
+          <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+            Table Text <span className="text-[var(--color-core-danger)]">*</span>
+          </label>
+          <Input
+            variant="crosstab"
+            className="mt-2"
             placeholder="Enter text"
             value={tableText}
             onChange={(e: any) => setTableText(e.target.value)}
-            required
           />
         </div>
         <div>

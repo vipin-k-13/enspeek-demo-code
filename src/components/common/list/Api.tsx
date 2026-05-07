@@ -5,13 +5,31 @@ import type { AppDispatch, RootState } from "../../../store/store";
 import { toast } from "sonner";
 import { queryClient } from "../../../App";
 import { setFilterStudys } from "../../../store/CrosstabStudySlice";
-import { setCopyModel, setDeleteModel } from "../../../store/TriggerSlice";
+import {
+  REFRESH_STUDY_LIST_EVENT,
+  type RefreshStudyListOptions,
+} from "../../../utils/studyListRefresh";
+import {
+  setCopyModel,
+  setDeleteModel,
+  setSelectedId,
+  setSelectedStudyName,
+} from "../../../store/TriggerSlice";
 
 const removeStudyFromList = (items: any[], studyId: string) =>
   items.filter((prev) => (prev.studyid ?? prev.studyID) !== studyId);
 
-const refreshStudyList = async () => {
-  window.dispatchEvent(new CustomEvent("refresh-study-list"));
+const refreshStudyList = async (options?: RefreshStudyListOptions) => {
+  await new Promise<void>((resolve) => {
+    window.dispatchEvent(
+      new CustomEvent(REFRESH_STUDY_LIST_EVENT, {
+        detail: {
+          ...options,
+          resolve,
+        },
+      })
+    );
+  });
   await queryClient.invalidateQueries({
     queryKey: ["studyList"],
     exact: false,
@@ -23,11 +41,11 @@ const refreshStudyList = async () => {
   });
 };
 
-export const useArchive = () => {
+export const useArchive = (onArchived?: () => void) => {
   const { apiToken } = useSelector((state: RootState) => state.user);
   const { FilterStudys } = useSelector((state: RootState) => state.study);
   const dispatch = useDispatch<AppDispatch>();
-  const { mutate: Archived } = useMutation({
+  const { mutate: Archived, isPending } = useMutation({
     mutationFn: async (selectedStudies: string) => {
       return await apiRequest("post", "study/archive", {
         apiToken: apiToken,
@@ -40,37 +58,47 @@ export const useArchive = () => {
     },
     onSuccess: async () => {
       await refreshStudyList();
+      onArchived?.();
       toast.success("Study archived successfully");
     },
   });
 
-  return { Archived };
+  return { Archived, isPending };
 };
 
 export const useDelete = () => {
   const { apiToken } = useSelector((state: RootState) => state.user);
   const { FilterStudys } = useSelector((state: RootState) => state.study);
   const dispatch = useDispatch<AppDispatch>();
-  const { mutate: Delete } = useMutation({
+  const { mutate: Delete, isPending } = useMutation({
     mutationKey: ["studyDelete"],
     mutationFn: async (selectedStudies: string) => {
-      return await apiRequest("post", "study/delete", {
+      const res = await apiRequest("post", "study/delete", {
         apiToken: apiToken,
         study_list: [selectedStudies],
       });
+      if (!res) {
+        return null;
+      }
+      return res;
     },
     onMutate(variables) {
       const newData = removeStudyFromList(FilterStudys, variables);
       dispatch(setFilterStudys(newData));
     },
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      if (!data) {
+        return;
+      }
       await refreshStudyList();
+      dispatch(setSelectedId(""));
+      dispatch(setSelectedStudyName(""));
       dispatch(setDeleteModel(false));
       toast.success("Study deleted successfully");
     },
   });
 
-  return { Delete };
+  return { Delete, isPending };
 };
 
 export const useCopy = () => {
@@ -90,11 +118,19 @@ export const useCopy = () => {
         studyID: studyId,
         studyName: studyName,
       });
-      const data = await res.response;
-      return data;
+      if (!res) {
+        return null;
+      }
+      return res.response;
     },
-    onSuccess: async () => {
-      window.dispatchEvent(new CustomEvent("copy-study-success"));
+    onSuccess: async (data) => {
+      if (!data) {
+        return;
+      }
+      await refreshStudyList({
+        selection: "myactive",
+        resetSearch: true,
+      });
       dispatch(setCopyModel(false));
       toast.success("Study copied successfully");
     },
@@ -102,11 +138,11 @@ export const useCopy = () => {
   return { Copy, isPending };
 };
 
-export const useActive = () => {
+export const useActive = (onActivated?: () => void) => {
   const { apiToken } = useSelector((state: RootState) => state.user);
   const { FilterStudys } = useSelector((state: RootState) => state.study);
   const dispatch = useDispatch<AppDispatch>();
-  const { mutate: Active } = useMutation({
+  const { mutate: Active, isPending } = useMutation({
     mutationKey: ["activeProject"],
     mutationFn: async (selectedStudies: string) => {
       return await apiRequest("post", "study/activate", {
@@ -119,12 +155,16 @@ export const useActive = () => {
       dispatch(setFilterStudys(newData));
     },
     onSuccess: async () => {
-      await refreshStudyList();
-      toast.success("Project activated successfully");
+      await refreshStudyList({
+        selection: "myactive",
+        resetSearch: true,
+      });
+      onActivated?.();
+      toast.success("Study activated successfully");
     },
   });
 
-  return { Active };
+  return { Active, isPending };
 };
 
 export const useFieldReport = () => {

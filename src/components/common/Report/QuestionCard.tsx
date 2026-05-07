@@ -1,5 +1,5 @@
 import React from "react";
-import { LuPresentation } from "react-icons/lu";
+import { LuDownload } from "react-icons/lu";
 import { usePptDownloadHook, useProcessHook } from "./ReportMutations";
 import { useLocation } from "react-router";
 import Button from "../../ui/Button";
@@ -36,7 +36,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ title, children, qId, study
             DownloadPpt(qId);
           }}
         >
-          <LuPresentation />
+          <LuDownload />
         </Button>
       </SurfaceCardHeader>
       <SurfaceCardContent>{children}</SurfaceCardContent>

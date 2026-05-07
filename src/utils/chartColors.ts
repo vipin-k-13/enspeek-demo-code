@@ -1,1 +1,1 @@
-export const PRIMARY_CHART_COLOR = "#3F72AF";
+export const PRIMARY_CHART_COLOR = "var(--color-action)";

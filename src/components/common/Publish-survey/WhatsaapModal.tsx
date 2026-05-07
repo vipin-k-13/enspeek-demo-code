@@ -1,11 +1,22 @@
 import React from "react";
-import DynamicModel from "../../global/DynamicModel";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
+import { FaWhatsapp } from "react-icons/fa";
+import {
+  LuCopy,
+  LuInfo,
+  LuLink,
+  LuMessageSquareQuote,
+} from "react-icons/lu";
 import type { RootState } from "../../../store/store";
 import { apiRequest } from "../../../services/apiService";
-import { toast } from "sonner";
+import Modal from "../../ui/Modal";
+import Button from "../../ui/Button";
+import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
+import ModalHeader from "../../ui/modal/ModalHeader";
+
 interface WhatsaapModalProps {
   onSave: (selected: string) => void;
   onClose: () => void;
@@ -34,37 +45,115 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
     retry: 1,
   });
 
+  const copyContent = data?.short_url || "";
+
   return (
-    <DynamicModel
+    <Modal
       isOpen={true}
       onClose={onClose}
-      Title="WhatsApp Link"
-      ButtonText="Copy"
-      onClick={() => {
-        if (data?.short_url) {
-          navigator.clipboard.writeText(data.short_url);
-          toast.success("WhatsApp link copied to clipboard!");
-        }
-        onClose();
-      }}
-      className="max-w-lg"
+      className="max-w-[90vw] md:max-w-[980px]"
     >
-      <div className="flex justify-center items-center text-center">
-        {data?.short_url ? (
-          <a
-            data-test-id="WHATSAPP_LINK"
-            href={data.short_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="break-words text-action underline cursor-pointer"
+      <div className="theme-surface">
+        <ModalHeader
+          title="WhatsApp Link"
+          icon={
+            <span className="text-[var(--color-study-activated)]">
+              <FaWhatsapp className="h-5 w-5" />
+            </span>
+          }
+          onClose={onClose}
+        />
+
+        <div className="modal-body px-8 py-3 md:px-12">
+          <div className="flex flex-col gap-5">
+            {data?.short_url ? (
+              <>
+                <div className="modal-card flex items-center gap-5 px-5 py-5">
+                  <span className="modal-header-icon text-[var(--color-study-activated)]">
+                    <LuLink className="h-5 w-5" />
+                  </span>
+                  <div className="min-w-0 flex-1 text-left">
+                    <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap">
+                      <strong className="questionnaire-heading shrink-0 text-[24px] font-extrabold text-[var(--color-text-strong)]">
+                        Link:
+                      </strong>
+                      <a
+                        data-test-id="WHATSAPP_LINK"
+                        href={data.short_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="min-w-0 truncate text-[22px] leading-8 text-[var(--color-study-activated)] underline decoration-dashed underline-offset-4"
+                      >
+                        {data.short_url}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {data.Message && (
+                  <div className="modal-card flex items-center gap-5 px-5 py-5">
+                    <span className="modal-header-icon text-[var(--color-study-activated)]">
+                      <LuMessageSquareQuote className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0 flex-1 text-left">
+                      <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap">
+                        <p className="questionnaire-heading shrink-0 text-[24px] font-extrabold text-[var(--color-text-strong)]">
+                          Message:
+                        </p>
+                        <p className="min-w-0 truncate text-[22px] leading-8 text-[var(--color-text-default)]">
+                          {data.Message}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="modal-card px-5 py-8 text-center">
+                <p className="text-lg theme-text-muted">Generating link...</p>
+              </div>
+            )}
+
+            <ModalInfoBlock
+              className="gap-5 rounded-lg px-5 py-5"
+              icon={
+                <span className="modal-header-icon text-[var(--color-study-activated)]">
+                <LuInfo className="h-5 w-5" />
+                </span>
+              }
+            >
+              <p className="text-left text-[21px] leading-9 text-[var(--color-text-default)]">
+                Copy and paste the message to start the conversation after opening the link
+              </p>
+            </ModalInfoBlock>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-3 questionnaire-border theme-surface px-6 py-6">
+          <Button
+            type="button"
+            varinat="cancel"
+            onClick={onClose}
           >
-            {data.short_url}
-          </a>
-        ) : (
-          <p className="text-gray-400">Generating link...</p>
-        )}
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            varinat="success"
+            onClick={() => {
+              if (copyContent) {
+                navigator.clipboard.writeText(copyContent);
+                toast.success("WhatsApp link copied to clipboard!");
+              }
+              onClose();
+            }}
+          >
+            <LuCopy className="h-4 w-4" />
+            Copy
+          </Button>
+        </div>
       </div>
-    </DynamicModel>
+    </Modal>
   );
 };
 

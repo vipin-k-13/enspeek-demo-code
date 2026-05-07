@@ -36,7 +36,7 @@ const CrossTabTable = () => {
   } = useSelector((state: RootState) => state.crosstab);
 
   return (
-    <div className="p-3 md:p-4">
+    <div>
       <SuspenseContent
         studyID={state.studyID}
         bannerID={state.bannerID}

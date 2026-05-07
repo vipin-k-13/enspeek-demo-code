@@ -1,39 +1,63 @@
 @import "tailwindcss";
 
 @theme {
-  --color-surface-base: #ffffff;
-  --color-surface-soft: #f7f5ff;
-  --color-surface-soft-alt: #f6f5ff;
-  --color-surface-softest: #fbfaff;
-  --color-border-soft: #f0eefc;
-  --color-border-default: #e7e4fb;
-  --color-border-strong: #d8d5ff;
-  --color-text-strong: #1d2456;
-  --color-text-default: #252b59;
-  --color-text-supporting: #8f92c8;
-  --color-text-subtle: #b7b4f0;
-  --color-brand-primary: #4f56e6;
-  --color-brand-primary-hover: #444be0;
-  --color-brand-primary-soft: #6d63ff;
-  --color-brand-primary-softest: #efecff;
-  --color-brand-secondary: #5e58f1;
-  --color-brand-secondary-strong: #4b46e2;
-  --color-brand-info: #3b82f6;
-  --color-brand-info-soft: #e8f1ff;
-  --color-brand-ai: #2b8aa5;
-  --color-scrollbar-thumb: #c9ced8;
-  --color-scrollbar-thumb-hover: #b6bcc8;
-  --color-action: #3F72AF;
-  --color-primary: #112D4E;
+  --color-core-surface: #ffffff;
+  --color-core-surface-subtle: #f7f5ff;
+  --color-core-surface-soft: #fbfaff;
+  --color-core-border: #e7e4fb;
+  --color-core-border-soft: #f0eefc;
+  --color-core-border-strong: #d8d5ff;
+  --color-core-text: #252b59;
+  --color-core-text-strong: #1d2456;
+  --color-core-text-muted: #8f92c8;
+  --color-core-text-subtle: #b7b4f0;
+  --color-core-text-inverse: #ffffff;
+  --color-core-primary: #4f56e6;
+  --color-core-primary-hover: #444be0;
+  --color-core-primary-soft: #6d63ff;
+  --color-core-secondary: #5e58f1;
+  --color-core-accent: #0f9f98;
+  --color-core-info: #3b82f6;
+  --color-core-success: #16a34a;
+  --color-core-warning: #f59e0b;
+  --color-core-danger: #ef4444;
+  --color-core-scrollbar: #c9ced8;
+  --color-core-scrollbar-hover: color-mix(in srgb, var(--color-core-scrollbar) 82%, var(--color-core-text) 18%);
+
+  --color-surface-base: var(--color-core-surface);
+  --color-surface-soft: var(--color-core-surface-subtle);
+  --color-surface-soft-alt: color-mix(in srgb, var(--color-core-surface-subtle) 92%, var(--color-core-surface) 8%);
+  --color-surface-softest: var(--color-core-surface-soft);
+  --color-border-soft: var(--color-core-border-soft);
+  --color-border-default: var(--color-core-border);
+  --color-border-strong: var(--color-core-border-strong);
+  --color-text-strong: var(--color-core-text-strong);
+  --color-text-default: var(--color-core-text);
+  --color-text-supporting: var(--color-core-text-muted);
+  --color-text-subtle: var(--color-core-text-subtle);
+  --color-text-muted: var(--color-core-text-muted);
+  --color-brand-primary: var(--color-core-primary);
+  --color-brand-primary-hover: var(--color-core-primary-hover);
+  --color-brand-primary-soft: var(--color-core-primary-soft);
+  --color-brand-primary-softest: color-mix(in srgb, var(--color-core-primary) 10%, var(--color-core-surface) 90%);
+  --color-brand-secondary: var(--color-core-secondary);
+  --color-brand-secondary-strong: color-mix(in srgb, var(--color-core-secondary) 82%, var(--color-core-primary) 18%);
+  --color-brand-info: var(--color-core-info);
+  --color-brand-info-soft: color-mix(in srgb, var(--color-core-info) 10%, var(--color-core-surface) 90%);
+  --color-brand-ai: color-mix(in srgb, var(--color-core-accent) 78%, var(--color-core-info) 22%);
+  --color-scrollbar-thumb: var(--color-core-scrollbar);
+  --color-scrollbar-thumb-hover: var(--color-core-scrollbar-hover);
+  --color-action: var(--color-core-info);
+  --color-primary: var(--color-core-text-strong);
   --color-bg: var(--color-surface-base);
   --color-text: var(--color-text-default);
-  --color-airesp: #d0dee8;
+  --color-airesp: color-mix(in srgb, var(--color-core-info) 18%, var(--color-core-surface) 82%);
   --color-login-bg-start: var(--color-brand-secondary);
   --color-login-bg-end: var(--color-brand-primary-soft);
-  --color-login-card: #f9f9fc;
+  --color-login-card: color-mix(in srgb, var(--color-core-surface) 94%, var(--color-core-surface-subtle) 6%);
   --color-login-muted: var(--color-text-supporting);
-  --color-login-input: #f1f2fb;
-  --color-login-input-text: #262942;
+  --color-login-input: color-mix(in srgb, var(--color-core-surface-subtle) 75%, var(--color-core-surface) 25%);
+  --color-login-input-text: var(--color-core-text);
   --color-login-primary: var(--color-brand-primary);
   --color-login-primary-hover: var(--color-brand-primary-hover);
   --color-home-page: var(--color-surface-soft);
@@ -61,13 +85,13 @@
   --color-home-dropdown-search-bg: var(--color-surface-softest);
   --color-home-dropdown-search-text: var(--color-text-default);
   --color-home-dropdown-search-placeholder: var(--color-text-subtle);
-  --color-study-progress: #f59e0b;
-  --color-study-progress-bg: #fff4df;
+  --color-study-progress: var(--color-core-warning);
+  --color-study-progress-bg: color-mix(in srgb, var(--color-core-warning) 16%, var(--color-core-surface) 84%);
   --color-study-launched: var(--color-brand-info);
-  --color-study-activated: #16a34a;
-  --color-study-collecting: #22c55e;
-  --color-study-report: #ec4899;
-  --color-study-archived: #64748b;
+  --color-study-activated: var(--color-core-success);
+  --color-study-collecting: color-mix(in srgb, var(--color-core-success) 82%, var(--color-core-accent) 18%);
+  --color-study-report: var(--color-brand-primary-soft);
+  --color-study-archived: color-mix(in srgb, var(--color-core-text-muted) 82%, var(--color-core-text) 18%);
   --color-study-default: var(--color-brand-primary);
   --color-questionnaire-page: var(--color-surface-soft);
   --color-questionnaire-card: var(--color-surface-base);
@@ -77,26 +101,31 @@
   --color-questionnaire-heading: var(--color-text-strong);
   --color-questionnaire-label: var(--color-brand-primary-soft);
   --color-questionnaire-input: var(--color-surface-base);
-  --color-questionnaire-danger: #ff8d98;
-  --color-questionnaire-multi: #0f9f98;
-  --color-questionnaire-multi-bg: #e6f8f7;
+  --color-questionnaire-danger: var(--color-core-danger);
+  --color-questionnaire-multi: var(--color-core-accent);
+  --color-questionnaire-multi-bg: color-mix(in srgb, var(--color-core-accent) 14%, var(--color-core-surface) 86%);
   --color-questionnaire-single: var(--color-brand-primary-soft);
   --color-questionnaire-single-bg: var(--color-brand-primary-softest);
-  --color-questionnaire-rating: #8b5cf6;
-  --color-questionnaire-rating-bg: #f1eaff;
-  --color-questionnaire-open: #0f766e;
-  --color-questionnaire-open-bg: #dff7f3;
+  --color-questionnaire-rating: var(--color-brand-secondary);
+  --color-questionnaire-rating-bg: color-mix(in srgb, var(--color-brand-secondary) 12%, var(--color-core-surface) 88%);
+  --color-questionnaire-open: color-mix(in srgb, var(--color-core-accent) 80%, var(--color-core-text) 20%);
+  --color-questionnaire-open-bg: color-mix(in srgb, var(--color-core-accent) 12%, var(--color-core-surface) 88%);
   --color-questionnaire-text: var(--color-brand-info);
   --color-questionnaire-text-bg: var(--color-brand-info-soft);
-  --color-questionnaire-stop: #ef4444;
-  --color-questionnaire-stop-bg: #ffe8ea;
+  --color-questionnaire-stop: var(--color-core-danger);
+  --color-questionnaire-stop-bg: color-mix(in srgb, var(--color-core-danger) 12%, var(--color-core-surface) 88%);
   --color-questionnaire-sidebar-border: var(--color-border-default);
   --color-questionnaire-sidebar-icon: var(--color-text-supporting);
   --color-questionnaire-sidebar-icon-hover: var(--color-brand-primary);
   --color-questionnaire-sidebar-active-start: var(--color-brand-secondary);
   --color-questionnaire-sidebar-active-end: var(--color-brand-secondary-strong);
-  --color-questionnaire-sidebar-active-shadow: rgba(88, 84, 237, 0.28);
-  --color-questionnaire-input-ring: rgba(216, 213, 255, 0.8);
+  --color-questionnaire-sidebar-active-shadow: color-mix(in srgb, var(--color-brand-secondary) 28%, transparent);
+  --color-questionnaire-input-ring: color-mix(in srgb, var(--color-core-border-strong) 80%, transparent);
+  --color-shadow-primary: color-mix(in srgb, var(--color-core-primary) 8%, transparent);
+  --color-shadow-strong: color-mix(in srgb, var(--color-core-text-strong) 16%, transparent);
+  --color-shadow-success: color-mix(in srgb, var(--color-core-success) 10%, transparent);
+  --color-shadow-danger: color-mix(in srgb, var(--color-core-danger) 10%, transparent);
+  --color-overlay: color-mix(in srgb, var(--color-core-text-strong) 34%, transparent);
 }
 
 html,
@@ -106,7 +135,7 @@ body,
 }
 
 body{
-  @apply bg-white;
+  background-color: var(--color-surface-base);
   font-family: Inter, "Segoe UI", sans-serif;
   color: var(--color-text-default);
 }
@@ -236,6 +265,33 @@ body{
 .study-state-progress-accent { background-color: var(--color-study-progress); }
 .study-state-progress-avatar { background-color: var(--color-study-progress); color: white; }
 
+.copying-dots > span {
+  opacity: 0.2;
+  animation: copying-dot-fade 1.2s infinite;
+}
+
+.copying-dots > span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.copying-dots > span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes copying-dot-fade {
+  0%, 20% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
+  }
+}
+
 .study-state-launched-text { color: var(--color-study-launched); }
 .study-state-launched-accent { background-color: var(--color-study-launched); }
 .study-state-launched-avatar { background-color: var(--color-study-launched); color: white; }
@@ -295,6 +351,224 @@ body{
   background-color: var(--color-questionnaire-input);
   box-shadow: inset 0 0 0 1px var(--color-questionnaire-input-ring);
   cursor: text;
+}
+
+.theme-surface {
+  background-color: var(--color-surface-base);
+}
+
+.theme-surface-soft {
+  background-color: var(--color-surface-soft);
+}
+
+.theme-text-strong {
+  color: var(--color-text-strong);
+}
+
+.theme-text-default {
+  color: var(--color-text-default);
+}
+
+.theme-text-muted {
+  color: var(--color-text-supporting);
+}
+
+.theme-border {
+  border-color: var(--color-border-default);
+}
+
+.theme-border-soft {
+  border-color: var(--color-border-soft);
+}
+
+.theme-focus-ring {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-brand-primary) 20%, transparent);
+}
+
+.modal-panel {
+  background-color: var(--color-surface-base);
+  border: 1px solid var(--color-border-default);
+  border-radius: 1.5rem;
+  box-shadow: 0 24px 60px var(--color-shadow-strong);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--color-border-default);
+  padding: 1.5rem;
+}
+
+.modal-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.modal-header-icon {
+  display: inline-flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: var(--color-brand-primary-softest);
+  color: var(--color-brand-primary);
+}
+
+.modal-title {
+    color: var(--color-text-strong);
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+.modal-description {
+  margin-top: 0.75rem;
+  color: var(--color-text-default);
+  font-size: 0.9375rem;
+  line-height: 1.625;
+}
+
+.modal-close-button {
+    display: inline-flex;
+    height: 2rem;
+    width: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+}
+
+.modal-close-button:hover {
+  background-color: var(--color-surface-soft);
+  color: var(--color-brand-primary);
+}
+
+.modal-body {
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+  background-color: var(--color-surface-base);
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.75rem;
+  border-top: 1px solid var(--color-border-default);
+  background-color: var(--color-surface-base);
+  padding: 1rem 1.5rem;
+}
+
+.modal-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.modal-footer-note {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.modal-label {
+  color: var(--color-text-strong);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.modal-label-required {
+  color: var(--color-questionnaire-stop);
+}
+
+.modal-input,
+.modal-select,
+.modal-textarea {
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--color-brand-primary) 28%, var(--color-surface-base) 72%);
+  border-radius: 0.5rem;
+  background-color: var(--color-surface-base);
+  color: var(--color-text-default);
+  box-shadow: 0 8px 24px var(--color-shadow-primary);
+  outline: none;
+}
+
+.modal-input::placeholder,
+.modal-textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.modal-input:focus,
+.modal-select:focus,
+.modal-textarea:focus {
+  box-shadow:
+    0 8px 24px var(--color-shadow-primary),
+    0 0 0 2px color-mix(in srgb, var(--color-brand-primary) 18%, transparent);
+}
+
+.modal-input-danger {
+  border-color: color-mix(in srgb, var(--color-questionnaire-stop) 28%, var(--color-surface-base) 72%);
+  box-shadow: 0 8px 24px var(--color-shadow-danger);
+}
+
+.modal-input-danger:focus {
+  box-shadow:
+    0 8px 24px var(--color-shadow-danger),
+    0 0 0 2px color-mix(in srgb, var(--color-questionnaire-stop) 18%, transparent);
+}
+
+.modal-select {
+  appearance: none;
+  background-position: right 0.875rem center;
+  padding-right: 2.75rem;
+}
+
+.modal-info-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  border-radius: 1rem;
+  background-color: var(--color-surface-soft);
+  padding: 0.875rem 1rem;
+}
+
+.modal-info-icon {
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.modal-card {
+  border: 1px solid var(--color-border-default);
+  border-radius: 0.5rem;
+  background-color: var(--color-surface-base);
+  box-shadow: 0 8px 24px var(--color-shadow-primary);
+}
+
+.modal-spinner {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 9999px;
+  border: 2px solid color-mix(in srgb, var(--color-core-text-inverse) 35%, transparent);
+  border-top-color: var(--color-core-text-inverse);
+  animation: spin 1s linear infinite;
+}
+
+.modal-spinner-primary {
+  border-color: color-mix(in srgb, var(--color-brand-primary) 25%, transparent);
+  border-top-color: var(--color-brand-primary);
+}
+
+@media (min-width: 640px) {
+  .modal-footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 .questionnaire-input[type="number"],
@@ -427,6 +701,8 @@ body{
   color: var(--color-questionnaire-heading);
   font-weight: 600;
   box-shadow: 0 10px 24px rgba(79, 86, 230, 0.04);
+  padding-right: 3.25rem;
+  background-position: right 1rem center;
 }
 
 .questionnaire-logic-select-active {

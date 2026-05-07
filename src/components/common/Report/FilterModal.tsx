@@ -8,6 +8,7 @@ import LoaderSpinner from "../../global/LoaderSpinner";
 import { setTrigger } from "../../../store/TriggerSlice";
 import { useLocation } from "react-router";
 import ModalInstruction from "../../ui/ModalInstruction";
+import Checkbox from "../../ui/Checkbox";
 
 export default function FilterModal({isOpen, setIsOpen}:{isOpen:boolean, setIsOpen:()=>void}) {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -61,13 +62,12 @@ export default function FilterModal({isOpen, setIsOpen}:{isOpen:boolean, setIsOp
       </ModalInstruction>
       <div className="max-h-[60vh] overflow-y-auto">
         {filter.FilterList.map((option) => (
-          <div key={option.id} className="mb-3 flex items-center rounded-[16px] bg-white px-4 py-3 shadow-sm">
-            <input
-              type="checkbox"
+          <div key={option.id} className="modal-card mb-3 flex items-center rounded-[16px] px-4 py-3">
+            <Checkbox
               id={option.id}
               checked={selectedFilters.includes(option.id)}
               onChange={() => toggleFilter(option.id)}
-              className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary"
+              className="cursor-pointer"
             />
             <label htmlFor={option.id} className="ml-3 home-text text-sm font-medium">
               {option.label}

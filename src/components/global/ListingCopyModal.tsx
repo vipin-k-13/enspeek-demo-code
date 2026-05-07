@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
-import LoaderSpinner from "./LoaderSpinner";
 import { handleKeyPress } from "../../utils";
 import { useCopy } from "../common/list/Api";
 import { setCopyModel } from "../../store/TriggerSlice";
-import Modal from "../ui/Modal";
-import ModalInstruction from "../ui/ModalInstruction";
 import Button from "../ui/Button";
+import Input from "../ui/Input";
+import { LuCopy, LuInfo } from "react-icons/lu";
+import ModalScaffold from "../ui/modal/ModalScaffold";
+import ModalField from "../ui/modal/ModalField";
+import ModalInfoBlock from "../ui/modal/ModalInfoBlock";
+import { modalDefinitions } from "../../config/modalDefinitions";
 
 const ListingCopyModel: React.FC = () => {
   const { selectedStudyName, copyModel, selectedId } = useSelector(
@@ -17,71 +20,93 @@ const ListingCopyModel: React.FC = () => {
   const [value, setValue] = useState<string>("");
   const { Copy, isPending } = useCopy();
 
-  if (isPending) {
-    return <LoaderSpinner />;
-  }
+  const defaultCopyName = selectedStudyName
+    ? `${selectedStudyName} (copy)`
+    : "";
+  const draftValue = value;
+  const definition = modalDefinitions.copyStudy;
+
+  React.useEffect(() => {
+    if (copyModel) {
+      setValue(defaultCopyName);
+    }
+  }, [copyModel, defaultCopyName]);
 
   const handleClose = () => {
     dispatch(setCopyModel(false));
     setValue("");
   };
 
-  const defaultCopyName = selectedStudyName
-    ? `${selectedStudyName} (copy)`
-    : "";
-  const draftValue = value.trim() !== "" ? value : defaultCopyName;
-
   return (
-    <Modal isOpen={copyModel} onClose={handleClose} className="max-w-md">
-      <div className="p-6">
-        <h3 className="home-heading text-[22px] font-bold">Copy Study</h3>
-        <p className="home-muted mt-3 text-[15px] leading-6">
-          Create a copy of
-          <span className="home-heading font-semibold">{` ${selectedStudyName || "this study"}`}</span>
-          {" "}with a new study name.
-        </p>
-        <label className="home-heading mt-5 block text-[15px] font-semibold">
-          New Study Name
-        </label>
-        <input
-          value={draftValue}
-          onChange={(e) => {
-            setValue(e.target.value);
+    <ModalScaffold
+      isOpen={copyModel}
+      onClose={handleClose}
+      className={definition.maxWidthClass}
+      title={definition.title}
+      icon={<LuCopy className="h-5 w-5" />}
+      closeDisabled={isPending}
+      footerLeft={
+        <Button type="button" varinat="cancel" onClick={handleClose} disabled={isPending}>
+          {definition.cancelLabel}
+        </Button>
+      }
+      footerRight={
+        <Button
+          type="button"
+          varinat="theme"
+          onClick={() => {
+            Copy({ studyId: selectedId, studyName: draftValue });
           }}
-          className="questionnaire-input home-text mt-3 w-full rounded-[18px] border questionnaire-border px-4 py-3 focus-visible:outline-none"
-          placeholder="Enter copied study name"
-          onKeyDown={(e) =>
-            handleKeyPress(e, () => {
-              Copy({ studyId: selectedId, studyName: draftValue });
-              setValue("");
-            })
-          }
-        />
-        <ModalInstruction>
-          Click <span className="font-semibold">Copy Study</span> and wait a moment while the duplicated study is created.
-        </ModalInstruction>
-        <div className="mt-6 flex justify-end gap-3">
-          <Button
-            type="button"
-            varinat="cancel"
-            onClick={handleClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="button"
-            varinat="theme"
-            onClick={() => {
-              Copy({ studyId: selectedId, studyName: draftValue });
-              setValue("");
+          disabled={isPending || draftValue.trim() === ""}
+        >
+          {isPending ? (
+            <>
+              <span className="modal-spinner" />
+              {definition.submittingLabel}
+            </>
+          ) : (
+            <>
+              <LuCopy className="h-4 w-4" />
+              {definition.submitLabel}
+            </>
+          )}
+        </Button>
+      }
+    >
+      <div className="space-y-4">
+        <p className="text-[15px] leading-6 theme-text-default">
+          Create a copy of{" "}
+          <span className="font-semibold text-[var(--color-brand-primary)]">
+            {selectedStudyName || "this study"}
+          </span>{" "}
+          with a new study name.
+        </p>
+        <ModalField label="New Study Name" required>
+          <Input
+            variant="modal"
+            value={draftValue}
+            onChange={(e) => {
+              setValue(e.target.value);
             }}
-            disabled={isPending || draftValue.trim() === ""}
-          >
+            placeholder="Enter copied study name"
+            onKeyDown={(e) =>
+              handleKeyPress(e, () => {
+                Copy({ studyId: selectedId, studyName: draftValue });
+              })
+            }
+          />
+        </ModalField>
+        <ModalInfoBlock
+          icon={<LuInfo className="h-4 w-4 text-[var(--color-brand-primary)]" />}
+        >
+          Click{" "}
+          <span className="font-semibold text-[var(--color-brand-primary)]">
             Copy Study
-          </Button>
-        </div>
+          </span>{" "}
+          and wait a moment while the duplicated study is created.
+        </ModalInfoBlock>
       </div>
-    </Modal>
+    </ModalScaffold>
   );
 };
 

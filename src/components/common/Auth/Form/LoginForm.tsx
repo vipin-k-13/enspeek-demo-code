@@ -79,27 +79,33 @@ const LoginForm = () => {
             Enspeek
           </span>
         </div>
-        <h2 className="text-[2rem] font-semibold leading-tight text-[#232542]">
+        <h2 className="text-[2rem] font-semibold leading-tight theme-text-strong">
           Welcome Back!
         </h2>
         <p className="mt-1 text-sm text-login-muted">Sign in to your account</p>
       </div>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
-          <Input id="email" data-test-id="EMAIL" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="h-12 rounded-xl border-0 bg-login-input px-4 text-base text-login-input-text placeholder:text-[#a5a8bf] focus-visible:ring-2 focus-visible:ring-login-primary/40" />
+          <Input id="email" variant="login" data-test-id="EMAIL" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
           {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+            <p className="mt-1 text-sm text-[var(--color-core-danger)]">{errors.email}</p>
           )}
         </div>
         <div>
           <div className="relative">
-            <Input id="password" type={isPasswordVisible ? "text" : "password"} data-test-id="PASSWORD" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="h-12 rounded-xl border-0 bg-login-input px-4 pr-11 text-base text-login-input-text placeholder:text-[#a5a8bf] focus-visible:ring-2 focus-visible:ring-login-primary/40" />
-            <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#a2a6be] hover:text-[#7f839f]" onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
+            <Input id="password" variant="login" type={isPasswordVisible ? "text" : "password"} data-test-id="PASSWORD" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="pr-11" />
+            <Button
+              type="button"
+              varinat="ghost"
+              size="icon"
+              className="absolute inset-y-0 right-1 my-auto h-10 w-10 border-0 bg-transparent p-0 text-[var(--color-text-muted)] shadow-none hover:bg-transparent hover:text-[var(--color-text-default)]"
+              onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+            >
               {isPasswordVisible ? <LuEyeOff size={18} /> : <LuEye size={18} />}
-            </button>
+            </Button>
           </div>
           {errors.password && (
-            <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+            <p className="mt-1 text-sm text-[var(--color-core-danger)]">{errors.password}</p>
           )}
         </div>
         <Button type="submit" data-test-id="SUBMIT" className={cn(
@@ -112,18 +118,18 @@ const LoginForm = () => {
         </Button>
         <div className="relative my-2">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-[#dddff0]" />
+            <div className="w-full border-t theme-border-soft" />
           </div>
           <div className="relative flex justify-center text-sm">
             <span className="bg-login-card px-3 text-login-muted">or</span>
           </div>
         </div>
-        <Button varinat={"social"} className="h-12 rounded-xl border border-[#e2e4f1] bg-white text-[15px] font-medium text-[#30334d] shadow-none hover:bg-[#f8f8fd] cursor-not-allowed" disabled>
+        <Button varinat={"social"} className="h-12 rounded-xl text-[15px] font-medium cursor-not-allowed" disabled>
           <GoogleIcon />
           <span>Continue with Google</span>
         </Button>
         <div className="text-center">
-          <Button varinat={"link"} className="text-sm text-[#5f63e9] hover:text-[#4f56e6] transition-colors cursor-not-allowed" disabled>
+          <Button varinat={"link"} className="cursor-not-allowed text-sm transition-colors" disabled>
             Forgot password?
           </Button>
         </div>

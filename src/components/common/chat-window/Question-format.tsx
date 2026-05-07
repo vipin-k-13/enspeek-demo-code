@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import Checkbox from "../../ui/Checkbox";
 
 
 interface Question_FormatProps {
@@ -21,7 +22,7 @@ const Question_Format: FC<Question_FormatProps> = ({ questions = [], instruction
                     </div>
                     <ul className="mb-2">
                         {question?.options?.map((option, idx) => (
-                            <div  key={idx} className="flex items-center gap-1"><input type="checkbox" disabled={false} /><li>{option}</li></div>
+                            <div  key={idx} className="flex items-center gap-1"><Checkbox checked={false} readOnly tabIndex={-1} /><li>{option}</li></div>
                         ))}
                     </ul>
                 </div>

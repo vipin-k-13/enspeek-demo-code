@@ -8,8 +8,10 @@ import BannerLogic from "../../global/BannerLogic";
 import { useLocation } from "react-router";
 import { setSelectedQuestions } from "../../../store/CrosstabSlice";
 import { toast } from "sonner";
-import { cn } from "../../../utils";
-import CrosstabInput from "../../global/CrosstabInput";
+import Button from "../../ui/Button";
+import Input from "../../ui/Input";
+import Checkbox from "../../ui/Checkbox";
+import { LuPanelsTopLeft, LuSave } from "react-icons/lu";
 
 interface BannerSettingsProps {
   Id: string;
@@ -59,7 +61,11 @@ export default function BannerSettings({
     studyID: state.studyID,
     cb: () => onClose(),
   });
-  const { tableListAddMutate } = useTableListAdd(value.bannerid, state.studyID);
+  const { tableListAddMutate, isTableListAddPending } = useTableListAdd(
+    value.bannerid,
+    state.studyID
+  );
+  const isSaving = isEditBannerPending || isTableListAddPending;
 
   const isAllSelected =
     !isQListDataPending && selectedQuestions.length === QListData.length;
@@ -98,27 +104,48 @@ export default function BannerSettings({
     }
   };
 
-  if (isEditBannerPending) return;
-  <div className="flex items-center justify-center w-full h-full">
-    <AiOutlineLoading3Quarters
-      size={34}
-      className={cn("animate-spin text-action")}
-    />
-  </div>;
-
   return (
     <DynamicModel
       Title={`Banner Settings: ${value.title}`}
-      ButtonText="Save Banner Settings"
+      headerIcon={
+        <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
+          <LuPanelsTopLeft className="h-5 w-5" />
+        </span>
+      }
+      ButtonText={isSaving ? "Saving..." : "Save Banner Settings"}
+      buttonIcon={
+        isSaving ? (
+          <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+        ) : (
+          <LuSave className="h-4 w-4" />
+        )
+      }
+      buttonVariant="success"
       isOpen={isOpen}
       onClose={onClose}
       onClick={handleClick}
+      disable={isSaving}
+      secondaryAction={
+        <Button
+          type="button"
+          varinat="cancel"
+          className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
+          onClick={onClose}
+          disabled={isSaving}
+        >
+          Close
+        </Button>
+      }
       className="max-w-4xl"
-    >
+      >
       <div className="space-y-4">
         <div>
-          <CrosstabInput
-            label="Banner Name"
+          <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+            Banner Name
+          </label>
+          <Input
+            variant="crosstab"
+            className="mt-2"
             data-test-id="BANNER_NAME"
             placeholder="Enter label"
             value={value.title}
@@ -129,9 +156,13 @@ export default function BannerSettings({
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <CrosstabInput
+            <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+              Banner Description
+            </label>
+            <Input
+              variant="crosstab"
+              className="mt-2"
               data-test-id="BANNER_DESCRIPTION"
-              label="Banner Description"
               placeholder="Enter Description"
               value={value.description}
               onChange={(e) =>
@@ -142,8 +173,12 @@ export default function BannerSettings({
             />
           </div>
           <div>
-            <CrosstabInput
-              label="Stat Testing"
+            <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+              Stat Testing
+            </label>
+            <Input
+              variant="crosstab"
+              className="mt-2"
               placeholder="eg. AB,C-F"
               onChange={() => {}}
             />
@@ -153,9 +188,7 @@ export default function BannerSettings({
           <label className="crosstab-title mb-2 block text-sm font-semibold">Select View Type</label>
           <div className="flex items-center gap-4">
             <label className="home-text inline-flex items-center">
-              <input
-                type="checkbox"
-                className="form-checkbox questionnaire-clickable"
+              <Checkbox
                 checked={Boolean(value.percent)}
                 onChange={(e) =>
                   setValue((prev) => ({
@@ -190,10 +223,9 @@ export default function BannerSettings({
         <div className="crosstab-surface p-4">
           <h3 className="crosstab-title mb-3 text-base font-semibold">Question list</h3>
           <div>
-            <div className="crosstab-soft-panel flex items-center px-4 py-3">
-              <input
-                type="checkbox"
-                className="questionnaire-clickable mr-3"
+            <div className="border border-[#e2e4f1] rounded-lg flex items-center px-4 py-3 mb-2">
+              <Checkbox
+                className="mr-3"
                 checked={isAllSelected}
                 onChange={toggleAll}
               />
@@ -206,12 +238,11 @@ export default function BannerSettings({
               QListData.map((question: any, idx: number) => (
                 <div
                   key={idx}
-                  className="crosstab-soft-panel mb-2 flex items-center px-4 py-3 last:mb-0"
+                  className="border border-[#e2e4f1] rounded-lg mb-2 flex items-center px-4 py-3 last:mb-0"
                 >
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     data-test-id={`Q_${idx}`}
-                    className="questionnaire-clickable mr-3"
+                    className="mr-3"
                     checked={selectedQuestions.includes(question.qID)}
                     onChange={() => toggleQuestion(question.qID)}
                   />

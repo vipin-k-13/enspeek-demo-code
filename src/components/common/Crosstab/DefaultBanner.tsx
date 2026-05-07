@@ -3,6 +3,7 @@ import {
   LuCopy,
   LuDownload,
   LuPencilLine,
+  LuInfo,
   LuSettings2,
   LuTable2,
   LuTrash2,
@@ -23,6 +24,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../../store/store";
 import { setBannerName } from "../../../store/CrosstabSlice";
 import IconActionButton from "../../ui/IconActionButton";
+import Button from "../../ui/Button";
 
 interface DefaultBannerProps {
   Id: string;
@@ -200,33 +202,85 @@ export default function DefaultBanner({
       </div>
       <DynamicModel
         isOpen={isCopyModalOpen}
-        onClose={() => setIsCopyModalOpen(false)}
+        onClose={() => {
+          if (!isRelicateBannerPending) {
+            setIsCopyModalOpen(false);
+          }
+        }}
         Title={`Copy : ${Title}`}
-        ButtonText="Copy Banner"
+        headerIcon={
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
+            <LuCopy className="h-5 w-5" />
+          </span>
+        }
+        ButtonText={isRelicateBannerPending ? "Copying..." : "Copy Banner"}
+        buttonIcon={
+          isRelicateBannerPending ? (
+            <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+          ) : (
+            <LuCopy className="h-4 w-4" />
+          )
+        }
         onClick={() =>
           replicateBannerMutate({ bannerID: Id, title: copyTitle })
         }
         className="max-w-2xl"
         disable={isRelicateBannerPending}
-        >
-        <p className="crosstab-title">Please type banner name in the below box.</p>
+        secondaryAction={
+          <Button
+            type="button"
+            varinat="cancel"
+            className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
+            onClick={() => setIsCopyModalOpen(false)}
+            disabled={isRelicateBannerPending}
+          >
+            Cancel
+          </Button>
+        }
+      >
+        <p className="mt-1 text-[15px] leading-6 text-black">
+          Create a copy of
+          <span className="font-semibold text-login-primary">{` ${Title || "this banner"}`}</span>
+          {" "}with a new banner name.
+        </p>
+        <label className="home-heading mt-5 block text-[15px] font-semibold">
+          New Banner Name
+        </label>
         <Input
           value={copyTitle}
           placeholder="Default Banner (copy)"
-          className="questionnaire-input questionnaire-heading my-3 border questionnaire-border focus:outline-none"
+          className="questionnaire-input questionnaire-heading mt-3 w-full rounded-[18px] border border-login-primary/35 bg-white px-4 py-3 shadow-[0_8px_20px_rgba(85,90,230,0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-login-primary/20"
           onChange={(e) => setCopyTitle(e.target.value)}
           disabled={isRelicateBannerPending}
         />
-        <p className="crosstab-muted">
-          <span className="text-login-primary">*</span> Please click on "Copy Banner"
-          button and wait for some time till the banner is copied.
-        </p>
+        <div className="mt-4 flex items-start gap-3 rounded-[16px] home-panel-soft-bg px-4 py-3">
+          <LuInfo className="mt-0.5 h-4 w-4 shrink-0 text-login-primary" />
+          <p className="text-sm leading-6 text-black">
+            Click <span className="font-semibold text-login-primary">Copy Banner</span> and wait a moment while the duplicated banner is created.
+          </p>
+        </div>
       </DynamicModel>
       <DynamicModel
         isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        Title="Confirm Delete"
-        ButtonText="Delete"
+        onClose={() => {
+          if (!isDeleteBannerPending) {
+            setIsDeleteModalOpen(false);
+          }
+        }}
+        Title="Delete Banner"
+        headerIcon={
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-questionnaire-stop-bg)] text-[var(--color-questionnaire-stop)]">
+            <LuTrash2 className="h-5 w-5" />
+          </span>
+        }
+        ButtonText={isDeleteBannerPending ? "Deleting..." : "Delete"}
+        buttonIcon={
+          isDeleteBannerPending ? (
+            <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+          ) : (
+            <LuTrash2 className="h-4 w-4" />
+          )
+        }
         onClick={() => {
           if (deleteInputValue.trim().toLowerCase() === "delete") {
             deleteBannerMutation(Id);
@@ -235,16 +289,37 @@ export default function DefaultBanner({
           }
         }}
         className="max-w-lg"
+        bodyClassName="bg-white"
         disable={isDeleteBannerPending}
+        secondaryAction={
+          <Button
+            type="button"
+            varinat="cancel"
+            className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
+            onClick={() => setIsDeleteModalOpen(false)}
+            disabled={isDeleteBannerPending}
+          >
+            Cancel
+          </Button>
+        }
       >
-        <p className="crosstab-title">{`Are you sure want to delete ${Title}?`}</p>
-        <p className="crosstab-muted my-3">Type delete in the input box</p>
+        <p className="mt-1 text-[15px] leading-6 text-black">
+          Are you sure you want to delete
+          <span className="font-semibold text-[var(--color-questionnaire-stop)]">{` ${Title || "this banner"}`}</span>
+          ? This action cannot be undone.
+        </p>
+        <div className="mt-4 flex items-start gap-3 rounded-[16px] home-panel-soft-bg px-4 py-3">
+          <LuInfo className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-questionnaire-stop)]" />
+          <p className="text-sm leading-6 text-black">
+            Type <span className="font-semibold text-[var(--color-questionnaire-stop)]">delete</span> to confirm this action.
+          </p>
+        </div>
         <Input
           data-test-id="BANNER_DELETE"
-          placeholder="eg. delete"
+          placeholder="Type 'delete' here..."
           value={deleteInputValue}
           onChange={(e) => setDeleteInputValue(e.target.value)}
-          className="questionnaire-input questionnaire-heading my-3 border questionnaire-border focus:outline-none"
+          className="questionnaire-input questionnaire-heading mt-4 w-full rounded-[18px] border border-[color:var(--color-questionnaire-stop)]/35 bg-white px-4 py-3 shadow-[0_8px_20px_rgba(239,68,68,0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-questionnaire-stop)]/20"
           disabled={isDeleteBannerPending}
         />
       </DynamicModel>

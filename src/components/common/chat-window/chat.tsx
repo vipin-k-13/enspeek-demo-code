@@ -17,6 +17,8 @@ import { PRIMARY_CHART_COLOR } from "../../../utils/chartColors";
 import { Tooltip } from "../../ui/Tooltip";
 import { getFullName, getInitials } from "../../../utils";
 import { LuBotMessageSquare, LuSparkles } from "react-icons/lu";
+import Button from "../../ui/Button";
+import IconActionButton from "../../ui/IconActionButton";
 
 const ChatWindow: React.FC<{
   surface?: "auto" | "page" | "card";
@@ -287,11 +289,14 @@ const ChatWindow: React.FC<{
                     <div className="w-full mt-3">
                       <div className="flex justify-between items-center mb-2">
                         <div className="flex space-x-2">
-                          <button
-                            className={`text-sm px-3 py-1 cursor-pointer rounded-md border ${
+                          <Button
+                            type="button"
+                            varinat={isChart ? "theme" : "outline"}
+                            size="sm"
+                            className={`rounded-md ${
                               isChart
-                                ? "bg-primary text-white"
-                                : "bg-white text-gray-600 border-gray-300"
+                                ? "text-white"
+                                : "theme-text-default"
                             }`}
                             onClick={() =>
                               setActiveTab((prev) => ({
@@ -301,16 +306,19 @@ const ChatWindow: React.FC<{
                             }
                           >
                             <FaChartBar />
-                          </button>
+                          </Button>
                           {!(
                             questionData.external === 1 &&
                             questionData.external_link
                           ) && (
-                            <button
-                              className={`text-sm px-3 py-2 cursor-pointer rounded-md border ${
+                            <Button
+                              type="button"
+                              varinat={isTable ? "theme" : "outline"}
+                              size="sm"
+                              className={`rounded-md ${
                                 isTable
-                                  ? "bg-primary text-white"
-                                  : "bg-white text-gray-600 border-gray-300"
+                                  ? "text-white"
+                                  : "theme-text-default"
                               }`}
                               onClick={() =>
                                 setActiveTab((prev) => ({
@@ -320,12 +328,12 @@ const ChatWindow: React.FC<{
                               }
                             >
                               <FaTable />
-                            </button>
+                            </Button>
                           )}
                         </div>
 
                         {(isChart || isTable) && (
-                          <button
+                          <IconActionButton
                             onClick={() => {
                               if (isChart) {
                                 setSelectedChart(index);
@@ -335,10 +343,11 @@ const ChatWindow: React.FC<{
                                 setIsTableModalOpen(true);
                               }
                             }}
-                            className="cursor-pointer text-xl text-gray-400"
+                            tone="neutral"
+                            className="text-xl theme-text-muted"
                           >
                             <FaExpandArrowsAlt />
-                          </button>
+                          </IconActionButton>
                         )}
                       </div>
 
@@ -397,17 +406,18 @@ const ChatWindow: React.FC<{
                     </a>
 
                     <Tooltip content="Copy survey link" position="top">
-                      <button
+                      <IconActionButton
                         onClick={() => {
                           if (msg.liveLink) {
                             navigator.clipboard.writeText(msg.liveLink);
                           }
                           toast.success("Survey link copied to clipboard!");
                         }}
-                        className="text-gray-400 hover:text-gray-700 cursor-pointer"
+                        tone="neutral"
+                        className="theme-text-muted"
                       >
                         <FaCopy />
-                      </button>
+                      </IconActionButton>
                     </Tooltip>
                   </div>
                 )}

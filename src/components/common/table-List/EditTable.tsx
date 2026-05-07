@@ -1,15 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DynamicModel from "../../global/DynamicModel";
-import { LuArrowUpDown, LuTrash2 } from "react-icons/lu";
+import { LuArrowUpDown, LuSave, LuTable, LuTrash2 } from "react-icons/lu";
 import { toast } from "sonner";
 import BannerLogic from "../../global/BannerLogic";
 import { useEditTableListQuestion, useOpList } from "../Crosstab/CrossTab.Api";
 import { useLocation } from "react-router";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import CrosstabInput from "../../global/CrosstabInput";
 import Button from "../../ui/Button";
+import Input from "../../ui/Input";
+import Select from "../../ui/Select";
 import IconActionButton from "../../ui/IconActionButton";
 import { Tooltip } from "../../ui/Tooltip";
+import Checkbox from "../../ui/Checkbox";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store/store";
+import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "../../../services/apiService";
 
 interface EditTableModalProps {
   qid: string;
@@ -25,12 +31,30 @@ export default function EditTableModal({
   tid,
 }: EditTableModalProps) {
   const { state } = useLocation();
+  const { apiToken } = useSelector((store: RootState) => store.user);
   const { opListData, isOpListPending } = useOpList(
     tid,
     qid,
     state.bannerID,
     state.studyID
   );
+  const { data: tableOutputData, isPending: isTableOutputPending } = useQuery({
+    queryKey: ["tableOutputEditRows", state.bannerID, tid, state.studyID],
+    queryFn: async () => {
+      const res = await apiRequest(
+        "post",
+        `crosstab/tableList/output/${state.bannerID}/${tid}`,
+        {
+          studyID: state.studyID,
+          apiToken,
+        }
+      );
+      return res.response;
+    },
+    enabled: open && !!apiToken && !!state.bannerID && !!tid && !!state.studyID,
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
   const [tableLabel, setTableLabel] = useState("");
   const [tableText, setTableText] = useState("");
   const [rows, setRows] = useState<QuestionOption[]>([]);
@@ -47,21 +71,65 @@ export default function EditTableModal({
       cb: () => onOpenChange(false),
     });
 
+  const mergedRows = useMemo(() => {
+    if (!opListData?.rowOptionList?.length) {
+      return [];
+    }
+
+    const rowsById = new Map<string, QuestionOption>(
+      opListData.rowOptionList.map((row: QuestionOption) => [row.id, row])
+    );
+    const orderedIds = tableOutputData?._row_order?.length
+      ? tableOutputData._row_order
+      : opListData.rowOptionList.map((row: QuestionOption) => row.id);
+
+    return orderedIds.map((rowId: string, index: number) => {
+      const sourceRow = rowsById.get(rowId);
+      return {
+        ...(sourceRow ?? {
+          id: rowId,
+          optionText: "",
+          optionType: "standard",
+          optionLogic: [],
+          optionCode: index + 1,
+          seq: index + 1,
+          active: 1,
+          op_show: 1,
+          include_in_base: 0,
+          net: [],
+          mean: 0,
+          median: 0,
+          stdev: 0,
+          old_q: 0,
+          net_val: 0,
+        }),
+        optionText:
+          tableOutputData?._rows?.[rowId as keyof typeof tableOutputData._rows] ??
+          sourceRow?.optionText ??
+          "",
+      } as QuestionOption;
+    });
+  }, [opListData, tableOutputData]);
+
   useEffect(() => {
     if (!isOpListPending && opListData) {
       setTableLabel(opListData.title);
       setTableText(opListData.description);
-      setRows(opListData.rowOptionList);
-      setLogics((prev) => [...opListData.logic, ...prev]);
+      setRows(mergedRows);
+      setLogics(opListData.logic ?? []);
     }
-  }, [opListData]);
+  }, [isOpListPending, mergedRows, opListData]);
+
+  const isLoading = isOpListPending || isTableOutputPending;
 
   const handleDeleteRow = (id: string) => {
     setRows(rows.filter((row) => row.id !== id));
   };
 
   const handleRowTitleChange = (id: string, title: string) => {
-    setRows(rows.map((row) => (row.id === id ? { ...row, title } : row)));
+    setRows(
+      rows.map((row) => (row.id === id ? { ...row, optionText: title } : row))
+    );
   };
 
   const handleSelectOption = (id: string, value: boolean) => {
@@ -99,14 +167,44 @@ export default function EditTableModal({
     <DynamicModel
       Title={tableLabel}
       description="Update the table details, logic, and row settings, then save the refreshed table configuration."
+      descriptionClassName="text-black [color:#000000]"
+      headerIcon={
+        <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
+          <LuTable className="h-5 w-5" />
+        </span>
+      }
       disable={isEditTableListQuestionPending}
-      ButtonText="Update Table"
+      ButtonText={
+        isEditTableListQuestionPending ? "Updating..." : "Update Table"
+      }
+      buttonIcon={
+        isEditTableListQuestionPending ? (
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/35 border-t-white" />
+        ) : (
+          <LuSave className="h-4 w-4" />
+        )
+      }
       isOpen={open}
-      onClose={() => onOpenChange(false)}
+      onClose={() =>
+        !isEditTableListQuestionPending && onOpenChange(false)
+      }
       onClick={updateTable}
       className="max-w-6xl"
+      bodyClassName="bg-white"
+      buttonVariant="success"
+      secondaryAction={
+        <Button
+          type="button"
+          varinat="cancel"
+          className="border-gray-300 text-[var(--color-text-strong)] hover:bg-gray-50"
+          onClick={() => onOpenChange(false)}
+          disabled={isEditTableListQuestionPending}
+        >
+          Cancel
+        </Button>
+      }
     >
-      {isOpListPending ? (
+      {isLoading ? (
         <div className="flex justify-center">
           <AiOutlineLoading3Quarters
             size={34}
@@ -116,21 +214,27 @@ export default function EditTableModal({
       ) : (
         <div className="space-y-6">
           <div className="space-y-2">
-            <CrosstabInput
-              label="Table Label"
-              required
+            <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+              Table Label <span className="text-[var(--color-core-danger)]">*</span>
+            </label>
+            <Input
+              variant="crosstab"
+              className="mt-2"
               placeholder="Enter label"
               value={tableLabel}
               onChange={(e) => setTableLabel(e.target.value)}
             />
           </div>
           <div className="space-y-2">
-            <CrosstabInput
-              label="Table Text"
+            <label className="questionnaire-label text-sm font-semibold text-[var(--color-text-strong)]">
+              Table Text <span className="text-[var(--color-core-danger)]">*</span>
+            </label>
+            <Input
+              variant="crosstab"
+              className="mt-2"
               placeholder="Enter text"
               value={tableText}
               onChange={(e: any) => setTableText(e.target.value)}
-              required
             />
           </div>
           {opListData.logic.length !== 0 &&
@@ -167,7 +271,12 @@ export default function EditTableModal({
               </div>
             )}
           <div className="space-y-2">
-            <label className="crosstab-title text-sm font-semibold">* Table Logic</label>
+            <label className="text-base font-medium text-login-primary">
+              Table Logic
+              <span className="ml-0.5 text-[var(--color-questionnaire-stop)]">
+                *
+              </span>
+            </label>
             <div className="flex items-center gap-2">
               <BannerLogic
                 setLogicFunc={(e) => setLogics(e)}
@@ -203,9 +312,7 @@ export default function EditTableModal({
                       </Button>
                     </td>
                     <td className="border-r home-border-soft px-3 py-3 align-middle text-center">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox questionnaire-clickable"
+                      <Checkbox
                         checked={Boolean(row.op_show)}
                         onChange={(e) =>
                           handleSelectOption(row.id, e.target.checked)
@@ -216,24 +323,27 @@ export default function EditTableModal({
                       {row.id}
                     </td>
                     <td className="border-r home-border-soft px-3 py-3">
-                      <input
-                        type="text"
+                      <Input
+                        variant="crosstab"
                         value={row.optionText}
                         onChange={(e) =>
                           handleRowTitleChange(row.id, e.target.value)
                         }
-                        className="questionnaire-input questionnaire-heading w-full rounded-[14px] border questionnaire-border p-2.5"
+                        className="rounded-lg px-2.5 py-2"
                       />
                     </td>
                     <td className="border-r home-border-soft px-3 py-3">
                       {row.id === "" ? (
-                        <select className="questionnaire-input questionnaire-heading w-full rounded-[14px] border questionnaire-border p-2.5 focus:outline-none">
+                        <Select
+                          variant="crosstab"
+                          className="rounded-lg px-2.5 py-2"
+                        >
                           <option value="">Select</option>
                           <option value="option1">Net</option>
                           <option value="option2">Mean</option>
                           <option value="option2">Median</option>
                           <option value="option2">Standard Deviation</option>
-                        </select>
+                        </Select>
                       ) : null}
                     </td>
                     <td className="px-3 py-3">

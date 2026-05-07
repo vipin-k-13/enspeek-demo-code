@@ -18,6 +18,7 @@ import type { AppDispatch } from "../../../store/store";
 import ListingCopyModal from "../../global/ListingCopyModal";
 import { useNavigate } from "react-router";
 import { resetStudyInfo } from "../../../store/CrosstabStudySlice";
+import Checkbox from "../../ui/Checkbox";
 
 const columnHelper = createColumnHelper<Study>();
 
@@ -71,8 +72,7 @@ const useColumns = ({
           Boolean(row.original.isOwner);
 
         return canSelect ? (
-          <input
-            type="checkbox"
+          <Checkbox
             checked={selectedStudies.includes(row.original.studyID)}
             onChange={(e) => {
               const id = row.original.studyID;

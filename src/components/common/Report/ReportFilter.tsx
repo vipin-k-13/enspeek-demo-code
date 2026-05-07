@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import { SimpleAccordion, SimpleAccordionItem } from "./ShortAccorion";
 import Button from "../../ui/Button";
+import Checkbox from "../../ui/Checkbox";
 
 type ReportFilterProps = {
   onClose: () => void;
@@ -20,12 +21,15 @@ const ReportFilter: React.FC<ReportFilterProps> = ({
     <div className="report-card absolute top-2 right-2 z-50 w-80 overflow-hidden">
       <div className="relative bg-login-primary text-center py-3 text-sm font-bold text-white">
         FILTER
-        <button
+        <Button
+          type="button"
+          varinat="ghost"
+          size="icon"
           onClick={onClose}
-          className="questionnaire-clickable absolute left-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-login-primary"
+          className="absolute left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-white/90 p-0 text-login-primary shadow-none hover:bg-white"
         >
           <IoMdClose />
-        </button>
+        </Button>
       </div>
       <div className="p-4 mb-2 h-[40vh] overflow-y-auto">
         <SimpleAccordion>
@@ -33,12 +37,11 @@ const ReportFilter: React.FC<ReportFilterProps> = ({
             <SimpleAccordionItem key={item.id} title={"test"} id={item.id}>
               {[1, 2, 3, 4].map((seq) => (
                 <div key={seq} className="flex items-center my-1">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     id={`${seq}`}
                     checked={true}
                     onChange={() => {}}
-                    className="h-3 w-3 rounded border home-border text-login-primary"
+                    className="h-3 w-3"
                   />
                   <label
                     htmlFor={`${seq}`}

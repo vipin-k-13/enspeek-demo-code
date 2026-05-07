@@ -1,4 +1,4 @@
-import { LuTable2 } from "react-icons/lu";
+import { LuDownload } from "react-icons/lu";
 import Button from "../../ui/Button";
 import { useLocation } from "react-router";
 import { useProcessHook, useTableDownload } from "./ReportMutations";
@@ -54,7 +54,7 @@ export default function TableForm({
             DownloadTable(questionId);
           }}
         >
-          <LuTable2 />
+          <LuDownload />
         </Button>
       </SurfaceCardHeader>
 

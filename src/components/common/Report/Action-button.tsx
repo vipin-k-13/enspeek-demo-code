@@ -28,7 +28,7 @@ import {
 import LoaderSpinner from "../../global/LoaderSpinner";
 import DropDown from "../../global/DropDown";
 import SetSubgroupModal from "./SetSubGroupModal";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "../../../services/apiService";
 import type { RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -68,6 +68,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   const { state } = useLocation();
   const [showSubgroupModal, setshowSubgroupModal] = useState(false);
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const { Process } = useProcessHook();
   const { DownloadExcel, isDownloadExcelPending } = useExcelDownload({
@@ -176,7 +177,12 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     retry: 1,
   });
 
-  const handleSave = () => {
+  const handleSave = async (selectedValue: string) => {
+    dispatch(setSelected(selectedValue));
+    await queryClient.refetchQueries({
+      queryKey: ["ReportView"],
+      type: "active",
+    });
     setshowSubgroupModal(false);
   };
 
@@ -236,7 +242,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
               <Button
                 data-test-id="GROUP_TOGGLE_ON"
                 size="icon"
-                className="report-toolbar-btn bg-[var(--color-study-progress)] text-white hover:opacity-90"
+                className="report-toolbar-btn bg-[var(--color-study-progress)] text-white hover:bg-[var(--color-study-progress)] hover:text-white hover:opacity-90"
                 onClick={() => {
                   setshowSubgroupModal(true);
                 }}
@@ -272,7 +278,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
           <Button
             data-test-id="TABLE"
             size="icon"
-            className="report-toolbar-btn report-title border home-border-soft bg-white"
+            className="report-toolbar-btn report-title border home-border-soft bg-white hover:bg-white hover:text-[var(--color-text-strong)]"
             onClick={() => setShowTableView((prev) => !prev)}
           >
             {showTableView ? <LuChartColumnBig /> : <LuTable2 />}
@@ -295,7 +301,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
             <Button
               data-test-id="MORE_ACTIONS"
               size="icon"
-              className="report-toolbar-btn bg-[var(--color-questionnaire-multi)] text-white hover:opacity-90"
+              className="report-toolbar-btn bg-[var(--color-questionnaire-multi)] text-white hover:bg-[var(--color-questionnaire-multi)] hover:text-white hover:opacity-90"
               onClick={() => {
                 setShowMoreDropdown((prev) => !prev);
               }}

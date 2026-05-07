@@ -4,6 +4,7 @@ import QuestionCard from "../Report/QuestionCard";
 import SingleSelectChart from "../Report/Charts";
 import TableForm from "../Report/TableForm";
 import ModalInstruction from "../../ui/ModalInstruction";
+import { PRIMARY_CHART_COLOR } from "../../../utils/chartColors";
 
 interface TableAndChartModalProps {
   isOpen: boolean;
@@ -33,7 +34,7 @@ const TableAndChartModal: React.FC<TableAndChartModalProps> = ({
   const chartData = isCrosstab
     ? questionData._colorder.map((colId: any) => ({
         name: questionData._coloptions?.[colId] ?? colId,
-        color: "#3F72AF",
+        color: PRIMARY_CHART_COLOR,
         data: questionData._roworder.map((rowId: any) => ({
           name: questionData._rowoptions?.[rowId],
           y: questionData.data?.[colId]?.[rowId] ?? 0,
@@ -42,7 +43,7 @@ const TableAndChartModal: React.FC<TableAndChartModalProps> = ({
     : [
         {
           name: "Responses",
-          color: "#3F72AF",
+          color: PRIMARY_CHART_COLOR,
           data: questionData._roworder.map((rowId: any) => ({
             name: questionData._rowoptions?.[rowId],
             y: questionData.data?.[rowId] ?? 0,

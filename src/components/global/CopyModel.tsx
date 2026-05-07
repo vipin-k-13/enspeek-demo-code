@@ -1,24 +1,42 @@
 import React from "react";
 import { handleKeyPress } from "../../utils";
-import Modal from "../ui/Modal";
-import ModalInstruction from "../ui/ModalInstruction";
 import Button from "../ui/Button";
+import Input from "../ui/Input";
+import { LuCopy, LuInfo } from "react-icons/lu";
+import ModalScaffold from "../ui/modal/ModalScaffold";
+import ModalField from "../ui/modal/ModalField";
+import ModalInfoBlock from "../ui/modal/ModalInfoBlock";
+import { modalDefinitions } from "../../config/modalDefinitions";
 
 interface CopyModelProps {
   isOpen: boolean;
   onClick: (id: string, value: string) => void;
   onClose: () => void;
+  qID?: string;
   label: string;
+  isPending?: boolean;
 }
 
 const CopyModel: React.FC<CopyModelProps> = ({
   isOpen,
   onClick,
   onClose,
+  qID,
   label,
+  isPending = false,
 }) => {
   const [QID, setQID] = React.useState<string>("");
   const [QLabel, setQlabel] = React.useState<string>("");
+  const displayLabel =
+    label?.replace(/^[A-Za-z0-9_-]+\s*:\s*/, "").trim() || label;
+  const definition = modalDefinitions.copyQuestion;
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setQID("");
+      setQlabel("");
+    }
+  }, [isOpen, qID, label]);
 
   const handleClick = () => {
     if (QID !== "" && QLabel !== "") {
@@ -27,66 +45,81 @@ const CopyModel: React.FC<CopyModelProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="max-w-md">
-      <div className="p-6">
-        <h3 className="questionnaire-heading text-[22px] font-bold">Copy Question</h3>
-        <p className="report-muted mt-3 text-[15px] leading-6">
-          Create a copy of
-          <span className="questionnaire-heading font-semibold">{` ${label || "this question"}`}</span>
-          {" "}with a new question ID and label.
+    <ModalScaffold
+      isOpen={isOpen}
+      onClose={onClose}
+      className={definition.maxWidthClass}
+      title={definition.title}
+      icon={<LuCopy className="h-5 w-5" />}
+      closeDisabled={isPending}
+      footerLeft={
+        <Button type="button" varinat="cancel" onClick={onClose} disabled={isPending}>
+          {definition.cancelLabel}
+        </Button>
+      }
+      footerRight={
+        <Button
+          type="button"
+          varinat="theme"
+          onClick={handleClick}
+          disabled={isPending || QID.trim() === "" || QLabel.trim() === ""}
+        >
+          {isPending ? (
+            <>
+              <span className="modal-spinner" />
+              {definition.submittingLabel}
+            </>
+          ) : (
+            <>
+              <LuCopy className="h-4 w-4" />
+              {definition.submitLabel}
+            </>
+          )}
+        </Button>
+      }
+    >
+      <div className="space-y-4">
+        <p className="text-[15px] leading-6 theme-text-default">
+          Create a copy of{" "}
+          <span className="font-semibold text-[var(--color-brand-primary)]">{`${qID ? `${qID}: ` : ""}${displayLabel || "this question"}`}</span>{" "}
+          with a new question Id and label.
         </p>
-
-        <div className="mt-5">
-          <label className="questionnaire-label mb-3 block text-[15px]">
-            QID <span className="text-red-500">*</span>
-          </label>
-          <div className="flex items-center gap-2">
-            <span className="questionnaire-heading text-base font-semibold">CQ</span>
-            <input
+        <ModalField label="Question Id" required>
+          <div className="relative">
+            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-[var(--color-text-strong)]">
+              CQ
+            </span>
+            <Input
+              variant="modal"
               data-test-id="COPY_QUESTIONNAIRE_MODEL_1"
-              className="questionnaire-input questionnaire-heading w-full rounded-[18px] border questionnaire-border px-4 py-3 focus-visible:outline-none"
-              placeholder="Enter QID"
+              placeholder="Enter question id"
+              value={QID}
               onChange={(e) => setQID(e.target.value)}
+              className="pl-10"
             />
           </div>
-        </div>
-
-        <div className="mt-5">
-          <label className="questionnaire-label mb-3 block text-[15px]">
-            Question Label <span className="text-red-500">*</span>
-          </label>
-          <input
+        </ModalField>
+        <ModalField label="Question Label" required>
+          <Input
+            variant="modal"
             data-test-id="COPY_QUESTIONNAIRE_MODEL_2"
-            className="questionnaire-input questionnaire-heading w-full rounded-[18px] border questionnaire-border px-4 py-3 focus-visible:outline-none"
             placeholder="Enter copied question label"
+            value={QLabel}
             onChange={(e) => setQlabel(e.target.value)}
             onKeyDown={(e) => handleKeyPress(e, handleClick)}
           />
-        </div>
-
-        <ModalInstruction>
-          Click <span className="font-semibold">Copy Question</span> and wait a moment while the duplicated question is created.
-        </ModalInstruction>
-
-        <div className="mt-6 flex justify-end gap-3">
-          <Button
-            type="button"
-            varinat="cancel"
-            onClick={onClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="button"
-            varinat="theme"
-            onClick={handleClick}
-            disabled={QID.trim() === "" || QLabel.trim() === ""}
-          >
+        </ModalField>
+        <ModalInfoBlock
+          icon={<LuInfo className="h-4 w-4 text-[var(--color-brand-primary)]" />}
+        >
+          Click{" "}
+          <span className="font-semibold text-[var(--color-brand-primary)]">
             Copy Question
-          </Button>
-        </div>
+          </span>{" "}
+          and wait a moment while the duplicated question is created.
+        </ModalInfoBlock>
       </div>
-    </Modal>
+    </ModalScaffold>
   );
 };
 

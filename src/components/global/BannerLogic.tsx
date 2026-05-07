@@ -9,6 +9,7 @@ import { setLogicData } from "../../store/CrossTabDataSlice";
 import { useLocation } from "react-router";
 import { Tooltip } from "../ui/Tooltip";
 import IconActionButton from "../ui/IconActionButton";
+import Select from "../ui/Select";
 
 export interface LogicRow {
   id: string;
@@ -162,24 +163,26 @@ export default function BannerLogic({
         <div key={row.id} className="mb-4 flex flex-wrap items-center gap-3">
           {row.type === "condition" && (
             <div>
-              <select
+              <Select
+                variant="questionnaire"
                 value={row.connector || "AND"}
                 onChange={(e) => handleConnectorChange(row.id, e.target.value)}
-                className="questionnaire-logic-select min-w-[120px] rounded-[16px] px-4 py-3 focus:outline-none"
+                className="min-w-[120px]"
               >
                 {connectors.map((connector) => (
                   <option key={connector} value={connector}>
                     {connector}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
           )}
-          <select
+          <Select
+            variant="questionnaire"
             value={row.variable || ""}
             data-test-id={`TAB_SELECTED_1`}
             onChange={(e) => handleVariableChange(row.id, e.target.value)}
-            className="questionnaire-logic-select min-w-[220px] rounded-[16px] px-4 py-3 focus:outline-none"
+            className="min-w-[220px]"
           >
             <option value="">Select variables</option>
             {/* {varsData?.variables?.access?.length > 0 && (
@@ -204,15 +207,16 @@ export default function BannerLogic({
                 ))}
               </optgroup>
             )}
-          </select>
+          </Select>
           {row.variable &&
             Object.keys(optsData).length !== 0 &&
             optsData[row.variable] && (
-              <select
+              <Select
+                variant="questionnaire"
                 value={row.option || ""}
                 data-test-id={`TAB_SELECTED_2`}
                 onChange={(e) => handleOptionChange(row.id, e.target.value)}
-                className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
+                className="min-w-[180px]"
               >
                 <option value="">Select option</option>
                 {optsData[row.variable].map((opt: any, index: number) => (
@@ -224,14 +228,15 @@ export default function BannerLogic({
                     {opt.show}
                   </option>
                 ))}
-              </select>
+              </Select>
             )}
           {row.option !== "" && (
-            <select
+            <Select
+              variant="questionnaire"
               value={row.value || ""}
               data-test-id={`TAB_SELECTED_3`}
               onChange={(e) => handleValueChange(row.id, e.target.value)}
-              className="questionnaire-logic-select min-w-[180px] rounded-[16px] px-4 py-3 focus:outline-none"
+              className="min-w-[180px]"
             >
               <option value="">Select value</option>
               {optsData[row.variable]
@@ -245,7 +250,7 @@ export default function BannerLogic({
                     {opt.show}
                   </option>
                 ))}
-            </select>
+            </Select>
           )}
           <div className="flex items-center gap-2">
             {row.type === "main" && (

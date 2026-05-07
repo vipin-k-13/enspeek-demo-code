@@ -9,9 +9,12 @@ import {
 import { handleKeyPress } from "../../../utils";
 import { useDelete } from "./Api";
 import { toast } from "sonner";
-import Modal from "../../ui/Modal";
-import ModalInstruction from "../../ui/ModalInstruction";
 import Button from "../../ui/Button";
+import Input from "../../ui/Input";
+import { LuInfo, LuTrash2 } from "react-icons/lu";
+import ModalScaffold from "../../ui/modal/ModalScaffold";
+import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
 const DeleteModel = () => {
   const [deleteInputValue, setDeleteInputValue] = useState<string>("");
@@ -19,7 +22,7 @@ const DeleteModel = () => {
     (state: RootState) => state.trigger
   );
   const dispatch = useDispatch<AppDispatch>();
-  const { Delete } = useDelete();
+  const { Delete, isPending } = useDelete();
 
   const handleDelete = () => {
     if (
@@ -27,9 +30,6 @@ const DeleteModel = () => {
       selectedId !== ""
     ) {
       Delete(selectedId);
-      dispatch(setSelectedId(""));
-      dispatch(setDeleteModel(false));
-      setDeleteInputValue("");
     } else {
       toast.warning("Please type 'delete' to confirm.");
     }
@@ -42,46 +42,69 @@ const DeleteModel = () => {
   };
   const isDeleteConfirmed =
     deleteInputValue.trim().toLowerCase() === "delete" && selectedId !== "";
+  const definition = modalDefinitions.deleteStudy;
 
   return (
-    <Modal isOpen={deleteModel} onClose={handleClose} className="max-w-md">
-      <div className="p-6">
-        <h3 className="home-heading text-[22px] font-bold">Delete Study</h3>
-        <p className="home-muted mt-3 text-[15px] leading-6">
-          Are you sure you want to delete
-          <span className="home-heading font-semibold">{` ${selectedStudyName || "this study"}`}</span>
+    <ModalScaffold
+      isOpen={deleteModel}
+      onClose={handleClose}
+      className={definition.maxWidthClass}
+      title={definition.title}
+      icon={<LuTrash2 className="h-5 w-5" />}
+      closeDisabled={isPending}
+      footerLeft={
+        <Button type="button" varinat="cancel" onClick={handleClose} disabled={isPending}>
+          {definition.cancelLabel}
+        </Button>
+      }
+      footerRight={
+        <Button
+          type="button"
+          varinat="danger"
+          onClick={handleDelete}
+          disabled={!isDeleteConfirmed || isPending}
+        >
+          {isPending ? (
+            <>
+              <span className="modal-spinner" />
+              {definition.submittingLabel}
+            </>
+          ) : (
+            <>
+              <LuTrash2 className="h-4 w-4" />
+              {definition.submitLabel}
+            </>
+          )}
+        </Button>
+      }
+    >
+      <div className="space-y-4">
+        <p className="text-[15px] leading-6 theme-text-default">
+          Are you sure you want to delete{" "}
+          <span className="font-semibold text-[var(--color-questionnaire-stop)]">
+            {selectedStudyName || "this study"}
+          </span>
           ? This action cannot be undone.
         </p>
-        <ModalInstruction>
-          Type <strong className="text-red-500">delete</strong> to confirm this action.
-        </ModalInstruction>
-        <input
+        <ModalInfoBlock
+          icon={<LuInfo className="h-4 w-4 text-[var(--color-questionnaire-stop)]" />}
+        >
+          Type{" "}
+          <span className="font-semibold text-[var(--color-questionnaire-stop)]">
+            delete
+          </span>{" "}
+          to confirm this action.
+        </ModalInfoBlock>
+        <Input
+          variant="modalDanger"
           data-test-id="DELETE_MODEL"
-          className="questionnaire-input home-text mt-3 w-full rounded-[18px] border questionnaire-border px-4 py-3 focus:outline-none"
           placeholder="Type 'delete' here..."
           value={deleteInputValue}
           onChange={(e) => setDeleteInputValue(e.target.value)}
           onKeyDown={(e) => handleKeyPress(e, handleDelete)}
         />
-        <div className="mt-6 flex justify-end gap-3">
-          <Button
-            type="button"
-            varinat="cancel"
-            onClick={handleClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="button"
-            varinat="danger"
-            onClick={handleDelete}
-            disabled={!isDeleteConfirmed}
-          >
-            Delete
-          </Button>
-        </div>
       </div>
-    </Modal>
+    </ModalScaffold>
   );
 };
 

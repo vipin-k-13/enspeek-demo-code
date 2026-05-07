@@ -4,6 +4,7 @@ type trigger = {
   add: boolean;
   deleteModel: boolean;
   archiveModel: boolean;
+  archiveAction: "archive" | "unarchive";
   selectedId: string;
   selectedStudyName: string;
   copyModel: boolean;
@@ -18,6 +19,7 @@ const initialState: trigger = {
   add: false,
   deleteModel: false,
   archiveModel: false,
+  archiveAction: "archive",
   selectedId: "",
   selectedStudyName: "",
   copyModel: false,
@@ -46,6 +48,10 @@ const TriggerSlice = createSlice({
     },
     setArchiveModel: (state, action: PayloadAction<boolean>) => {
       state.archiveModel = action.payload;
+      return state;
+    },
+    setArchiveAction: (state, action: PayloadAction<"archive" | "unarchive">) => {
+      state.archiveAction = action.payload;
       return state;
     },
     setSelectedId: (state, action: PayloadAction<string>) => {
@@ -86,6 +92,7 @@ export const {
   resetTrigger,
   setDeleteModel,
   setArchiveModel,
+  setArchiveAction,
   setSelectedId,
   setCopyModel,
   setSelectedStudyName,

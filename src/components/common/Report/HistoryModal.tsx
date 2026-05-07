@@ -1,4 +1,5 @@
 import DynamicModel from "../../global/DynamicModel";
+import Button from "../../ui/Button";
 import { FiDownload } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "../../../services/apiService";
@@ -10,7 +11,7 @@ import { useClearHistoryHook, useProcessHook } from "./ReportMutations";
 import { queryClient } from "../../../App";
 import { useState } from "react";
 import { useLocation } from "react-router";
-import ModalInstruction from "../../ui/ModalInstruction";
+import { LuEraser } from "react-icons/lu";
 
 export default function HistoryModal({
   open,
@@ -55,28 +56,49 @@ export default function HistoryModal({
     setPid((prev) => [pid, ...prev]);
     Process({ studyID: state.studyID, pid: pid });
   };
+  const hasHistory = Boolean(List?.data?.length);
 
   if (isError) {
     return null;
   }
 
-  if (isClearHistoryPending) {
-    return <LoaderSpinner />;
-  }
-
   return (
     <DynamicModel
       Title={`Downloads : ${name}`}
-      ButtonText="Clear History"
+      description="Review recent downloads for this study, or clear the history when you no longer need it."
+      ButtonText={hasHistory ? (isClearHistoryPending ? "Clearing..." : "Clear History") : ""}
+      buttonIcon={
+        hasHistory
+          ? isClearHistoryPending ? (
+              <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+            ) : (
+              <LuEraser className="h-4 w-4" />
+            )
+          : undefined
+      }
+      buttonVariant="danger"
       isOpen={open}
-      onClick={() => ClearHistory()}
+      onClick={() => {
+        if (hasHistory) {
+          ClearHistory();
+        }
+      }}
       onClose={() => onOpenChange(false)}
       className="max-w-xl"
+      disable={isClearHistoryPending}
+      secondaryActionPosition={hasHistory ? "before" : "after"}
+      secondaryAction={
+        <Button
+          type="button"
+          varinat="cancel"
+          onClick={() => onOpenChange(false)}
+          disabled={isClearHistoryPending}
+        >
+          Cancel
+        </Button>
+      }
     >
-      <ModalInstruction>
-        Review recent downloads for this study, or clear the history when you no longer need it.
-      </ModalInstruction>
-      <div className="py-2 h-[20rem] overflow-y-auto no-scrollbar">
+      <div className="py-1">
         {isPending ? (
           <LoaderSpinner />
         ) : List.data.length ? (
