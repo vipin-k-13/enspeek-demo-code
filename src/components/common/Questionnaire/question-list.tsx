@@ -318,16 +318,16 @@ export default function QuestionList() {
                                 dispatch(setChatOpen(true));
                                 dispatch(setMessage(prompt.text));
                               }}
-                              className="home-panel-soft-bg questionnaire-border group w-full items-start justify-start rounded-[20px] px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                              className="home-panel-soft-bg questionnaire-border group h-auto w-full items-start justify-start whitespace-normal rounded-[20px] px-4 py-3 text-left leading-normal transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                             >
                               <span className="home-dropdown-icon-wrap flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl">
                                 {prompt.icon}
                               </span>
-                              <span>
-                                <span className="questionnaire-heading block text-sm font-semibold">
+                              <span className="min-w-0 flex-1">
+                                <span className="questionnaire-heading block break-words text-sm font-semibold leading-5">
                                   {prompt.title}
                                 </span>
-                                <span className="questionnaire-muted mt-0.5 block text-sm leading-5">
+                                <span className="questionnaire-muted mt-0.5 block break-words text-sm leading-5">
                                   {prompt.text}
                                 </span>
                               </span>
