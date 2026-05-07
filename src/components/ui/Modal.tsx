@@ -9,7 +9,6 @@ const Modal: React.FC<{
   showOverlay?: boolean;
 }> = ({
   isOpen,
-  onClose,
   children,
   className = "",
   showOverlay = true,
@@ -23,7 +22,7 @@ const Modal: React.FC<{
       role="dialog"
     >
       {showOverlay && (
-        <div className="fixed inset-0 bg-[var(--color-overlay)]" onClick={onClose} />
+        <div className="fixed inset-0 bg-[var(--color-overlay)]" />
       )}
       <div
         className={cn(
