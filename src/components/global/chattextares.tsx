@@ -79,6 +79,34 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
     }
   }, [isTyping, pending]);
 
+  React.useEffect(() => {
+    const handleShortcutFocus = (event: KeyboardEvent) => {
+      const isFocusShortcut =
+        (event.ctrlKey || event.metaKey) && event.key === "/";
+
+      if (!isFocusShortcut) return;
+
+      event.preventDefault();
+
+      if (!isChatOpen) {
+        dispatch(setChatOpen(true));
+      }
+
+      requestAnimationFrame(() => {
+        internalTextareaRef.current?.focus();
+        internalTextareaRef.current?.setSelectionRange(
+          internalTextareaRef.current.value.length,
+          internalTextareaRef.current.value.length
+        );
+      });
+    };
+
+    window.addEventListener("keydown", handleShortcutFocus);
+    return () => {
+      window.removeEventListener("keydown", handleShortcutFocus);
+    };
+  }, [dispatch, isChatOpen]);
+
   return (
     <>
       {!isChatOpen && !isPanelPlacement && (
