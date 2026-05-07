@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
 import { StudyCard } from "./card";
@@ -13,6 +13,12 @@ import { HiSearch } from "react-icons/hi";
 import DeleteModel from "../common/list/DeleteModel";
 import ListingCopyModel from "./ListingCopyModal";
 import ArchiveModel from "../common/list/ArchiveModel";
+import { queryClient } from "../../App";
+import {
+  REFRESH_STUDY_LIST_EVENT,
+  type RefreshStudyListEventDetail,
+  type StudyListSelection,
+} from "../../utils/studyListRefresh";
 
 const HomeSidebar: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
@@ -27,47 +33,64 @@ const HomeSidebar: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [pageInput, setPageInput] = useState<string>("1");
+  const activeTabRef = useRef<StudyListSelection>("myactive");
   const dispatch = useDispatch<AppDispatch>();
-  const { data: studyList = {}, isLoading: isListLoading, refetch } = useQuery({
-    queryKey: ["studyList", activeTab],
-    queryFn: async () => {
-      try {
-        const res = await apiRequest("post", "study/listing", {
-          apiToken: apiToken,
-          selection: activeTab,
-          page: 1,
-        });
-        dispatch(setStudys(res.response.data));
-        dispatch(setFilterStudys(res.response.data));
-        return res.response;
-      } catch (error: any) {
-        console.log(error.message);
-      }
+
+  useEffect(() => {
+    activeTabRef.current = activeTab;
+  }, [activeTab]);
+
+  const fetchStudyListForSelection = useCallback(
+    async (selection: StudyListSelection) => {
+      const res = await apiRequest("post", "study/listing", {
+        apiToken: apiToken,
+        selection,
+        page: 1,
+      });
+      dispatch(setStudys(res.response.data));
+      dispatch(setFilterStudys(res.response.data));
+      queryClient.setQueryData(["studyList", selection], res.response);
+      return res.response;
     },
+    [apiToken, dispatch]
+  );
+
+  const { data: studyList = {}, isLoading: isListLoading } = useQuery({
+    queryKey: ["studyList", activeTab],
+    queryFn: async () => fetchStudyListForSelection(activeTab),
     enabled: !!apiToken,
     refetchOnWindowFocus: false,
     retry: 1,
   });
 
   useEffect(() => {
-    const handleRefreshStudyList = () => {
-      refetch();
+    const handleRefreshStudyList = async (event: Event) => {
+      const detail = (event as CustomEvent<RefreshStudyListEventDetail>).detail;
+
+      const selection = detail?.selection ?? activeTabRef.current;
+
+      if (detail?.resetSearch) {
+        setPage(1);
+        setPageInput("1");
+        setSearchTerm("");
+      }
+
+      if (selection !== activeTabRef.current) {
+        setActiveTab(selection);
+      }
+
+      try {
+        await fetchStudyListForSelection(selection);
+      } finally {
+        detail?.resolve?.();
+      }
     };
 
-    const handleCopyStudySuccess = () => {
-      setPage(1);
-      setPageInput("1");
-      setSearchTerm("");
-      setActiveTab((prev) => (prev === "myactive" ? prev : "myactive"));
-    };
-
-    window.addEventListener("refresh-study-list", handleRefreshStudyList);
-    window.addEventListener("copy-study-success", handleCopyStudySuccess);
+    window.addEventListener(REFRESH_STUDY_LIST_EVENT, handleRefreshStudyList);
     return () => {
-      window.removeEventListener("refresh-study-list", handleRefreshStudyList);
-      window.removeEventListener("copy-study-success", handleCopyStudySuccess);
+      window.removeEventListener(REFRESH_STUDY_LIST_EVENT, handleRefreshStudyList);
     };
-  }, [refetch]);
+  }, [fetchStudyListForSelection]);
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {

@@ -2,10 +2,10 @@ import React from "react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { useNavigate } from "react-router";
 import NewDropdown from "./NewDropDown";
-import { useActive } from "../common/list/Api";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../store/store";
 import {
+  setArchiveAction,
   setArchiveModel,
   setCopyModel,
   setDeleteModel,
@@ -50,7 +50,6 @@ export const StudyCard: React.FC<StudyCardProps> = ({
   activeTab,
 }) => {
   const navigate = useNavigate();
-  const { Active } = useActive();
   const dispatch = useDispatch<AppDispatch>();
   const cleanStatus = (status || "").replace(/\|\s*\d+\s*questions?/i, "").trim();
   const questionMatch = (status || "").match(/(\d+)\s*questions?/i);
@@ -83,7 +82,12 @@ export const StudyCard: React.FC<StudyCardProps> = ({
           id: "active",
           label: "Unarchive",
           icon: <LuArchive className="h-4 w-4" />,
-          onClick: () => Active(id),
+          onClick: () => {
+            dispatch(setSelectedId(id));
+            dispatch(setSelectedStudyName(name));
+            dispatch(setArchiveAction("unarchive"));
+            dispatch(setArchiveModel(true));
+          },
           disabled: !isOwner,
         }
       : {
@@ -93,6 +97,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
           onClick: () => {
             dispatch(setSelectedId(id));
             dispatch(setSelectedStudyName(name));
+            dispatch(setArchiveAction("archive"));
             dispatch(setArchiveModel(true));
           },
           disabled: !isOwner,

@@ -15,6 +15,7 @@ import { apiRequest } from "../../../services/apiService";
 import Modal from "../../ui/Modal";
 import Button from "../../ui/Button";
 import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
+import ModalHeader from "../../ui/modal/ModalHeader";
 
 interface WhatsaapModalProps {
   onSave: (selected: string) => void;
@@ -53,16 +54,15 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
       className="max-w-[90vw] md:max-w-[980px]"
     >
       <div className="theme-surface">
-        <div className="questionnaire-border px-6 py-6 pr-16">
-          <div className="flex items-center gap-3">
-            <div className="modal-header-icon text-[var(--color-study-activated)]">
+        <ModalHeader
+          title="WhatsApp Link"
+          icon={
+            <span className="text-[var(--color-study-activated)]">
               <FaWhatsapp className="h-5 w-5" />
-            </div>
-            <h3 className="modal-title">
-              WhatsApp Link
-            </h3>
-          </div>
-        </div>
+            </span>
+          }
+          onClose={onClose}
+        />
 
         <div className="modal-body px-8 py-3 md:px-12">
           <div className="flex flex-col gap-5">

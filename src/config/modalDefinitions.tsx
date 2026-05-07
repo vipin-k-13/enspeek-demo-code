@@ -1,6 +1,7 @@
 import type { ComponentType, ReactNode } from "react";
 import {
   LuBadgeCheck,
+  LuArchive,
   LuCopy,
   LuDownload,
   LuFilter,
@@ -31,6 +32,26 @@ export type ModalDefinition = {
 };
 
 export const modalDefinitions: Record<string, ModalDefinition> = {
+  archiveStudy: {
+    id: "archiveStudy",
+    title: "Archive Study",
+    tone: "primary",
+    icon: LuArchive,
+    submitLabel: "Archive",
+    submittingLabel: "Archiving...",
+    cancelLabel: "Cancel",
+    maxWidthClass: "max-w-md",
+  },
+  unarchiveStudy: {
+    id: "unarchiveStudy",
+    title: "Unarchive Study",
+    tone: "success",
+    icon: LuArchive,
+    submitLabel: "Unarchive",
+    submittingLabel: "Unarchiving...",
+    cancelLabel: "Cancel",
+    maxWidthClass: "max-w-md",
+  },
   copyStudy: {
     id: "copyStudy",
     title: "Copy Study",

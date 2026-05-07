@@ -415,11 +415,11 @@ body{
 }
 
 .modal-title {
-  color: var(--color-brand-primary);
-  font-size: 1.5rem;
-  font-weight: 800;
-  line-height: 1.2;
-}
+    color: var(--color-text-strong);
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
 
 .modal-description {
   margin-top: 0.75rem;
@@ -429,16 +429,17 @@ body{
 }
 
 .modal-close-button {
-  display: inline-flex;
-  height: 2rem;
-  width: 2rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  color: var(--color-text-muted);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    display: inline-flex;
+    height: 2rem;
+    width: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
 }
 
 .modal-close-button:hover {
