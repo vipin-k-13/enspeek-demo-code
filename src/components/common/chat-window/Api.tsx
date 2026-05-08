@@ -14,6 +14,7 @@ import {
 import { useEffect } from "react";
 import { useProcessHook } from "../Report/ReportMutations";
 import { setSubmitItems } from "../../../store/QuestionSlice";
+import { REFRESH_STUDY_LIST_EVENT } from "../../../utils/studyListRefresh";
 
 const MAX_RECALL_CHAIN_CALLS = 10;
 
@@ -52,6 +53,31 @@ export const useChat = () => {
     await queryClient.refetchQueries({
       queryKey: ["viewCustomList", studyID],
       type: "all",
+    });
+  };
+
+  const refreshHomeStudyList = async () => {
+    if (pathname !== "/") return;
+
+    await new Promise<void>((resolve) => {
+      window.dispatchEvent(
+        new CustomEvent(REFRESH_STUDY_LIST_EVENT, {
+          detail: {
+            selection: "myactive",
+            resolve,
+          },
+        })
+      );
+    });
+
+    await queryClient.invalidateQueries({
+      queryKey: ["studyList"],
+      exact: false,
+    });
+    await queryClient.refetchQueries({
+      queryKey: ["studyList"],
+      exact: false,
+      type: "active",
     });
   };
 
@@ -96,6 +122,10 @@ export const useChat = () => {
         queryKey: ["studyInfo", studyID],
         type: "all",
       });
+    }
+
+    if (data.type === "activated" && data.liveLink) {
+      await refreshHomeStudyList();
     }
 
     dispatch(setFollowUp(data.followUp));
