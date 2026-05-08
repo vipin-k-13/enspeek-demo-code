@@ -98,8 +98,8 @@ const ChatWindow: React.FC<{
         <div
           className={cn(
             isHomePageSurface
-              ? "mx-auto w-[min(94%,1120px)] pb-[170px] pt-4 md:pb-[184px] md:pt-6"
-              : "px-4 pb-36 pt-4 md:px-6 md:pb-40 md:pt-6"
+              ? "mx-auto w-[min(94%,1120px)] pb-28 pt-4 md:pt-6"
+              : "px-4 pb-3 pt-4 md:px-6 md:pt-6"
           )}
         >
         {messages.map((msg, index) => (
