@@ -1,6 +1,11 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { type ButtonHTMLAttributes, type FC, type ReactNode } from "react";
+import {
+  forwardRef,
+  type ButtonHTMLAttributes,
+  type ReactNode,
+} from "react";
 import { cn } from "../../utils";
+import { getTooltipAttributes, type TooltipPosition } from "./Tooltip";
 
 const buttonBaseClasses = "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-full border border-transparent font-bold leading-none align-middle transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
 
@@ -49,27 +54,44 @@ export interface ButtonProps
   VariantProps<typeof buttonToneVariants>,
   VariantProps<typeof buttonSizeVariants> {
   children: ReactNode;
+  tooltip?: string;
+  tooltipPosition?: TooltipPosition;
+  tooltipDelay?: number;
 }
 
-const Button: FC<ButtonProps> = ({
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
   varinat,
   size,
   className,
+  tooltip,
+  tooltipPosition,
+  tooltipDelay,
   ...props
-}) => {
-  return (
-    <button className={cn(
+}, ref) => {
+  const buttonElement = (
+    <button
+      ref={ref}
+      {...getTooltipAttributes(tooltip, tooltipPosition)}
+      data-tooltip-delay={tooltip ? tooltipDelay : undefined}
+      className={cn(
       buttonBaseClasses,
       buttonToneVariants({ varinat }),
-      buttonSizeVariants({ size })
-      ,
+      buttonSizeVariants({ size }),
       className
     )}
-      {...props}>
+      {...props}
+    >
       {children}
     </button>
   );
-};
+
+  if (!tooltip) {
+    return buttonElement;
+  }
+  return buttonElement;
+});
+
+Button.displayName = "Button";
 
 export default Button;

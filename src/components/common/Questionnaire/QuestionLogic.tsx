@@ -12,7 +12,6 @@ import { apiRequest } from "../../../services/apiService";
 import { cn } from "../../../utils";
 import IconActionButton from "../../ui/IconActionButton";
 import Select from "../../ui/Select";
-import { Tooltip } from "../../ui/Tooltip";
 
 export interface LogicRow {
   id: string;
@@ -539,23 +538,21 @@ export default function QuestionLogic({
 
                 <div className="flex items-center gap-2">
                   {selectedConditions[groupId] && (
-                    <Tooltip content="Add condition" position="top">
-                      <IconActionButton
-                        tone="primary"
-                        onClick={() => addConditionRow(groupId)}
-                      >
-                        <LuGitBranchPlus className="h-4 w-4" />
-                      </IconActionButton>
-                    </Tooltip>
-                  )}
-                  <Tooltip content="Reset group" position="top">
                     <IconActionButton
-                      tone="neutral"
-                      onClick={() => resetAllGroupRows(groupId)}
+                      tone="primary"
+                      tooltip="Add condition"
+                      onClick={() => addConditionRow(groupId)}
                     >
-                      <FaRotateLeft />
+                      <LuGitBranchPlus className="h-4 w-4" />
                     </IconActionButton>
-                  </Tooltip>
+                  )}
+                  <IconActionButton
+                    tone="neutral"
+                    tooltip="Reset group"
+                    onClick={() => resetAllGroupRows(groupId)}
+                  >
+                    <FaRotateLeft />
+                  </IconActionButton>
 
                   {groupId === lastGroupId && (
                     <IconActionButton
@@ -567,14 +564,13 @@ export default function QuestionLogic({
                   )}
 
                   {index > 0 && (
-                    <Tooltip content="Delete group" position="top">
-                      <IconActionButton
-                        tone="danger"
-                        onClick={() => deleteGroup(groupId)}
-                      >
-                        <LuTrash2 className="h-4 w-4" />
-                      </IconActionButton>
-                    </Tooltip>
+                    <IconActionButton
+                      tone="danger"
+                      tooltip="Delete group"
+                      onClick={() => deleteGroup(groupId)}
+                    >
+                      <LuTrash2 className="h-4 w-4" />
+                    </IconActionButton>
                   )}
                 </div>
               </div>
@@ -588,7 +584,7 @@ export default function QuestionLogic({
                   rowIndex !== conditionRows.length - 1 && "mb-4"
                 )}
               >
-                <Tooltip content="AND/OR condition" position="top">
+                <div title="AND/OR condition">
                   <Select
                     variant="questionnaire"
                     value={row.connector || "AND"}
@@ -603,7 +599,7 @@ export default function QuestionLogic({
                       </option>
                     ))}
                   </Select>
-                </Tooltip>
+                </div>
 
                 <Select
                   variant="questionnaire"
@@ -671,22 +667,20 @@ export default function QuestionLogic({
                 )}
 
                 <div className="flex items-center gap-2">
-                  <Tooltip content="Reset row" position="top">
-                    <IconActionButton
-                      tone="neutral"
-                      onClick={() => resetRow(row.id)}
-                    >
-                      <FaRotateLeft />
-                    </IconActionButton>
-                  </Tooltip>
-                  <Tooltip content="Delete row" position="top">
-                    <IconActionButton
-                      tone="danger"
-                      onClick={() => deleteRow(row.id)}
-                    >
-                      <LuTrash2 className="h-4 w-4" />
-                    </IconActionButton>
-                  </Tooltip>
+                  <IconActionButton
+                    tone="neutral"
+                    tooltip="Reset row"
+                    onClick={() => resetRow(row.id)}
+                  >
+                    <FaRotateLeft />
+                  </IconActionButton>
+                  <IconActionButton
+                    tone="danger"
+                    tooltip="Delete row"
+                    onClick={() => deleteRow(row.id)}
+                  >
+                    <LuTrash2 className="h-4 w-4" />
+                  </IconActionButton>
                 </div>
               </div>
             ))}

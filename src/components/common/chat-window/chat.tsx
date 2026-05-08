@@ -14,7 +14,6 @@ import TableAndChartModal from "../Report/TableAndChartModal";
 import TableModal from "../Crosstab/TableModal";
 import { toast } from "sonner";
 import { PRIMARY_CHART_COLOR } from "../../../utils/chartColors";
-import { Tooltip } from "../../ui/Tooltip";
 import { getFullName, getInitials } from "../../../utils";
 import { LuBotMessageSquare, LuSparkles } from "react-icons/lu";
 import Button from "../../ui/Button";
@@ -118,21 +117,17 @@ const ChatWindow: React.FC<{
                 msg.sender === "user" && "flex-row-reverse"
               )}
             >
-              <Tooltip
-                content={msg.sender === "user" ? fullName : "Enspeek AI"}
-                position={msg.sender === "user" ? "left" : "right"}
+              <div
+                title={msg.sender === "user" ? fullName : "Enspeek AI"}
+                className={cn(
+                  "mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold",
+                  msg.sender === "user"
+                    ? "home-avatar-user"
+                    : "home-avatar-ai"
+                )}
               >
-                <div
-                  className={cn(
-                    "mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold",
-                    msg.sender === "user"
-                      ? "home-avatar-user"
-                      : "home-avatar-ai"
-                  )}
-                >
-                  {msg.sender === "user" ? userInitials : "AI"}
-                </div>
-              </Tooltip>
+                {msg.sender === "user" ? userInitials : "AI"}
+              </div>
               <div
                 className={
                   msg.sdata || msg.crosstab
@@ -405,20 +400,19 @@ const ChatWindow: React.FC<{
                       🔗 Click to view survey
                     </a>
 
-                    <Tooltip content="Copy survey link" position="top">
-                      <IconActionButton
-                        onClick={() => {
-                          if (msg.liveLink) {
-                            navigator.clipboard.writeText(msg.liveLink);
-                          }
-                          toast.success("Survey link copied to clipboard!");
-                        }}
-                        tone="neutral"
-                        className="theme-text-muted"
-                      >
-                        <FaCopy />
-                      </IconActionButton>
-                    </Tooltip>
+                    <IconActionButton
+                      tooltip="Copy survey link"
+                      onClick={() => {
+                        if (msg.liveLink) {
+                          navigator.clipboard.writeText(msg.liveLink);
+                        }
+                        toast.success("Survey link copied to clipboard!");
+                      }}
+                      tone="neutral"
+                      className="theme-text-muted"
+                    >
+                      <FaCopy />
+                    </IconActionButton>
                   </div>
                 )}
               </>

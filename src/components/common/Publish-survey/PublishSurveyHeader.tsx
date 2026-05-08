@@ -20,7 +20,6 @@ import {
   LuFiles,
 } from "react-icons/lu";
 import PageSubheader from "../../ui/PageSubheader";
-import { Tooltip } from "../../ui/Tooltip";
 import Button from "../../ui/Button";
 
 interface PublishSurveyHeaderProps {
@@ -116,30 +115,26 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
               </>
             )}
             {!isSurveyActive && (
-              <Tooltip
-                content="Activate the study first."
-                position="top"
+              <span
+                title="Activate the study first."
+                className="inline-flex cursor-not-allowed"
+                onMouseEnter={() => onHoverDisabledInitiate?.(true)}
+                onMouseLeave={() => onHoverDisabledInitiate?.(false)}
+                onFocus={() => onHoverDisabledInitiate?.(true)}
+                onBlur={() => onHoverDisabledInitiate?.(false)}
               >
-                <span
-                  className="inline-flex cursor-not-allowed"
-                  onMouseEnter={() => onHoverDisabledInitiate?.(true)}
-                  onMouseLeave={() => onHoverDisabledInitiate?.(false)}
-                  onFocus={() => onHoverDisabledInitiate?.(true)}
-                  onBlur={() => onHoverDisabledInitiate?.(false)}
+                <Button
+                  type="button"
+                  varinat="secondary"
+                  size="default"
+                  disabled
+                  data-test-id="INITIATE_DISABLED"
+                  aria-disabled="true"
+                  className="pointer-events-none border-[var(--color-border-soft)] bg-[var(--color-surface-soft)] text-[var(--color-text-muted)] shadow-none opacity-55 grayscale-[0.2] saturate-[0.75]"
                 >
-                  <Button
-                    type="button"
-                    varinat="secondary"
-                    size="default"
-                    disabled
-                    data-test-id="INITIATE_DISABLED"
-                    aria-disabled="true"
-                    className="pointer-events-none border-[var(--color-border-soft)] bg-[var(--color-surface-soft)] text-[var(--color-text-muted)] shadow-none opacity-55 grayscale-[0.2] saturate-[0.75]"
-                  >
-                    <FaUsers /> Initiate Sample Collection
-                  </Button>
-                </span>
-              </Tooltip>
+                  <FaUsers /> Initiate Sample Collection
+                </Button>
+              </span>
             )}
             {isSurveyActive && launch !== 1 && (
               <Button

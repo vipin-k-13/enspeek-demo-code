@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "../../utils";
+import { getTooltipAttributes, type TooltipPosition } from "./Tooltip";
 
 type IconActionTone =
   | "neutral"
@@ -26,19 +27,45 @@ const toneClassMap: Record<IconActionTone, string> = {
 
 type IconActionButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   tone?: IconActionTone;
+  tooltip?: string;
+  tooltipPosition?: TooltipPosition;
+  tooltipDelay?: number;
 };
 
 const IconActionButton = React.forwardRef<
   HTMLButtonElement,
   IconActionButtonProps
->(({ className, tone = "neutral", type = "button", ...props }, ref) => (
-  <button
-    ref={ref}
-    type={type}
-    className={cn(toneClassMap[tone], className)}
-    {...props}
-  />
-));
+>(
+  (
+    {
+      className,
+      tone = "neutral",
+      type = "button",
+      tooltip,
+      tooltipPosition,
+      tooltipDelay,
+      ...props
+    },
+    ref
+  ) => {
+    const buttonElement = (
+      <button
+        ref={ref}
+        type={type}
+        {...getTooltipAttributes(tooltip, tooltipPosition)}
+        data-tooltip-delay={tooltip ? tooltipDelay : undefined}
+        className={cn(toneClassMap[tone], className)}
+        {...props}
+      />
+    );
+
+    if (!tooltip) {
+      return buttonElement;
+    }
+
+    return buttonElement;
+  }
+);
 
 IconActionButton.displayName = "IconActionButton";
 

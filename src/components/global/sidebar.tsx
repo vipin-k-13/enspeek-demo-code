@@ -11,7 +11,6 @@ import {
 import type { AppDispatch, RootState } from "../../store/store";
 import { cn } from "../../utils";
 import { resetStudyInfo } from "../../store/CrosstabStudySlice";
-import { Tooltip } from "../ui/Tooltip";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -62,26 +61,26 @@ const Sidebar: React.FC = () => {
               ? pathname === "/"
               : pathname === path || pathname.startsWith(path + "/");
           return (
-            <Tooltip key={path} content={title} position="right">
-              <button
-                type="button"
-                data-test-id={title}
-                className={cn(
-                  "questionnaire-sidebar-item",
-                  isActive && "questionnaire-sidebar-item-active"
-                )}
-                onClick={() => {
-                  if (path == "/") {
-                    dispatch(resetStudyInfo());
-                  }
-                  navigate(path, {
-                    state: path !== "/" ? { studyID: state?.studyID } : null,
-                  });
-                }}
-              >
-                {icon}
-              </button>
-            </Tooltip>
+            <button
+              key={path}
+              type="button"
+              title={title}
+              data-test-id={title}
+              className={cn(
+                "questionnaire-sidebar-item",
+                isActive && "questionnaire-sidebar-item-active"
+              )}
+              onClick={() => {
+                if (path == "/") {
+                  dispatch(resetStudyInfo());
+                }
+                navigate(path, {
+                  state: path !== "/" ? { studyID: state?.studyID } : null,
+                });
+              }}
+            >
+              {icon}
+            </button>
           );
         })}
       </div>

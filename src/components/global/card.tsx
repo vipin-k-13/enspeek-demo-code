@@ -22,7 +22,6 @@ import {
   LuTrash2,
 } from "react-icons/lu";
 import { getStudyStateTheme } from "../../utils/studyStateTheme";
-import { Tooltip } from "../ui/Tooltip";
 
 type StudyCardProps = {
   id: string;
@@ -149,16 +148,15 @@ export const StudyCard: React.FC<StudyCardProps> = ({
         <div className={cn("absolute bottom-3 left-0 top-3 w-[3px] rounded-r-full opacity-0 transition-opacity duration-200 group-hover:opacity-100", stateTheme.accentClass)} />
         <div className="mb-2 flex items-start justify-between gap-2">
           <div className="flex items-start gap-2">
-            <Tooltip content={displayOwnerName} position="right">
-              <span
-                className={cn(
-                  "mt-0.5 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-semibold uppercase shadow-sm",
-                  stateTheme.avatarClass
-                )}
-              >
-                {initials}
-              </span>
-            </Tooltip>
+            <span
+              title={displayOwnerName}
+              className={cn(
+                "mt-0.5 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-semibold uppercase shadow-sm",
+                stateTheme.avatarClass
+              )}
+            >
+              {initials}
+            </span>
             <div className="min-w-0 flex-1">
                 <h3
                   data-test-id={name}

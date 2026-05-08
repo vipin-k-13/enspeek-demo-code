@@ -7,7 +7,6 @@ import { setLogic, setValidateLogic } from "../../store/CrosstabSlice";
 import type { AppDispatch, RootState } from "../../store/store";
 import { setLogicData } from "../../store/CrossTabDataSlice";
 import { useLocation } from "react-router";
-import { Tooltip } from "../ui/Tooltip";
 import IconActionButton from "../ui/IconActionButton";
 import Select from "../ui/Select";
 
@@ -255,53 +254,48 @@ export default function BannerLogic({
           <div className="flex items-center gap-2">
             {row.type === "main" && (
               <>
-                <Tooltip content="Reset all" position="top">
-                  <IconActionButton
-                    tone="neutral"
-                    onClick={resetAllValues}
-                  >
-                    <FaRotateLeft />
-                  </IconActionButton>
-                </Tooltip>
-                <Tooltip content="Add simple row" position="top">
-                  <IconActionButton
-                    tone="primary"
-                    onClick={addSimpleRow}
-                  >
-                    <FaPlus />
-                  </IconActionButton>
-                </Tooltip>
+                <IconActionButton
+                  tone="neutral"
+                  tooltip="Reset all"
+                  onClick={resetAllValues}
+                >
+                  <FaRotateLeft />
+                </IconActionButton>
+                <IconActionButton
+                  tone="primary"
+                  tooltip="Add simple row"
+                  onClick={addSimpleRow}
+                >
+                  <FaPlus />
+                </IconActionButton>
               </>
             )}
             {row.type === "condition" && (
               <>
-                <Tooltip content="Reset this row" position="top">
-                  <IconActionButton
-                    tone="neutral"
-                    onClick={() => resetRow(row.id)}
-                  >
-                    <FaRotateLeft />
-                  </IconActionButton>
-                </Tooltip>
-                <Tooltip content="Delete row" position="top">
-                  <IconActionButton
-                    tone="danger"
-                    onClick={() => deleteRow(row.id)}
-                  >
-                    <LuTrash2 className="h-4 w-4" />
-                  </IconActionButton>
-                </Tooltip>
-              </>
-            )}
-            {row.type === "simple" && (
-              <Tooltip content="Delete row" position="top">
+                <IconActionButton
+                  tone="neutral"
+                  tooltip="Reset this row"
+                  onClick={() => resetRow(row.id)}
+                >
+                  <FaRotateLeft />
+                </IconActionButton>
                 <IconActionButton
                   tone="danger"
+                  tooltip="Delete row"
                   onClick={() => deleteRow(row.id)}
                 >
                   <LuTrash2 className="h-4 w-4" />
                 </IconActionButton>
-              </Tooltip>
+              </>
+            )}
+            {row.type === "simple" && (
+              <IconActionButton
+                tone="danger"
+                tooltip="Delete row"
+                onClick={() => deleteRow(row.id)}
+              >
+                <LuTrash2 className="h-4 w-4" />
+              </IconActionButton>
             )}
           </div>
         </div>

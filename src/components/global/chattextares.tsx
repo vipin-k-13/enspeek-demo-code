@@ -8,7 +8,6 @@ import {
   setMessage,
   setMessages,
 } from "../../store/ChatSlice";
-import { Tooltip } from "../ui/Tooltip";
 import { cn, handleKeyPress } from "../../utils";
 import { LuMessageCircle } from "react-icons/lu";
 import { useLocation } from "react-router";
@@ -111,16 +110,15 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
     <>
       {!isChatOpen && !isPanelPlacement && (
         <div className="fixed bottom-8 right-8 z-50">
-          <Tooltip content="Open Chat" position="left">
-            <Button
-              onClick={handleOpen}
-              varinat="theme"
-              size="icon"
-              className="h-14 w-14 text-white shadow-lg transition-all duration-300 hover:scale-110"
-            >
-              <LuMessageCircle className="w-6 h-6" />
-            </Button>
-          </Tooltip>
+          <Button
+            onClick={handleOpen}
+            varinat="theme"
+            size="icon"
+            tooltip="Open Chat"
+            className="h-14 w-14 text-white shadow-lg transition-all duration-300 hover:scale-110"
+          >
+            <LuMessageCircle className="w-6 h-6" />
+          </Button>
         </div>
       )}
 
@@ -148,16 +146,15 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
             searchable
             searchPlaceholder="Search commands..."
             trigger={
-              <Tooltip content="Quick Commands" position="top">
-                <Button
-                  type="button"
-                  varinat="ghost"
-                  size="icon"
-                  className="home-dropdown-icon-wrap h-10 w-10 shrink-0 rounded-full shadow-sm hover:opacity-90"
-                >
-                  <CiCircleList className="w-5 h-5" />
-                </Button>
-              </Tooltip>
+              <Button
+                type="button"
+                varinat="ghost"
+                size="icon"
+                tooltip="Quick Commands"
+                className="home-dropdown-icon-wrap h-10 w-10 shrink-0 rounded-full shadow-sm hover:opacity-90"
+              >
+                <CiCircleList className="w-5 h-5" />
+              </Button>
             }
             items={PromptsList()}
           />
@@ -178,27 +175,26 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
             )}
           />
           <div className="ml-auto flex items-center gap-2">
-            <Tooltip content="Send" position="bottom">
-              <Button
-                type="button"
-                varinat="theme"
-                size="icon"
-                disabled={isTyping}
-                data-test-id="SEND"
-                onClick={handleSubmit}
-                className={cn(
-                  "h-11 w-11 border-0 bg-gradient-to-r from-login-primary to-login-bg-end text-sm font-medium transition-all hover:brightness-95 disabled:opacity-75 shadow-[0_10px_24px_rgba(85,90,230,0.28)]",
-                  isPanelPlacement && "h-12 w-12 shadow-[0_12px_28px_rgba(85,90,230,0.24)]"
-                )}
-              >
-                {isTyping || pending ? (
-                  <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
-                ) : (
-                  <IoMdSend className="h-5 w-5 text-white" />
-                )}
-                <span className="sr-only">Send message</span>
-              </Button>
-            </Tooltip>
+            <Button
+              type="button"
+              varinat="theme"
+              size="icon"
+              tooltip="Send"
+              disabled={isTyping}
+              data-test-id="SEND"
+              onClick={handleSubmit}
+              className={cn(
+                "h-11 w-11 border-0 bg-gradient-to-r from-login-primary to-login-bg-end text-sm font-medium transition-all hover:brightness-95 disabled:opacity-75 shadow-[0_10px_24px_rgba(85,90,230,0.28)]",
+                isPanelPlacement && "h-12 w-12 shadow-[0_12px_28px_rgba(85,90,230,0.24)]"
+              )}
+            >
+              {isTyping || pending ? (
+                <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
+              ) : (
+                <IoMdSend className="h-5 w-5 text-white" />
+              )}
+              <span className="sr-only">Send message</span>
+            </Button>
           </div>
         </div>
       </div>

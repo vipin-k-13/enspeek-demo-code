@@ -20,7 +20,6 @@ import OptionLogic from "./OptionLogic";
 import { cn } from "../../../utils";
 import { formatQuestionTypeLabel } from "../../../utils/questionnaireTheme";
 import { useAccordionContext } from "../../ui/Accrodion/Accordion";
-import { Tooltip } from "../../ui/Tooltip";
 import IconActionButton from "../../ui/IconActionButton";
 
 interface QuestionAccordionItem {
@@ -76,27 +75,26 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
               </p>
             </div>
             <div className="hidden items-center gap-3 md:flex">
-              <Tooltip content="Add or edit logic" position="top">
-                <span
-                  role="button"
-                  tabIndex={0}
-                  className="questionnaire-label questionnaire-clickable inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm"
-                  onClick={(e) => {
+              <span
+                title="Add or edit logic"
+                role="button"
+                tabIndex={0}
+                className="questionnaire-label questionnaire-clickable inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openLogicModal();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
                     e.stopPropagation();
                     openLogicModal();
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      openLogicModal();
-                    }
-                  }}
-                >
-                  <LuGitBranchPlus className="h-4 w-4" />
-                  <span>Add/Edit Logic</span>
-                </span>
-              </Tooltip>
+                  }
+                }}
+              >
+                <LuGitBranchPlus className="h-4 w-4" />
+                <span>Add/Edit Logic</span>
+              </span>
               <span
                 className={cn(
                   "rounded-full px-3 py-1.5 text-sm font-semibold",
@@ -111,62 +109,60 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
                 className="questionnaire-muted flex items-center gap-2 md:gap-3"
                 onClick={(e) => e.stopPropagation()}
               >
-                <Tooltip content="Edit question" position="top">
-                  <IconActionButton
-                    tone="primary"
-                    data-test-id={`${Data.qID}_EDIT`}
-                    onClick={() => setEditData()}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setEditData();
-                      }
-                    }}
-                  >
-                    <LuPencilLine className="h-4 w-4" />
-                  </IconActionButton>
-                </Tooltip>
-                <Tooltip content="Copy question" position="top">
-                  <IconActionButton
-                    tone="primary"
-                    data-test-id={`${Data.qID}_COPY`}
-                    onClick={() => setIsCopyOpen(Data.qID, Data.qLabel)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setIsCopyOpen(Data.qID, Data.qLabel);
-                      }
-                    }}
-                  >
-                    <LuCopy className="h-4 w-4" />
-                  </IconActionButton>
-                </Tooltip>
-                <Tooltip content="Delete question" position="top">
-                  <IconActionButton
-                    tone="danger"
-                    data-test-id={`${Data.qID}_DELETE`}
-                    onClick={() => setIsDeleteOpen()}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setIsDeleteOpen();
-                      }
-                    }}
-                  >
-                    <LuTrash2 className="h-4 w-4" />
-                  </IconActionButton>
-                </Tooltip>
+                <IconActionButton
+                  tone="primary"
+                  tooltip="Edit question"
+                  data-test-id={`${Data.qID}_EDIT`}
+                  onClick={() => setEditData()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setEditData();
+                    }
+                  }}
+                >
+                  <LuPencilLine className="h-4 w-4" />
+                </IconActionButton>
+                <IconActionButton
+                  tone="primary"
+                  tooltip="Copy question"
+                  data-test-id={`${Data.qID}_COPY`}
+                  onClick={() => setIsCopyOpen(Data.qID, Data.qLabel)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setIsCopyOpen(Data.qID, Data.qLabel);
+                    }
+                  }}
+                >
+                  <LuCopy className="h-4 w-4" />
+                </IconActionButton>
+                <IconActionButton
+                  tone="danger"
+                  tooltip="Delete question"
+                  data-test-id={`${Data.qID}_DELETE`}
+                  onClick={() => setIsDeleteOpen()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setIsDeleteOpen();
+                    }
+                  }}
+                >
+                  <LuTrash2 className="h-4 w-4" />
+                </IconActionButton>
               </div>
             )}
-            <Tooltip content={expanded ? "Collapse question" : "Expand question"} position="top">
-              <div className="questionnaire-muted questionnaire-clickable shrink-0">
-                {expanded ? (
-                  <LuChevronDown className="h-5 w-5" />
-                ) : (
-                  <LuChevronRight className="h-5 w-5" />
-                )}
-              </div>
-            </Tooltip>
+            <div
+              title={expanded ? "Collapse question" : "Expand question"}
+              className="questionnaire-muted questionnaire-clickable shrink-0"
+            >
+              {expanded ? (
+                <LuChevronDown className="h-5 w-5" />
+              ) : (
+                <LuChevronRight className="h-5 w-5" />
+              )}
+            </div>
           </div>
         </div>
       </AccordionTrigger>

@@ -3,7 +3,6 @@ import Button from "../../ui/Button";
 import { LuPlus, LuTrash2 } from "react-icons/lu";
 import BannerLogic from "../../global/BannerLogic";
 import IconActionButton from "../../ui/IconActionButton";
-import { Tooltip } from "../../ui/Tooltip";
 
 interface ControlItem {
   id: number;
@@ -100,14 +99,13 @@ export default function AddCustomTableListModal({ rows, setRows }: Props) {
               </td>
               {rows.length > 1 && (
                 <td className="px-4 py-3 text-center align-middle">
-                  <Tooltip content="Delete row" position="top">
-                    <IconActionButton
-                      tone="danger"
-                      onClick={() => handleDeleteRow(rowIndex)}
-                    >
-                      <LuTrash2 className="h-4 w-4" />
-                    </IconActionButton>
-                  </Tooltip>
+                  <IconActionButton
+                    tone="danger"
+                    tooltip="Delete row"
+                    onClick={() => handleDeleteRow(rowIndex)}
+                  >
+                    <LuTrash2 className="h-4 w-4" />
+                  </IconActionButton>
                 </td>
               )}
             </tr>

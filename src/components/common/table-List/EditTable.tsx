@@ -10,7 +10,6 @@ import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import Select from "../../ui/Select";
 import IconActionButton from "../../ui/IconActionButton";
-import { Tooltip } from "../../ui/Tooltip";
 import Checkbox from "../../ui/Checkbox";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
@@ -252,20 +251,19 @@ export default function EditTableModal({
                       <span className="crosstab-title">{index + 1}.</span>{" "}
                       {item.pointLogic}
                     </span>
-                    <Tooltip content="Delete logic" position="top">
-                      <IconActionButton
-                        tone="danger"
-                        onClick={() =>
-                          setLogics((prev) =>
-                            prev.filter(
-                              (logic) => logic.pointLogic !== item.pointLogic
-                            )
+                    <IconActionButton
+                      tone="danger"
+                      tooltip="Delete logic"
+                      onClick={() =>
+                        setLogics((prev) =>
+                          prev.filter(
+                            (logic) => logic.pointLogic !== item.pointLogic
                           )
-                        }
-                      >
-                        <LuTrash2 className="h-4 w-4" />
-                      </IconActionButton>
-                    </Tooltip>
+                        )
+                      }
+                    >
+                      <LuTrash2 className="h-4 w-4" />
+                    </IconActionButton>
                   </div>
                 ))}
               </div>
@@ -347,14 +345,13 @@ export default function EditTableModal({
                       ) : null}
                     </td>
                     <td className="px-3 py-3">
-                      <Tooltip content="Delete row" position="top">
-                        <IconActionButton
-                          tone="danger"
-                          onClick={() => handleDeleteRow(row.id)}
-                        >
-                          <LuTrash2 className="h-4 w-4" />
-                        </IconActionButton>
-                      </Tooltip>
+                      <IconActionButton
+                        tone="danger"
+                        tooltip="Delete row"
+                        onClick={() => handleDeleteRow(row.id)}
+                      >
+                        <LuTrash2 className="h-4 w-4" />
+                      </IconActionButton>
                     </td>
                   </tr>
                 ))}
