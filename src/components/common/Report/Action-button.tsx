@@ -39,7 +39,6 @@ import {
 } from "../../../store/FiltersSlice";
 import { Link, useLocation } from "react-router";
 import { setSubgroupOn } from "../../../store/CrosstabSlice";
-import { Tooltip } from "../../ui/Tooltip";
 
 type ActionButtonProps = {
   showTableView: boolean;
@@ -238,77 +237,67 @@ const ActionButton: React.FC<ActionButtonProps> = ({
             Subgroups
           </Button>
           {subgroupOn && (
-            <Tooltip content="Configure subgroups" position="top">
-              <Button
-                data-test-id="GROUP_TOGGLE_ON"
-                size="icon"
-                className="report-toolbar-btn bg-[var(--color-study-progress)] text-white hover:bg-[var(--color-study-progress)] hover:text-white hover:opacity-90"
-                onClick={() => {
-                  setshowSubgroupModal(true);
-                }}
-              >
-                <LuListFilter />
-              </Button>
-            </Tooltip>
+            <Button
+              data-test-id="GROUP_TOGGLE_ON"
+              size="icon"
+              tooltip="Configure subgroups"
+              className="report-toolbar-btn bg-[var(--color-study-progress)] text-white hover:bg-[var(--color-study-progress)] hover:text-white hover:opacity-90"
+              onClick={() => {
+                setshowSubgroupModal(true);
+              }}
+            >
+              <LuListFilter />
+            </Button>
           )}
         </div>
         <div className="relative" ref={selectDropdownRef}>
-          <Tooltip content="Select report questions" position="top">
-            <Button
-              data-test-id="SELECTOR"
-              onClick={() => setShowPointerDropdown((prev) => !prev)}
-              size="icon"
-              className="report-toolbar-btn bg-[var(--color-brand-primary-soft)] text-white hover:bg-login-primary"
-            >
-              <LuHand />
-            </Button>
-          </Tooltip>
+          <Button
+            data-test-id="SELECTOR"
+            tooltip="Select report questions"
+            onClick={() => setShowPointerDropdown((prev) => !prev)}
+            size="icon"
+            className="report-toolbar-btn bg-[var(--color-brand-primary-soft)] text-white hover:bg-login-primary"
+          >
+            <LuHand />
+          </Button>
           {showPointerDropdown && (
             <div className="absolute right-0 z-20 mt-2">
               <DropDown showCheckbox={true} Data={pointerDropdownData} />
             </div>
           )}
         </div>
-        <Tooltip
-          content={
-            showTableView ? "View chart mode" : "View table mode"
-          }
-          position="top"
+        <Button
+          data-test-id="TABLE"
+          size="icon"
+          tooltip={showTableView ? "View chart mode" : "View table mode"}
+          className="report-toolbar-btn report-title border home-border-soft bg-white hover:bg-white hover:text-[var(--color-text-strong)]"
+          onClick={() => setShowTableView((prev) => !prev)}
         >
-          <Button
-            data-test-id="TABLE"
-            size="icon"
-            className="report-toolbar-btn report-title border home-border-soft bg-white hover:bg-white hover:text-[var(--color-text-strong)]"
-            onClick={() => setShowTableView((prev) => !prev)}
-          >
-            {showTableView ? <LuChartColumnBig /> : <LuTable2 />}
-          </Button>
-        </Tooltip>
-        <Tooltip content="Filters" position="top">
-          <Button
-            size="icon"
-            className="report-toolbar-btn bg-[var(--color-brand-info)] text-white hover:opacity-90"
-            onClick={() => {
-              setShowFilter(true);
-            }}
-            disabled
-          >
-            <LuFilter />
-          </Button>
-        </Tooltip>
+          {showTableView ? <LuChartColumnBig /> : <LuTable2 />}
+        </Button>
+        <Button
+          size="icon"
+          tooltip="Filters"
+          className="report-toolbar-btn bg-[var(--color-brand-info)] text-white hover:opacity-90"
+          onClick={() => {
+            setShowFilter(true);
+          }}
+          disabled
+        >
+          <LuFilter />
+        </Button>
         <div className="relative" ref={dropdownRef}>
-          <Tooltip content="More actions" position="top">
-            <Button
-              data-test-id="MORE_ACTIONS"
-              size="icon"
-              className="report-toolbar-btn bg-[var(--color-questionnaire-multi)] text-white hover:bg-[var(--color-questionnaire-multi)] hover:text-white hover:opacity-90"
-              onClick={() => {
-                setShowMoreDropdown((prev) => !prev);
-              }}
-            >
-              <LuEllipsis />
-            </Button>
-          </Tooltip>
+          <Button
+            data-test-id="MORE_ACTIONS"
+            size="icon"
+            tooltip="More actions"
+            className="report-toolbar-btn bg-[var(--color-questionnaire-multi)] text-white hover:bg-[var(--color-questionnaire-multi)] hover:text-white hover:opacity-90"
+            onClick={() => {
+              setShowMoreDropdown((prev) => !prev);
+            }}
+          >
+            <LuEllipsis />
+          </Button>
           {showMoreDropdown && (
             <div className="absolute right-0 mt-2 z-10">
               <DropDown Data={MoreDropdownData} className="w-72 z-20" />

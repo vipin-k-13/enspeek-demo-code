@@ -1,5 +1,6 @@
 import type { FC } from "react";
 import Checkbox from "../../ui/Checkbox";
+import { formatRichText } from "../../../utils";
 
 
 interface Question_FormatProps {
@@ -27,7 +28,7 @@ const Question_Format: FC<Question_FormatProps> = ({ questions = [], instruction
                     </ul>
                 </div>
             ))}
-            <div className="break-words" dangerouslySetInnerHTML={{ __html: instruction }} />
+            <div className="break-words" dangerouslySetInnerHTML={{ __html: formatRichText(instruction) }} />
         </div>
     );
 };

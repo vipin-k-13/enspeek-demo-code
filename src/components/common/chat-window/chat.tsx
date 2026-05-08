@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { setMessages } from "../../../store/ChatSlice";
 import { useLocation } from "react-router";
-import { cn } from "../../../utils";
+import { cn, formatRichText } from "../../../utils";
 import { FaChartBar, FaCopy, FaExpandArrowsAlt, FaTable } from "react-icons/fa";
 import SingleSelectChart from "../Report/Charts";
 import TableForm from "../Report/TableForm";
@@ -14,7 +14,6 @@ import TableAndChartModal from "../Report/TableAndChartModal";
 import TableModal from "../Crosstab/TableModal";
 import { toast } from "sonner";
 import { PRIMARY_CHART_COLOR } from "../../../utils/chartColors";
-import { Tooltip } from "../../ui/Tooltip";
 import { getFullName, getInitials } from "../../../utils";
 import { LuBotMessageSquare, LuSparkles } from "react-icons/lu";
 import Button from "../../ui/Button";
@@ -99,8 +98,8 @@ const ChatWindow: React.FC<{
         <div
           className={cn(
             isHomePageSurface
-              ? "mx-auto w-[min(94%,1120px)] pb-[170px] pt-4 md:pb-[184px] md:pt-6"
-              : "px-4 pb-36 pt-4 md:px-6 md:pb-40 md:pt-6"
+              ? "mx-auto w-[min(94%,1120px)] pb-28 pt-4 md:pt-6"
+              : "px-4 pb-3 pt-4 md:px-6 md:pt-6"
           )}
         >
         {messages.map((msg, index) => (
@@ -118,21 +117,17 @@ const ChatWindow: React.FC<{
                 msg.sender === "user" && "flex-row-reverse"
               )}
             >
-              <Tooltip
-                content={msg.sender === "user" ? fullName : "Enspeek AI"}
-                position={msg.sender === "user" ? "left" : "right"}
+              <div
+                title={msg.sender === "user" ? fullName : "Enspeek AI"}
+                className={cn(
+                  "mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold",
+                  msg.sender === "user"
+                    ? "home-avatar-user"
+                    : "home-avatar-ai"
+                )}
               >
-                <div
-                  className={cn(
-                    "mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold",
-                    msg.sender === "user"
-                      ? "home-avatar-user"
-                      : "home-avatar-ai"
-                  )}
-                >
-                  {msg.sender === "user" ? userInitials : "AI"}
-                </div>
-              </Tooltip>
+                {msg.sender === "user" ? userInitials : "AI"}
+              </div>
               <div
                 className={
                   msg.sdata || msg.crosstab
@@ -148,7 +143,7 @@ const ChatWindow: React.FC<{
               {(!msg.questions || msg.questions.add) && !msg.sdata && (
                 <div
                   className="break-words text-[15px] leading-7"
-                  dangerouslySetInnerHTML={{ __html: msg.text }}
+                  dangerouslySetInnerHTML={{ __html: formatRichText(msg.text) }}
                 />
               )}
               {Array.isArray(msg.questions) &&
@@ -156,7 +151,7 @@ const ChatWindow: React.FC<{
                 !msg.sdata && (
                   <div
                     className="break-words text-[15px] leading-7"
-                    dangerouslySetInnerHTML={{ __html: msg.text }}
+                    dangerouslySetInnerHTML={{ __html: formatRichText(msg.text) }}
                   />
                 )}
               {msg.questions && !msg.questions.add && (
@@ -405,20 +400,19 @@ const ChatWindow: React.FC<{
                       🔗 Click to view survey
                     </a>
 
-                    <Tooltip content="Copy survey link" position="top">
-                      <IconActionButton
-                        onClick={() => {
-                          if (msg.liveLink) {
-                            navigator.clipboard.writeText(msg.liveLink);
-                          }
-                          toast.success("Survey link copied to clipboard!");
-                        }}
-                        tone="neutral"
-                        className="theme-text-muted"
-                      >
-                        <FaCopy />
-                      </IconActionButton>
-                    </Tooltip>
+                    <IconActionButton
+                      tooltip="Copy survey link"
+                      onClick={() => {
+                        if (msg.liveLink) {
+                          navigator.clipboard.writeText(msg.liveLink);
+                        }
+                        toast.success("Survey link copied to clipboard!");
+                      }}
+                      tone="neutral"
+                      className="theme-text-muted"
+                    >
+                      <FaCopy />
+                    </IconActionButton>
                   </div>
                 )}
               </>
@@ -428,11 +422,7 @@ const ChatWindow: React.FC<{
         ))}
 
         {(isTyping || pending) && (
-          <TypingIndicator
-            size="md"
-            dotColor="bg-primary/60"
-            textColor="text-gray-600"
-          />
+          <TypingIndicator />
         )}
         {messages.length === 0 && !isTyping && (
           <div className="flex h-full min-h-[320px] flex-col items-center justify-center px-6 text-center">

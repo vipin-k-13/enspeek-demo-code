@@ -4,7 +4,6 @@ import { MdCancel } from "react-icons/md";
 import { toast } from "sonner";
 import { useSetQuota } from "./SurveyApi";
 import { LuCircleCheck, LuCircleX, LuClock3, LuPencilLine } from "react-icons/lu";
-import { Tooltip } from "../../ui/Tooltip";
 import IconActionButton from "../../ui/IconActionButton";
 import Input from "../../ui/Input";
 
@@ -57,14 +56,13 @@ const Quota: React.FC<QuotaProps> = ({
                 <span className="questionnaire-heading text-sm font-bold">
                   {isSetQuotaPending ? "Updating..." : editTotal}
                 </span>
-                <Tooltip content="Edit total quota" position="top">
-                  <IconActionButton
-                    tone="primary"
-                    onClick={() => setIsEditingTotal(true)}
-                  >
-                    <LuPencilLine size={16} />
-                  </IconActionButton>
-                </Tooltip>
+                <IconActionButton
+                  tone="primary"
+                  tooltip="Edit total quota"
+                  onClick={() => setIsEditingTotal(true)}
+                >
+                  <LuPencilLine size={16} />
+                </IconActionButton>
               </div>
             ) : (
               <div className="flex items-center justify-end gap-2">
@@ -75,22 +73,20 @@ const Quota: React.FC<QuotaProps> = ({
                   onChange={(e) => setEditTotal(Number(e.target.value))}
                   className="w-20 rounded-xl px-3 py-2 text-sm"
                 />
-                <Tooltip content="Set total quota" position="top">
-                  <IconActionButton
-                    tone="success"
-                    onClick={handleSaveTotal}
-                  >
-                    <AiOutlineSave size={18} />
-                  </IconActionButton>
-                </Tooltip>
-                <Tooltip content="Cancel" position="top">
-                  <IconActionButton
-                    tone="danger"
-                    onClick={() => setIsEditingTotal(false)}
-                  >
-                    <MdCancel size={18} />
-                  </IconActionButton>
-                </Tooltip>
+                <IconActionButton
+                  tone="success"
+                  tooltip="Set total quota"
+                  onClick={handleSaveTotal}
+                >
+                  <AiOutlineSave size={18} />
+                </IconActionButton>
+                <IconActionButton
+                  tone="danger"
+                  tooltip="Cancel"
+                  onClick={() => setIsEditingTotal(false)}
+                >
+                  <MdCancel size={18} />
+                </IconActionButton>
               </div>
             )}
           </div>

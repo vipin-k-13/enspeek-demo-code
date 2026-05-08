@@ -8,7 +8,6 @@ import type { AppDispatch, RootState } from "../../store/store";
 import { setMessages } from "../../store/ChatSlice";
 import DropDown from "./DropDown";
 import Modal from "../ui/Modal";
-import { Tooltip } from "../ui/Tooltip";
 import { cn, getFullName, getInitials } from "../../utils";
 import Button from "../ui/Button";
 
@@ -95,14 +94,13 @@ const Header = () => {
               {fullName}
             </span>
           )}
-          <Tooltip content={fullName} position="bottom">
-            <div
-              data-test-id="PROFILE"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-login-primary text-sm font-semibold text-white"
-            >
-              {initials}
-            </div>
-          </Tooltip>
+          <div
+            title={fullName}
+            data-test-id="PROFILE"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-login-primary text-sm font-semibold text-white"
+          >
+            {initials}
+          </div>
           <LuChevronDown className="home-muted" size={18} />
         </div>
         {dropdownOpen && (

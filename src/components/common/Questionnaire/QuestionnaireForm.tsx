@@ -15,7 +15,6 @@ import { setQType } from "../../../store/TriggerSlice";
 import { setChatOpen } from "../../../store/ChatSlice";
 import { useRI } from "./Api";
 import { LuChevronDown, LuGripVertical, LuSave } from "react-icons/lu";
-import { Tooltip } from "../../ui/Tooltip";
 
 interface QuestionnaireForm {
   onSubmit: (e: string) => void;
@@ -312,18 +311,17 @@ const QuestionnaireForm: React.FC<QuestionnaireForm> = ({
               >
                 Close
               </Button>
-              <Tooltip content="Collapse" position="top">
-                <Button
-                  type="button"
-                  aria-label="Close edit question"
-                  varinat="secondary"
-                  size="icon"
-                  className="questionnaire-muted shadow-none"
-                  onClick={onClose}
-                >
-                  <LuChevronDown className="h-5 w-5" />
-                </Button>
-              </Tooltip>
+              <Button
+                type="button"
+                aria-label="Close edit question"
+                varinat="secondary"
+                size="icon"
+                tooltip="Collapse"
+                className="questionnaire-muted shadow-none"
+                onClick={onClose}
+              >
+                <LuChevronDown className="h-5 w-5" />
+              </Button>
             </div>
           </div>
         </div>

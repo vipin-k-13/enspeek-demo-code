@@ -9,7 +9,6 @@ import { setSubmitItems } from "../../../store/QuestionSlice";
 import { TbRefresh } from "react-icons/tb";
 import { LuBan, LuChevronDown } from "react-icons/lu";
 import Button from "../../ui/Button";
-import { Tooltip } from "../../ui/Tooltip";
 import IconActionButton from "../../ui/IconActionButton";
 import Select from "../../ui/Select";
 
@@ -182,62 +181,53 @@ export default function OptionLogic({
       {logic.map((row, idx) => (
         <div key={row.row} className="flex items-center">
           <div className="flex flex-wrap items-center gap-3">
-             {(row.value || row.terminate) && (
-              <Tooltip content="Reset logic" position="top">
-                <IconActionButton
-                  type="button"
-                  tone="neutral"
-                  onClick={() => handleReset(idx)}
-                >
-                  <TbRefresh className="h-4 w-4" />
-                </IconActionButton>
-              </Tooltip>
-            )}
-            <Tooltip
-              content={
-                row.terminate ? "Remove termination" : "Apply termination"
-              }
-              position="top"
-            >
-              <Button
+            {(row.value || row.terminate) && (
+              <IconActionButton
                 type="button"
-                varinat={row.terminate ? "danger" : "outline"}
-                size="sm"
-                onClick={() => toggleTerminate(idx)}
-                disabled={!!row.value}
-                className={row.terminate ? "questionnaire-logic-chip-danger" : "questionnaire-logic-chip-muted"}
+                tone="neutral"
+                tooltip="Reset logic"
+                onClick={() => handleReset(idx)}
               >
-                <LuBan className="h-4 w-4" />
-                <span>{row.terminate ? "Termination Applied" : "Apply Termination"}</span>
-              </Button>
-            </Tooltip>
-
-            <Tooltip
-              content={row.value?.trim() ? "Update skip logic" : "Apply skip logic"}
-              position="top"
+                <TbRefresh className="h-4 w-4" />
+              </IconActionButton>
+            )}
+            <Button
+              type="button"
+              varinat={row.terminate ? "danger" : "outline"}
+              size="sm"
+              tooltip={row.terminate ? "Remove termination" : "Apply termination"}
+              onClick={() => toggleTerminate(idx)}
+              disabled={!!row.value}
+              className={row.terminate ? "questionnaire-logic-chip-danger" : "questionnaire-logic-chip-muted"}
             >
-              <div className="relative min-w-[144px]">
-                <Select
-                  variant="questionnaire"
-                  className={`w-full rounded-full py-2 pl-3 pr-9 text-sm font-semibold ${
-                    row.value?.trim() ? "questionnaire-logic-select-active" : ""
-                  } ${row.terminate ? "opacity-50 cursor-not-allowed" : ""}`}
-                  value={row.value}
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                    handleLogicChange(idx, e.target.value)
-                  }
-                  disabled={row.terminate}
-                >
-                  <option value="">Skip to</option>
-                  {questionList?.map((opt) => (
-                    <option key={opt.qID} value={opt.qID}>
-                      SKIP TO {opt.qID}
-                    </option>
-                  ))}
-                </Select>
-                <LuChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 questionnaire-muted" />
-              </div>
-            </Tooltip>
+              <LuBan className="h-4 w-4" />
+              <span>{row.terminate ? "Termination Applied" : "Apply Termination"}</span>
+            </Button>
+
+            <div
+              title={row.value?.trim() ? "Update skip logic" : "Apply skip logic"}
+              className="relative min-w-[144px]"
+            >
+              <Select
+                variant="questionnaire"
+                className={`w-full rounded-full py-2 pl-3 pr-9 text-sm font-semibold ${
+                  row.value?.trim() ? "questionnaire-logic-select-active" : ""
+                } ${row.terminate ? "opacity-50 cursor-not-allowed" : ""}`}
+                value={row.value}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleLogicChange(idx, e.target.value)
+                }
+                disabled={row.terminate}
+              >
+                <option value="">Skip to</option>
+                {questionList?.map((opt) => (
+                  <option key={opt.qID} value={opt.qID}>
+                    SKIP TO {opt.qID}
+                  </option>
+                ))}
+              </Select>
+              <LuChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 questionnaire-muted" />
+            </div>
           </div>
         </div>
       ))}
