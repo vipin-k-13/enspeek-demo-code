@@ -422,11 +422,7 @@ const ChatWindow: React.FC<{
         ))}
 
         {(isTyping || pending) && (
-          <TypingIndicator
-            size="md"
-            dotColor="bg-primary/60"
-            textColor="text-gray-600"
-          />
+          <TypingIndicator />
         )}
         {messages.length === 0 && !isTyping && (
           <div className="flex h-full min-h-[320px] flex-col items-center justify-center px-6 text-center">
