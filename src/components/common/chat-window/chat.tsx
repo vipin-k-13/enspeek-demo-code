@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import TypingIndicator from "./typing-indicator";
 import Question_Format from "./Question-format";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +19,8 @@ import { LuBotMessageSquare, LuSparkles } from "react-icons/lu";
 import Button from "../../ui/Button";
 import IconActionButton from "../../ui/IconActionButton";
 
+const RESPONSE_SCROLL_GAP = 12;
+
 const ChatWindow: React.FC<{
   surface?: "auto" | "page" | "card";
   scrollMode?: "internal" | "external";
@@ -32,10 +34,108 @@ const ChatWindow: React.FC<{
   const { firstName, lastName } = useSelector((state: RootState) => state.user);
   const { pathname } = useLocation();
   const dispatch = useDispatch<AppDispatch>();
+  const rootRef = React.useRef<HTMLDivElement>(null);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const messageRowRefs = React.useRef<Array<HTMLDivElement | null>>([]);
+  const scrollTimersRef = React.useRef<number[]>([]);
+  const latestRowObserverRef = React.useRef<ResizeObserver | null>(null);
+  const previousChatStateRef = React.useRef({
+    messageCount: messages.length,
+    isTyping,
+    pending,
+  });
   const CHAT_HISTORY_KEY = "chat_history";
+  const findScrollableAncestor = (element: HTMLElement | null) => {
+    let current = element?.parentElement ?? null;
+
+    while (current) {
+      const style = window.getComputedStyle(current);
+      const canScroll =
+        /(auto|scroll)/.test(style.overflowY) &&
+        current.scrollHeight > current.clientHeight;
+
+      if (canScroll) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+
+    return null;
+  };
+  const getScrollElement = () => {
+    if (scrollMode === "internal") {
+      return scrollContainerRef.current;
+    }
+
+    return findScrollableAncestor(rootRef.current);
+  };
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const scrollElement = getScrollElement();
+
+    if (!scrollElement) return;
+    scrollElement.scrollTo({
+      top: scrollElement.scrollHeight,
+      behavior: "smooth",
+    });
+  };
+  const clearScheduledScrolls = () => {
+    scrollTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+    scrollTimersRef.current = [];
+  };
+  const disconnectLatestRowObserver = () => {
+    latestRowObserverRef.current?.disconnect();
+    latestRowObserverRef.current = null;
+  };
+  const scheduleScroll = (callback: () => void, delay = 0) => {
+    const timer = window.setTimeout(() => {
+      scrollTimersRef.current = scrollTimersRef.current.filter(
+        (activeTimer) => activeTimer !== timer
+      );
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(callback);
+      });
+    }, delay);
+    scrollTimersRef.current.push(timer);
+  };
+  const scheduleRowAlignment = (index: number) => {
+    clearScheduledScrolls();
+    disconnectLatestRowObserver();
+    [0, 80, 160, 280, 440].forEach((delay) => {
+      scheduleScroll(() => scrollMessageRowIntoView(index), delay);
+    });
+
+    const row = messageRowRefs.current[index];
+    if (!row || typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(() => {
+      scrollMessageRowIntoView(index);
+    });
+    observer.observe(row);
+    latestRowObserverRef.current = observer;
+
+    scheduleScroll(() => {
+      disconnectLatestRowObserver();
+    }, 900);
+  };
+  const scheduleBottomScroll = () => {
+    clearScheduledScrolls();
+    disconnectLatestRowObserver();
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(scrollToBottom);
+    });
+  };
+  const scrollMessageRowIntoView = (index: number) => {
+    const container = getScrollElement();
+    const row = messageRowRefs.current[index];
+
+    if (!container || !row) return;
+    const containerRect = container.getBoundingClientRect();
+    const rowRect = row.getBoundingClientRect();
+    const nextScrollTop =
+      container.scrollTop + (rowRect.top - containerRect.top) - RESPONSE_SCROLL_GAP;
+
+    container.scrollTop = Math.max(nextScrollTop, 0);
   };
   const hasLoadedFromStorage = React.useRef(false);
   const [selectedChart, setSelectedChart] = React.useState<number | null>(null);
@@ -76,12 +176,48 @@ const ChatWindow: React.FC<{
     if (hasLoadedFromStorage.current) {
       localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
     }
-    scrollToBottom();
-  }, [messages, isTyping]);
+  }, [messages]);
+
+  React.useEffect(() => {
+    return () => {
+      clearScheduledScrolls();
+      disconnectLatestRowObserver();
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    scheduleBottomScroll();
+  }, [pathname]);
+
+  useLayoutEffect(() => {
+    const previousState = previousChatStateRef.current;
+    const latestMessage = messages[messages.length - 1];
+    const messageAdded = messages.length > previousState.messageCount;
+    const thinkingStarted =
+      (isTyping || pending) && !(previousState.isTyping || previousState.pending);
+
+    if (messageAdded && latestMessage?.sender === "user") {
+      scheduleBottomScroll();
+    } else if (thinkingStarted) {
+      scheduleBottomScroll();
+    } else if (messageAdded && latestMessage) {
+      scheduleRowAlignment(messages.length - 1);
+    }
+
+    previousChatStateRef.current = {
+      messageCount: messages.length,
+      isTyping,
+      pending,
+    };
+  }, [isHomePageSurface, isTyping, messages, pending]);
 
   return (
-    <div className="z-50 flex h-full min-h-0 w-full max-w-full flex-col">
+    <div
+      ref={rootRef}
+      className="z-50 flex h-full min-h-0 w-full max-w-full flex-col"
+    >
       <div
+        ref={scrollContainerRef}
         className={cn(
           "min-h-0 flex-1",
           scrollMode === "internal" && "overflow-y-auto",
@@ -105,6 +241,9 @@ const ChatWindow: React.FC<{
         {messages.map((msg, index) => (
           <div
             key={index}
+            ref={(element) => {
+              messageRowRefs.current[index] = element;
+            }}
             data-test-id={`${msg.sender}-${index}`}
             className={cn(
               "mb-6 flex w-full",
