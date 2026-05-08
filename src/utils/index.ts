@@ -86,6 +86,26 @@ export const handleKeyPress = (
   }
 };
 
+const HTML_TAG_PATTERN = /<\/?[a-z][\s\S]*>/i;
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+export const formatRichText = (value?: string) => {
+  if (!value) return "";
+
+  if (HTML_TAG_PATTERN.test(value)) {
+    return value;
+  }
+
+  return escapeHtml(value).replace(/\r\n|\r|\n/g, "<br />");
+};
+
 export const ChartResponseReFactor = (Data: SurveyData) => {
   const questionId = Data.seq[0];
   const ChartData = Data[questionId as keyof typeof Data];

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { setMessages } from "../../../store/ChatSlice";
 import { useLocation } from "react-router";
-import { cn } from "../../../utils";
+import { cn, formatRichText } from "../../../utils";
 import { FaChartBar, FaCopy, FaExpandArrowsAlt, FaTable } from "react-icons/fa";
 import SingleSelectChart from "../Report/Charts";
 import TableForm from "../Report/TableForm";
@@ -143,7 +143,7 @@ const ChatWindow: React.FC<{
               {(!msg.questions || msg.questions.add) && !msg.sdata && (
                 <div
                   className="break-words text-[15px] leading-7"
-                  dangerouslySetInnerHTML={{ __html: msg.text }}
+                  dangerouslySetInnerHTML={{ __html: formatRichText(msg.text) }}
                 />
               )}
               {Array.isArray(msg.questions) &&
@@ -151,7 +151,7 @@ const ChatWindow: React.FC<{
                 !msg.sdata && (
                   <div
                     className="break-words text-[15px] leading-7"
-                    dangerouslySetInnerHTML={{ __html: msg.text }}
+                    dangerouslySetInnerHTML={{ __html: formatRichText(msg.text) }}
                   />
                 )}
               {msg.questions && !msg.questions.add && (
