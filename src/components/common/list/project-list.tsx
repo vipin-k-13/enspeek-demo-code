@@ -1,6 +1,4 @@
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "../../../services/apiService";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { resetQuestionGroup } from "../../../store/QuestionSlice";
@@ -9,13 +7,10 @@ import { cn, getTimeGreeting, normalizeDisplayName } from "../../../utils";
 import { promptCatalog } from "../../../utils/promptCatalog";
 import ChatWindow from "../chat-window/chat";
 import ChatTextArea from "../../global/chattextares";
-import {
-  LuBotMessageSquare,
-  LuCircleCheckBig,
-  LuSparkles,
-} from "react-icons/lu";
+import { LuBotMessageSquare, LuCircleCheckBig, LuSparkles } from "react-icons/lu";
 import { setChatOpen, setMessage } from "../../../store/ChatSlice";
 import Button from "../../ui/Button";
+import { useHomepageUserInfo } from "../../../api-network/homepage/query";
 
 export default function ProjectListing() {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,19 +20,7 @@ export default function ProjectListing() {
   }, [dispatch]);
 
   const user = useSelector((state: RootState) => state.user);
-
-  const { error: infoError } = useQuery({
-    queryKey: ["userInfo"],
-    queryFn: async () => {
-      const res = await apiRequest("post", "user/info", {
-        apiToken: user.apiToken,
-      });
-      return res.response;
-    },
-    enabled: !!user.apiToken,
-    refetchOnWindowFocus: false,
-    retry: 1,
-  });
+  const { userInfoError } = useHomepageUserInfo();
 
   const { messages } = useSelector((state: RootState) => state.chat);
   const firstName = user.firstName || "there";
@@ -63,7 +46,7 @@ export default function ProjectListing() {
     },
   ];
 
-  if (infoError) {
+  if (userInfoError) {
     return <Error />;
   }
 

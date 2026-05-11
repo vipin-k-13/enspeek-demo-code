@@ -38,8 +38,16 @@ const userSlice = createSlice({
         enabled: 0,
       };
     },
+    SyncUserInfo: (state, action: PayloadAction<Partial<User>>) => {
+      const nextState = {
+        ...state,
+        ...action.payload,
+      };
+      localStorage.setItem("user", encrypt(nextState));
+      return nextState;
+    },
   },
 });
 
-export const { Login, Logout } = userSlice.actions;
+export const { Login, Logout, SyncUserInfo } = userSlice.actions;
 export default userSlice.reducer;
