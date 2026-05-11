@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 const platform_url = import.meta.env.VITE_REACT_APP_API_URL || "";
 
-type ApiMethod = "get" | "post" | "put" | "delete";
+export type ApiMethod = "get" | "post" | "put" | "delete";
 
 
 const apiClient = axios.create({
@@ -24,14 +24,14 @@ apiClient.interceptors.request.use(
 );
 
 apiClient.interceptors.response.use(
-    (response) => {
-        const token = response.headers['access-token'];
-        if(token){
-          localStorage.setItem('token', token)
-        }
-        return response;
-    },
-    (error) => Promise.reject(error.response || error.message)
+  (response) => {
+    const token = response.headers['access-token'];
+    if (token) {
+      localStorage.setItem('token', token)
+    }
+    return response;
+  },
+  (error) => Promise.reject(error.response || error.message)
 );
 
 const handleSessionExpiration = (): void => {
@@ -47,12 +47,7 @@ export const apiRequest = async (
   responseType: "json" | "blob" = "json"
 ) => {
   try {
-    const response = await apiClient.request({
-      method,
-      url,
-      data,
-      responseType,
-    });
+    const response = await apiClient.request({ method, url, data, responseType });
     if (responseType === "json") {
       if (response?.data?.code === 200) {
         return response.data;
@@ -66,7 +61,7 @@ export const apiRequest = async (
         };
       }
     } else {
-      return { response: response.data, headers:response.headers };
+      return { response: response.data, headers: response.headers };
     }
   } catch (error: any) {
     if (error?.status === 401) {

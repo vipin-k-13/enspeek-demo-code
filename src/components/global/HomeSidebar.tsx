@@ -1,34 +1,23 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
 import { StudyCard } from "./card";
-import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "../../services/apiService";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { cn } from "../../utils";
-import { setFilterStudys, setStudys } from "../../store/CrosstabStudySlice";
+import { setFilterStudys } from "../../store/CrosstabStudySlice";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { HiSearch } from "react-icons/hi";
 import DeleteModel from "../common/list/DeleteModel";
 import ListingCopyModel from "./ListingCopyModal";
 import ArchiveModel from "../common/list/ArchiveModel";
-import { queryClient } from "../../App";
-import {
-  REFRESH_STUDY_LIST_EVENT,
-  type RefreshStudyListEventDetail,
-  type StudyListSelection,
-} from "../../utils/studyListRefresh";
+import { type StudyListSelection } from "../../utils/studyListRefresh";
+import { useStudyList } from "../../api-network/homepage/query";
 
 const HomeSidebar: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<
-    "myactive" | "allactive" | "isarchived"
-  >("myactive");
+  const [activeTab, setActiveTab] = useState<"myactive" | "allactive" | "isarchived">("myactive");
   const sidebarRef = useRef<HTMLDivElement | null>(null);
-  const { apiToken } = useSelector((state: RootState) => state.user);
-  const { Studys, FilterStudys } = useSelector(
-    (state: RootState) => state.study
-  );
+  const { Studys, FilterStudys } = useSelector((state: RootState) => state.study);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
@@ -40,64 +29,14 @@ const HomeSidebar: React.FC = () => {
     activeTabRef.current = activeTab;
   }, [activeTab]);
 
-  const fetchStudyListForSelection = useCallback(
-    async (selection: StudyListSelection) => {
-      const res = await apiRequest("post", "study/listing", {
-        apiToken: apiToken,
-        selection,
-        page: 1,
-      });
-      dispatch(setStudys(res.response.data));
-      dispatch(setFilterStudys(res.response.data));
-      queryClient.setQueryData(["studyList", selection], res.response);
-      return res.response;
-    },
-    [apiToken, dispatch]
-  );
-
-  const { data: studyList = {}, isLoading: isListLoading } = useQuery({
-    queryKey: ["studyList", activeTab],
-    queryFn: async () => fetchStudyListForSelection(activeTab),
-    enabled: !!apiToken,
-    refetchOnWindowFocus: false,
-    retry: 1,
-  });
-
-  useEffect(() => {
-    const handleRefreshStudyList = async (event: Event) => {
-      const detail = (event as CustomEvent<RefreshStudyListEventDetail>).detail;
-
-      const selection = detail?.selection ?? activeTabRef.current;
-
-      if (detail?.resetSearch) {
-        setPage(1);
-        setPageInput("1");
-        setSearchTerm("");
-      }
-
-      if (selection !== activeTabRef.current) {
-        setActiveTab(selection);
-      }
-
-      try {
-        await fetchStudyListForSelection(selection);
-      } finally {
-        detail?.resolve?.();
-      }
-    };
-
-    window.addEventListener(REFRESH_STUDY_LIST_EVENT, handleRefreshStudyList);
-    return () => {
-      window.removeEventListener(REFRESH_STUDY_LIST_EVENT, handleRefreshStudyList);
-    };
-  }, [fetchStudyListForSelection]);
+  const { studyList, isListLoading } = useStudyList(activeTab);
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       const filtered = searchTerm.trim()
         ? Studys.filter((banner) =>
-            banner.studyname.toLowerCase().includes(searchTerm.toLowerCase())
-          )
+          banner.studyname.toLowerCase().includes(searchTerm.toLowerCase())
+        )
         : Studys;
 
       dispatch(setFilterStudys(filtered));
@@ -147,23 +86,10 @@ const HomeSidebar: React.FC = () => {
 
   const totalPages = FilterStudys ? Math.ceil(FilterStudys.length / limit) : 0;
   const hasResults = FilterStudys?.length > 0;
-  const sidebarTitle =
-    activeTab === "myactive"
-      ? "My Studies"
-      : activeTab === "allactive"
-        ? "All Studies"
-        : "Archive Studies";
-  const activeCount =
-    studyList?.count?.active ??
-    Studys.filter((s: any) => !Boolean(s.isarchived)).length;
-  const archivedCount =
-    studyList?.count?.archived ??
-    Studys.filter((s: any) => Boolean(s.isarchived)).length;
-  const allCount = studyList?.count
-    ? (studyList.count.active || 0) +
-      (studyList.count.archived || 0) +
-      (studyList.count.shared || 0)
-    : Studys.length;
+  const sidebarTitle = activeTab === "myactive" ? "My Studies" : activeTab === "allactive" ? "All Studies" : "Archive Studies";
+  const activeCount = studyList?.count?.active ?? Studys.filter((s: any) => !Boolean(s.isarchived)).length;
+  const archivedCount = studyList?.count?.archived ?? Studys.filter((s: any) => Boolean(s.isarchived)).length;
+  const allCount = studyList?.count ? (studyList.count.active || 0) + (studyList.count.archived || 0) + (studyList.count.shared || 0) : Studys.length;
 
   const handleGoToPage = () => {
     const parsedPage = Number(pageInput);
@@ -180,125 +106,125 @@ const HomeSidebar: React.FC = () => {
           <p className="home-heading text-[18px] font-semibold">{sidebarTitle}</p>
         </div>
         <div className="home-panel-bg grid grid-cols-3 gap-1 rounded-full p-1 text-sm">
-        <Button
-          varinat={activeTab === "myactive" ? "theme" : "secondary"}
-          className={cn(
-            "px-2 text-center text-[13px] leading-none",
-            activeTab === "myactive"
-              ? "shadow-sm hover:bg-login-primary-hover"
-              : "home-muted border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-text-strong)]"
-          )}
-          onClick={() => setActiveTab("myactive")}
-        >
-          {`Active (${activeCount})`}
-        </Button>
-        <Button
-          varinat={activeTab === "allactive" ? "theme" : "secondary"}
-          className={cn(
-            "px-2 text-center text-[13px] leading-none",
-            activeTab === "allactive"
-              ? "shadow-sm hover:bg-login-primary-hover"
-              : "home-muted border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-text-strong)]"
-          )}
-          onClick={() => setActiveTab("allactive")}
-        >
-          {`All (${allCount})`}
-        </Button>
-        <Button
-          varinat={activeTab === "isarchived" ? "theme" : "secondary"}
-          className={cn(
-            "px-2 text-center text-[13px] leading-none",
-            activeTab === "isarchived"
-              ? "shadow-sm hover:bg-login-primary-hover"
-              : "home-muted border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-text-strong)]"
-          )}
-          onClick={() => setActiveTab("isarchived")}
-        >
-          {`Archive (${archivedCount})`}
-        </Button>
-      </div>
+          <Button
+            varinat={activeTab === "myactive" ? "theme" : "secondary"}
+            className={cn(
+              "px-2 text-center text-[13px] leading-none",
+              activeTab === "myactive"
+                ? "shadow-sm hover:bg-login-primary-hover"
+                : "home-muted border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-text-strong)]"
+            )}
+            onClick={() => setActiveTab("myactive")}
+          >
+            {`Active (${activeCount})`}
+          </Button>
+          <Button
+            varinat={activeTab === "allactive" ? "theme" : "secondary"}
+            className={cn(
+              "px-2 text-center text-[13px] leading-none",
+              activeTab === "allactive"
+                ? "shadow-sm hover:bg-login-primary-hover"
+                : "home-muted border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-text-strong)]"
+            )}
+            onClick={() => setActiveTab("allactive")}
+          >
+            {`All (${allCount})`}
+          </Button>
+          <Button
+            varinat={activeTab === "isarchived" ? "theme" : "secondary"}
+            className={cn(
+              "px-2 text-center text-[13px] leading-none",
+              activeTab === "isarchived"
+                ? "shadow-sm hover:bg-login-primary-hover"
+                : "home-muted border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-[var(--color-home-panel-soft)] hover:text-[var(--color-text-strong)]"
+            )}
+            onClick={() => setActiveTab("isarchived")}
+          >
+            {`Archive (${archivedCount})`}
+          </Button>
+        </div>
       </div>
       <div className="px-4 py-4">
-      <div className="home-search-bg flex h-10 items-center rounded-[18px] px-3">
-        <HiSearch className="home-muted h-4 w-4" />
-        <Input
-          placeholder="Search studies..."
-          className="home-text h-full border-0 bg-transparent px-2 text-sm home-chat-placeholder focus:outline-none focus-visible:ring-0"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+        <div className="home-search-bg flex h-10 items-center rounded-[18px] px-3">
+          <HiSearch className="home-muted h-4 w-4" />
+          <Input
+            placeholder="Search studies..."
+            className="home-text h-full border-0 bg-transparent px-2 text-sm home-chat-placeholder focus:outline-none focus-visible:ring-0"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-3">
-      <div className="flex w-full flex-col items-center gap-3">
-        {isListLoading ? (
-          <div className="flex items-center justify-center w-full h-full">
-            <AiOutlineLoading3Quarters
-              size={24}
-              className={cn("animate-spin text-action")}
-            />
-          </div>
-        ) : hasResults ? (
-          currentItems.map((item: any) => (
-            <StudyCard
-              key={item.studyid}
-              id={item.studyid}
-              name={item.studyname}
-              status={item.studystate}
-              owner={item.createdbyname}
-              createAt={item.createdon}
-              share={item?.isOwner ? item.isOwner : 0}
-              isArchived={item.isarchived}
-              launch={item.launch}
-              studystate={item.studystate}
-              activeTab={activeTab}
-            />
-          ))
-        ) : (
-          <div className="home-panel-soft-bg mt-8 w-full rounded-[20px] border home-border-soft px-4 py-8 text-center">
-            <h4 className="home-heading text-[16px] font-semibold">No study found</h4>
-            <p className="home-muted mt-2 text-sm">
-              Try another search term or switch the study tab.
-            </p>
-          </div>
-        )}
-      </div>
+        <div className="flex w-full flex-col items-center gap-3">
+          {isListLoading ? (
+            <div className="flex items-center justify-center w-full h-full">
+              <AiOutlineLoading3Quarters
+                size={24}
+                className={cn("animate-spin text-action")}
+              />
+            </div>
+          ) : hasResults ? (
+            currentItems.map((item: any) => (
+              <StudyCard
+                key={item.studyid}
+                id={item.studyid}
+                name={item.studyname}
+                status={item.studystate}
+                owner={item.createdbyname}
+                createAt={item.createdon}
+                share={item?.isOwner ? item.isOwner : 0}
+                isArchived={item.isarchived}
+                launch={item.launch}
+                studystate={item.studystate}
+                activeTab={activeTab}
+              />
+            ))
+          ) : (
+            <div className="home-panel-soft-bg mt-8 w-full rounded-[20px] border home-border-soft px-4 py-8 text-center">
+              <h4 className="home-heading text-[16px] font-semibold">No study found</h4>
+              <p className="home-muted mt-2 text-sm">
+                Try another search term or switch the study tab.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
       {totalPages > 1 && (
         <div className="mx-4 mb-4 mt-2 border-t home-border-soft pt-4">
           <div className="flex items-center justify-center gap-2">
-              <span className="home-muted text-sm font-medium">{`Page`}</span>
-              <Input
-                value={pageInput}
-                onChange={(e) => {
-                  const rawValue = e.target.value.replace(/\D/g, "");
-                  if (rawValue === "") {
-                    setPageInput("");
-                    return;
-                  }
-                  const parsedValue = Number(rawValue);
-                  const clampedValue = Math.min(
-                    Math.max(parsedValue, 1),
-                    totalPages
-                  );
-                  setPageInput(String(clampedValue));
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleGoToPage();
-                  }
-                }}
-                onBlur={handleGoToPage}
-                type="number"
-                min={1}
-                max={totalPages}
-                className="home-text h-10 w-20 rounded-xl border home-border bg-white px-3 text-center text-sm focus:outline-none"
-                placeholder="1"
-              />
-              <span className="home-muted text-sm font-medium">{`of ${totalPages}`}</span>
-              <Button type="button" varinat="theme" size="sm" onClick={handleGoToPage}>
-                Go
-              </Button>
+            <span className="home-muted text-sm font-medium">{`Page`}</span>
+            <Input
+              value={pageInput}
+              onChange={(e) => {
+                const rawValue = e.target.value.replace(/\D/g, "");
+                if (rawValue === "") {
+                  setPageInput("");
+                  return;
+                }
+                const parsedValue = Number(rawValue);
+                const clampedValue = Math.min(
+                  Math.max(parsedValue, 1),
+                  totalPages
+                );
+                setPageInput(String(clampedValue));
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleGoToPage();
+                }
+              }}
+              onBlur={handleGoToPage}
+              type="number"
+              min={1}
+              max={totalPages}
+              className="home-text h-10 w-20 rounded-xl border home-border bg-white px-3 text-center text-sm focus:outline-none"
+              placeholder="1"
+            />
+            <span className="home-muted text-sm font-medium">{`of ${totalPages}`}</span>
+            <Button type="button" varinat="theme" size="sm" onClick={handleGoToPage}>
+              Go
+            </Button>
           </div>
         </div>
       )}

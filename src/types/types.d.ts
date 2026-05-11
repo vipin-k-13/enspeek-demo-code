@@ -399,3 +399,11 @@ declare type QuesLogicPayload = {
     ];
   };
 };
+
+declare type QueryStructureProps = {
+  queryKey: string[];
+  queryFn: () => any;
+  enable?: boolean;
+  refetchOnWindowFocus?: boolean;
+  retry?: number;
+};
