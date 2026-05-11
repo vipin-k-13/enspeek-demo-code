@@ -18,7 +18,6 @@ import { cn, getTimeGreeting, normalizeDisplayName } from "../../../utils";
 import { setStudyInfo } from "../../../store/CrosstabStudySlice";
 import { setIsAddingQuestion } from "../../../store/TriggerSlice";
 import { useQtype } from "./Api";
-import { setChatOpen, setMessage } from "../../../store/ChatSlice";
 import { MdArrowForwardIos } from "react-icons/md";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
@@ -30,6 +29,7 @@ import {
 } from "react-icons/lu";
 import PageSubheader from "../../ui/PageSubheader";
 import Button from "../../ui/Button";
+import useAiChat from "../../../api-network/global/ai-chat";
 
 export default function QuestionList() {
   const navigate = useNavigate();
@@ -64,6 +64,7 @@ export default function QuestionList() {
   const firstName = user.firstName || "there";
   const normalizedFirstName = normalizeDisplayName(firstName);
   const greeting = getTimeGreeting();
+  const { openChat, openChatWithMessage } = useAiChat();
   const emptyStatePrompts = [
     {
       title: "Generate screening questions",
@@ -255,7 +256,7 @@ export default function QuestionList() {
               onSubmit={(CQID) => submit(CQID)}
               onClose={() => {
                 dispatch(setIsAddingQuestion(false));
-                dispatch(setChatOpen(true));
+                openChat();
                 setEditData(null);
               }}
               qType={qType}
@@ -296,10 +297,9 @@ export default function QuestionList() {
                           type="button"
                           varinat="outline"
                           size="sm"
-                          onClick={() => {
-                            dispatch(setChatOpen(true));
-                            dispatch(setMessage("Generate 5 questions about my study."));
-                          }}
+                          onClick={() =>
+                            openChatWithMessage("Generate 5 questions about my study.")
+                          }
                           className="mt-4 rounded-full home-muted shadow-sm hover:border-login-primary/30 hover:bg-login-primary/5"
                         >
                           Try:
@@ -314,10 +314,7 @@ export default function QuestionList() {
                               key={prompt.title}
                               type="button"
                               varinat="outline"
-                              onClick={() => {
-                                dispatch(setChatOpen(true));
-                                dispatch(setMessage(prompt.text));
-                              }}
+                              onClick={() => openChatWithMessage(prompt.text)}
                               className="home-panel-soft-bg questionnaire-border group h-auto w-full items-start justify-start whitespace-normal rounded-[20px] px-4 py-3 text-left leading-normal transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                             >
                               <span className="home-dropdown-icon-wrap flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl">

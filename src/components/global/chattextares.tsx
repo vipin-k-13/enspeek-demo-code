@@ -1,20 +1,14 @@
 import * as React from "react";
 import { IoMdSend } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../store/store";
-import {
-  setChatOpen,
-  setIsTyping,
-  setMessage,
-  setMessages,
-} from "../../store/ChatSlice";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
 import { cn, handleKeyPress } from "../../utils";
 import { LuMessageCircle } from "react-icons/lu";
 import { useLocation } from "react-router";
 import NewDropdown from "./NewDropDown";
 import PromptsList from "./PromptsList";
 import { CiCircleList } from "react-icons/ci";
-import { useChat } from "../common/chat-window/Api";
+import useAiChat from "../../api-network/global/ai-chat";
 import Button from "../ui/Button";
 
 interface ChatTextAreaProps {
@@ -25,36 +19,25 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
   placement = "floating",
 }) => {
   const internalTextareaRef = React.useRef<HTMLTextAreaElement>(null);
-  const { message, isTyping, messages, isChatOpen, pending } = useSelector(
+  const { isTyping, isChatOpen, pending } = useSelector(
     (state: RootState) => state.chat
   );
   const { pathname } = useLocation();
-  const dispatch = useDispatch<AppDispatch>();
   const isHome = pathname === "/";
   const isPanelPlacement = placement === "panel";
+  const { message, openChat, sendMessage, setDraftMessage } = useAiChat();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    dispatch(setMessage(e.target.value));
+    setDraftMessage(e.target.value);
   };
 
-  const { Chat } = useChat();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (message.trim() && !isTyping) {
-      const userMessage: any = {
-        text: message,
-        sender: "user",
-      };
-
-      dispatch(setMessages([...messages, userMessage]));
-      dispatch(setIsTyping(true));
-      Chat({ prompt: message });
-      dispatch(setMessage(""));
-    }
+    sendMessage();
   };
 
   const handleOpen = () => {
-    dispatch(setChatOpen(true));
+    openChat();
   };
 
   React.useLayoutEffect(() => {
@@ -88,7 +71,7 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
       event.preventDefault();
 
       if (!isChatOpen) {
-        dispatch(setChatOpen(true));
+        openChat();
       }
 
       requestAnimationFrame(() => {
@@ -104,7 +87,7 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
     return () => {
       window.removeEventListener("keydown", handleShortcutFocus);
     };
-  }, [dispatch, isChatOpen]);
+  }, [isChatOpen, openChat]);
 
   return (
     <>

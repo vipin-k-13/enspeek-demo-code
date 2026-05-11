@@ -1,44 +1,56 @@
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "../../../services/apiService";
-import { useDispatch, useSelector } from "react-redux";
-import { store, type AppDispatch, type RootState } from "../../../store/store";
-import { useLocation, useNavigate } from "react-router";
-import { getPageName } from "../../../utils/getPageName";
-import { queryClient } from "../../../App";
-import {
-  setFollowUp,
-  setIsTyping,
-  setMessages,
-  setPending,
-} from "../../../store/ChatSlice";
 import { useEffect } from "react";
-import { useProcessHook } from "../Report/ReportMutations";
-import { setSubmitItems } from "../../../store/QuestionSlice";
-import { REFRESH_STUDY_LIST_EVENT } from "../../../utils/studyListRefresh";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router";
+import { queryClient } from "../../App";
+import mutationStructure from "../mutation-template";
+import url from "../url";
+import { apiRequest } from "../../services/apiService";
+import { store, type AppDispatch, type RootState } from "../../store/store";
+import { setChatOpen, setFollowUp, setIsTyping, setMessage, setMessages, setPending } from "../../store/ChatSlice";
+import { getPageName } from "../../utils/getPageName";
+import { useProcessHook } from "../../components/common/Report/ReportMutations";
+import { setSubmitItems } from "../../store/QuestionSlice";
+import { REFRESH_STUDY_LIST_EVENT } from "../../utils/studyListRefresh";
 
 const MAX_RECALL_CHAIN_CALLS = 10;
 
 export const useChat = () => {
   const { pathname, state } = useLocation();
-  const studyID = state?.studyID;
-  const pageName = getPageName(pathname);
   const navigate = useNavigate();
-  const { apiToken } = useSelector((state: RootState) => state.user);
-  const { followUp, messages } = useSelector((state: RootState) => state.chat);
   const dispatch = useDispatch<AppDispatch>();
   const { Process } = useProcessHook();
+  const pageName = getPageName(pathname);
+  const studyID = state?.studyID;
+
+  const { apiToken } = useSelector((storeState: RootState) => storeState.user);
+  const { followUp, isChatOpen, isTyping, message, messages, pending } = useSelector((storeState: RootState) => storeState.chat);
 
   const getLatestMessages = () => store.getState().chat.messages;
 
-  const appendChatMessage = (message: any) => {
-    dispatch(setMessages([...getLatestMessages(), message]));
+  const appendChatMessage = (chatMessage: any) => {
+    dispatch(setMessages([...getLatestMessages(), chatMessage]));
+  };
+
+  const setDraftMessage = (value: string) => {
+    dispatch(setMessage(value));
+  };
+
+  const openChat = () => {
+    dispatch(setChatOpen(true));
+  };
+
+  const closeChat = () => {
+    dispatch(setChatOpen(false));
+  };
+
+  const openChatWithMessage = (value: string) => {
+    dispatch(setChatOpen(true));
+    dispatch(setMessage(value));
   };
 
   const requestRecallResponse = async () => {
-    const payload = studyID
-      ? { apiToken, studyID, recallFlag: 1 }
-      : { apiToken, recallFlag: 1 };
-    const res = await apiRequest("post", "studychatbot/chatStudy", payload);
+    const payload = studyID ? { apiToken, studyID, recallFlag: 1 } : { apiToken, recallFlag: 1 };
+    const res = await apiRequest(url.studyChatbot.method, url.studyChatbot.endpoint, payload);
     return res?.response;
   };
 
@@ -81,6 +93,20 @@ export const useChat = () => {
     });
   };
 
+  const { mutate: submitQuestionById } = mutationStructure({
+    mutationKey: ["questions", studyID],
+    mutationFn: async (questionId: string) => {
+      const res = await apiRequest(
+        url.questionView.method,
+        url.questionView.endpoint.replace(":qId", questionId), { apiToken, studyID }
+      );
+      return res.response;
+    },
+    onSuccess: (data: Question) => {
+      dispatch(setSubmitItems(data));
+    },
+  });
+
   const processChatResponse = async (data: any) => {
     if (!data) return;
 
@@ -94,18 +120,17 @@ export const useChat = () => {
       return;
     }
 
-    const aiMessage: any = {
+    appendChatMessage({
       text: data.message || "AI responded with no message.",
       sender: "ai",
       questions: data.questions,
       instruction: data.instruction,
       response: data.response || {},
       liveLink: data.liveLink,
-    };
-    appendChatMessage(aiMessage);
+    });
 
     if (data.opt === true && data.qid) {
-      submit(data.qid);
+      submitQuestionById(data.qid);
     }
 
     if (data.active && data.route) {
@@ -139,33 +164,14 @@ export const useChat = () => {
     }
   };
 
-  const { mutate: submit } = useMutation({
-    mutationKey: ["questions", state?.studyID],
-    mutationFn: async (CQID: string) => {
-      const res = await apiRequest("post", `questionnaire/view/${CQID}`, {
-        apiToken,
-        studyID,
-      });
-      return res.response;
-    },
-    onSuccess: (data: Question) => {
-      dispatch(setSubmitItems(data));
-    },
-  });
   const {
-    mutate: Chat,
+    mutate: requestChatResponse,
     isPending: isChatPending,
-    data,
-  } = useMutation({
-    mutationKey: ["chatBot"],
+    data: chatResponse,
+  } = mutationStructure({
+    mutationKey: ["chatBot", pageName, studyID],
     mutationFn: async (payload: { prompt: string }) => {
-      const res = await apiRequest("post", "studychatbot/chatStudy", {
-        apiToken: apiToken,
-        prompt: payload.prompt,
-        pageName: pageName,
-        followUp: followUp,
-        studyID,
-      });
+      const res = await apiRequest(url.studyChatbot.method, url.studyChatbot.endpoint, { apiToken, prompt: payload.prompt, pageName, followUp, studyID });
       return res.response;
     },
     onSuccess: async (data) => {
@@ -174,10 +180,7 @@ export const useChat = () => {
 
       await processChatResponse(currentResponse);
 
-      while (
-        totalCallsCompleted < MAX_RECALL_CHAIN_CALLS &&
-        shouldRequestRecall(currentResponse)
-      ) {
+      while (totalCallsCompleted < MAX_RECALL_CHAIN_CALLS && shouldRequestRecall(currentResponse)) {
         const recallResponse = await requestRecallResponse();
         if (!recallResponse) {
           break;
@@ -190,35 +193,64 @@ export const useChat = () => {
 
       dispatch(setIsTyping(false));
     },
-
     onError: () => {
-      const errorMessage: any = {
+      appendChatMessage({
         text: "❌ Failed to get response from AI. Please try again.",
         sender: "ai",
-      };
+      });
       dispatch(setIsTyping(false));
-      dispatch(setMessages([...messages, errorMessage]));
     },
   });
 
+  const sendMessage = (rawPrompt?: string) => {
+    const prompt = (rawPrompt ?? message).trim();
+
+    if (!prompt || isTyping || pending) {
+      return false;
+    }
+
+    appendChatMessage({
+      text: prompt,
+      sender: "user",
+    });
+    dispatch(setIsTyping(true));
+    requestChatResponse({ prompt });
+
+    if (rawPrompt === undefined) {
+      dispatch(setMessage(""));
+    }
+
+    return true;
+  };
+
   useEffect(() => {
     if (!followUp) return;
-    if (followUp !== "" && data && data.active) {
-      const userMessage: any = {
-        text: followUp,
-        sender: "user",
-      };
+
+    if (followUp !== "" && chatResponse && chatResponse.active) {
       dispatch(setFollowUp(""));
-      dispatch(setMessages([...messages, userMessage]));
-      setTimeout(() => {
-        Chat({ prompt: userMessage.text });
+      window.setTimeout(() => {
+        sendMessage(followUp);
       }, 1000);
     }
-  }, [data, followUp]);
+  }, [chatResponse, followUp]);
 
   useEffect(() => {
     dispatch(setPending(isChatPending));
-  }, [isChatPending, dispatch]);
+  }, [dispatch, isChatPending]);
 
-  return { Chat, isChatPending };
+  return {
+    closeChat,
+    isChatOpen,
+    isChatPending,
+    isTyping,
+    message,
+    messages,
+    openChat,
+    openChatWithMessage,
+    pending,
+    sendMessage,
+    setDraftMessage,
+  };
 };
+
+export default useChat;

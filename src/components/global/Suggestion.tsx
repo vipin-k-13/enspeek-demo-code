@@ -2,13 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import type { AppDispatch, RootState } from "../../store/store";
 import { setIsAddingQuestion, setQType } from "../../store/TriggerSlice";
-import {
-  setChatOpen,
-  setIsTyping,
-  setMessage,
-  setMessages,
-} from "../../store/ChatSlice";
-import { useChat } from "../common/chat-window/Api";
+import { setChatOpen } from "../../store/ChatSlice";
+import useAiChat from "../../api-network/global/ai-chat";
 import Button from "../ui/Button";
 
 type SuggestionAction = {
@@ -19,20 +14,9 @@ type SuggestionAction = {
 const Suggestion = () => {
   const { pathname } = useLocation();
   const { link, name } = useSelector((state: RootState) => state.study);
-  const { messages } = useSelector((state: RootState) => state.chat);
   const dispatch = useDispatch<AppDispatch>();
 
-  const { Chat } = useChat();
-
-  const handleDirectCall = (prompt: string) => {
-    const userMessage: any = {
-      text: prompt,
-      sender: "user",
-    };
-    dispatch(setMessages([...messages, userMessage]));
-    dispatch(setIsTyping(true));
-    Chat({ prompt });
-  };
+  const { sendMessage, setDraftMessage } = useAiChat();
 
   const renderSuggestionRow = (actions: SuggestionAction[]) => (
     <div className="hidden gap-1 md:flex lg:gap-3">
@@ -63,15 +47,15 @@ const Suggestion = () => {
       },
       {
         label: "Generate",
-        onClick: () => dispatch(setMessage("Generate questions [subject]")),
+        onClick: () => setDraftMessage("Generate questions [subject]"),
       },
       {
         label: "Remove",
-        onClick: () => dispatch(setMessage("Delete question [Q.no]")),
+        onClick: () => setDraftMessage("Delete question [Q.no]"),
       },
       {
         label: "Re-arrange",
-        onClick: () => dispatch(setMessage("Move [Q3] to [position/Q4]")),
+        onClick: () => setDraftMessage("Move [Q3] to [position/Q4]"),
       },
     ]);
   }
@@ -82,18 +66,18 @@ const Suggestion = () => {
     if (!link) {
       actions.push({
         label: "Activate",
-        onClick: () => dispatch(setMessage("Activate study")),
+        onClick: () => setDraftMessage("Activate study"),
       });
     }
 
     actions.push(
       {
         label: "Survey Link",
-        onClick: () => handleDirectCall("Give survey link"),
+        onClick: () => sendMessage("Give survey link"),
       },
       {
         label: "Test Link",
-        onClick: () => handleDirectCall("Give me test link"),
+        onClick: () => sendMessage("Give me test link"),
       }
     );
 
@@ -104,23 +88,23 @@ const Suggestion = () => {
     return renderSuggestionRow([
       {
         label: "Download PPT",
-        onClick: () => dispatch(setMessage("Download PPT")),
+        onClick: () => setDraftMessage("Download PPT"),
       },
       {
         label: "Download Excel",
-        onClick: () => dispatch(setMessage("Download Excel")),
+        onClick: () => setDraftMessage("Download Excel"),
       },
       {
         label: "Download SPSS",
-        onClick: () => dispatch(setMessage("Download SPSS")),
+        onClick: () => setDraftMessage("Download SPSS"),
       },
       {
         label: "Download Table",
-        onClick: () => dispatch(setMessage("Download table raw data")),
+        onClick: () => setDraftMessage("Download table raw data"),
       },
       {
         label: "Get Data",
-        onClick: () => dispatch(setMessage("Get data of [Qid]")),
+        onClick: () => setDraftMessage("Get data of [Qid]"),
       },
     ]);
   }
@@ -129,15 +113,15 @@ const Suggestion = () => {
     return renderSuggestionRow([
       {
         label: "Create Study",
-        onClick: () => dispatch(setMessage("create study [study name]")),
+        onClick: () => setDraftMessage("create study [study name]"),
       },
       {
         label: "Archived Study Count",
-        onClick: () => handleDirectCall("archived study count"),
+        onClick: () => sendMessage("archived study count"),
       },
       {
         label: "Total Study",
-        onClick: () => handleDirectCall("total study"),
+        onClick: () => sendMessage("total study"),
       },
     ]);
   }
@@ -145,15 +129,15 @@ const Suggestion = () => {
   return renderSuggestionRow([
     {
       label: "Archived Study Count",
-      onClick: () => handleDirectCall("archived study count"),
+      onClick: () => sendMessage("archived study count"),
     },
     {
       label: "Study Info",
-      onClick: () => handleDirectCall(`study info ${name}`),
+      onClick: () => sendMessage(`study info ${name}`),
     },
     {
       label: "Total Study",
-      onClick: () => handleDirectCall("total study"),
+      onClick: () => sendMessage("total study"),
     },
   ]);
 };

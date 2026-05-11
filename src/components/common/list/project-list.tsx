@@ -8,9 +8,9 @@ import { promptCatalog } from "../../../utils/promptCatalog";
 import ChatWindow from "../chat-window/chat";
 import ChatTextArea from "../../global/chattextares";
 import { LuBotMessageSquare, LuCircleCheckBig, LuSparkles } from "react-icons/lu";
-import { setChatOpen, setMessage } from "../../../store/ChatSlice";
 import Button from "../../ui/Button";
 import { useHomepageUserInfo } from "../../../api-network/homepage/query";
+import useAiChat from "../../../api-network/global/ai-chat";
 
 export default function ProjectListing() {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,6 +21,7 @@ export default function ProjectListing() {
 
   const user = useSelector((state: RootState) => state.user);
   const { userInfoError } = useHomepageUserInfo();
+  const { openChatWithMessage } = useAiChat();
 
   const { messages } = useSelector((state: RootState) => state.chat);
   const firstName = user.firstName || "there";
@@ -94,10 +95,7 @@ export default function ProjectListing() {
                       type="button"
                       varinat="outline"
                       size="sm"
-                      onClick={() => {
-                        dispatch(setChatOpen(true));
-                        dispatch(setMessage("count of in progress studies"));
-                      }}
+                      onClick={() => openChatWithMessage("count of in progress studies")}
                       className="max-w-full rounded-full home-muted shadow-sm hover:border-login-primary/30 hover:bg-login-primary/5"
                     >
                       Try:
@@ -114,11 +112,10 @@ export default function ProjectListing() {
                         type="button"
                         varinat="outline"
                         onClick={() => {
-                          dispatch(setChatOpen(true));
                           if (prompt.id === "activate study") {
-                            dispatch(setMessage("Activate Study [Study Name]"));
+                            openChatWithMessage("Activate Study [Study Name]");
                           } else if (prompt.message) {
-                            dispatch(setMessage(prompt.message));
+                            openChatWithMessage(prompt.message);
                           }
                         }}
                         className="home-panel-soft-bg home-border-soft group h-full min-h-[108px] w-full items-center justify-start rounded-[20px] px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
