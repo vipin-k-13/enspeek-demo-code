@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { toast } from "sonner";
 import { queryClient } from "../../../App";
+import url from "../../../api-network/url";
 import { setFilterStudys } from "../../../store/CrosstabStudySlice";
 import {
   REFRESH_STUDY_LIST_EVENT,
@@ -31,11 +32,11 @@ const refreshStudyList = async (options?: RefreshStudyListOptions) => {
     );
   });
   await queryClient.invalidateQueries({
-    queryKey: ["studyList"],
+    queryKey: [url.studyListing.queryKey],
     exact: false,
   });
   await queryClient.refetchQueries({
-    queryKey: ["studyList"],
+    queryKey: [url.studyListing.queryKey],
     exact: false,
     type: "active",
   });

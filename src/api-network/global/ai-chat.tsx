@@ -83,11 +83,11 @@ export const useChat = () => {
     });
 
     await queryClient.invalidateQueries({
-      queryKey: ["studyList"],
+      queryKey: [url.studyListing.queryKey],
       exact: false,
     });
     await queryClient.refetchQueries({
-      queryKey: ["studyList"],
+      queryKey: [url.studyListing.queryKey],
       exact: false,
       type: "active",
     });
