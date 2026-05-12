@@ -65,10 +65,20 @@ export const useHydrateQuestionnaireSubmitItems = (
   const submitItems = useSelector((state: RootState) => state.question.submitItems);
   const { mutate: fetchQuestionById } = useQuestionViewMutation(studyID);
   const lastHydratedKeyRef = useRef("");
+  const submitItemsRef = useRef(submitItems);
+  const fetchQuestionByIdRef = useRef(fetchQuestionById);
   const questionIdsKey = useMemo(
     () => (questionList?.length ? questionList.map((item) => item.qID).join("|") : ""),
     [questionList]
   );
+
+  useEffect(() => {
+    submitItemsRef.current = submitItems;
+  }, [submitItems]);
+
+  useEffect(() => {
+    fetchQuestionByIdRef.current = fetchQuestionById;
+  }, [fetchQuestionById]);
 
   useEffect(() => {
     if (questionList?.length) {
@@ -78,7 +88,7 @@ export const useHydrateQuestionnaireSubmitItems = (
 
       lastHydratedKeyRef.current = questionIdsKey;
       const existingItemsMap = new Map(
-        submitItems.map((item) => [item.qID, item])
+        submitItemsRef.current.map((item) => [item.qID, item])
       );
       const mergedItems: any[] = questionList.map((item) => {
         const existingItem = existingItemsMap.get(item.qID);
@@ -96,7 +106,7 @@ export const useHydrateQuestionnaireSubmitItems = (
 
       mergedItems.forEach((item) => {
         if (item?.qID && item.isLoaded === false) {
-          fetchQuestionById(item.qID);
+          fetchQuestionByIdRef.current(item.qID);
         }
       });
       return;
@@ -104,7 +114,7 @@ export const useHydrateQuestionnaireSubmitItems = (
 
     lastHydratedKeyRef.current = "";
     dispatch(setAllSubmitItems([]));
-  }, [dispatch, fetchQuestionById, questionIdsKey, questionList, submitItems]);
+  }, [dispatch, questionIdsKey, questionList]);
 };
 
 export const useCreateQuestionMutation = (studyID?: string) => {
@@ -132,6 +142,7 @@ export const useCreateQuestionMutation = (studyID?: string) => {
 export const useEditQuestionMutation = (studyID?: string) => {
   const { apiToken } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
+  const { mutateAsync: refreshQuestion } = useQuestionViewMutation(studyID);
 
   return mutationStructure({
     mutationKey: [url.questionnaireEdit.mutationKey, studyID],
@@ -149,8 +160,10 @@ export const useEditQuestionMutation = (studyID?: string) => {
       return { response: res.response, question: data };
     },
     onSuccess: async (_, variables) => {
+      if (variables.qID) {
+        await refreshQuestion(variables.qID);
+      }
       await refreshQuestionnaireQueries(studyID);
-      dispatch(setSubmitItems(variables));
       dispatch(setIsAddingQuestion(false));
       dispatch(setEditingQuestion(null));
       toast.success("Question saved successfully");

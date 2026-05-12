@@ -62,16 +62,33 @@ export const AccordionTrigger: React.FC<AccordionTriggerProps> = ({
 }) => {
   const { toggleItem } = useAccordionContext();
 
-  const handleClick = () => {
+  const isNestedAction = (target: EventTarget | null) => {
+    if (!(target instanceof HTMLElement)) return false;
+    return Boolean(
+      target.closest(
+        '[data-accordion-action="true"], button, a, input, select, textarea, [role="button"]'
+      )
+    );
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (isNestedAction(e.target) && e.target !== e.currentTarget) {
+      return;
+    }
     if (!disabled && value) {
       toggleItem(value);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (isNestedAction(e.target) && e.target !== e.currentTarget) {
+      return;
+    }
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
-      handleClick();
+      if (!disabled && value) {
+        toggleItem(value);
+      }
     }
   };
 

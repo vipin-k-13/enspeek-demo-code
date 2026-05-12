@@ -78,6 +78,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
             </div>
             <div className="hidden items-center gap-3 md:flex">
               <span
+                data-accordion-action="true"
                 title="Add or edit logic"
                 role="button"
                 tabIndex={0}
@@ -108,6 +109,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
             </div>
             {!disableActions && isLoaded && (
               <div
+                data-accordion-action="true"
                 className="questionnaire-muted flex items-center gap-2 md:gap-3"
                 onClick={(e) => e.stopPropagation()}
               >

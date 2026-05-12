@@ -102,6 +102,7 @@ export const useQuestionnaireRI = (studyID?: string) => {
 
 export const useQuestionnaireList = (studyID?: string) => {
   const { apiToken } = useSelector((state: RootState) => state.user);
+  const questionState = useSelector((state: RootState) => state.question);
   const dispatch = useDispatch<AppDispatch>();
 
   const questionListQuery = queryStructure({
@@ -121,13 +122,13 @@ export const useQuestionnaireList = (studyID?: string) => {
       dispatch(setQuestionList(apiData.qList));
       dispatch(setQuestionGroup({
         ...apiData,
-        logicPayload: apiData.logicPayload ?? {},
-        logic2Skip: apiData.logic2Skip ?? {},
-        getLogicRes: apiData.getLogicRes ?? {},
+        logicPayload: apiData.logicPayload ?? questionState.logicPayload ?? {},
+        logic2Skip: apiData.logic2Skip ?? questionState.logic2Skip ?? {},
+        getLogicRes: apiData.getLogicRes ?? questionState.getLogicRes ?? {},
         questionList: apiData.questionList ?? [],
-        submitItems: apiData.submitItems ?? [],
-        hydratingQuestionIds: [],
-        editingQuestion: null,
+        submitItems: questionState.submitItems,
+        hydratingQuestionIds: questionState.hydratingQuestionIds ?? [],
+        editingQuestion: questionState.editingQuestion,
       }));
 
       return apiData;
