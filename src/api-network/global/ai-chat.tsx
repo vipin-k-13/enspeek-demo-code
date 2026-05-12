@@ -142,6 +142,15 @@ export const useChat = () => {
     }
 
     if (data.add && data.liveLink && studyID) {
+      queryClient.setQueryData(
+        publishSurveyKeys.studyInfo(studyID),
+        (previous: any) => ({
+          ...(previous ?? {}),
+          studyID: data.studyID ?? studyID,
+          livelink: data.liveLink,
+          link: data.liveLink,
+        })
+      );
       await queryClient.invalidateQueries({
         queryKey: publishSurveyKeys.studyInfo(studyID),
       });
