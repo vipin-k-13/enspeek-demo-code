@@ -9,7 +9,9 @@ import { store, type AppDispatch, type RootState } from "../../store/store";
 import { setChatOpen, setFollowUp, setIsTyping, setMessage, setMessages, setPending } from "../../store/ChatSlice";
 import { getPageName } from "../../utils/getPageName";
 import { useReportProcessDownload } from "../report/mutation";
+import homepageKeys from "../homepage/keys";
 import questionnaireKeys from "../questionnaire/keys";
+import publishSurveyKeys from "../publish-survey/keys";
 import { setSubmitItems } from "../../store/QuestionSlice";
 import { REFRESH_STUDY_LIST_EVENT } from "../../utils/studyListRefresh";
 
@@ -81,18 +83,18 @@ export const useChat = () => {
     });
 
     await queryClient.invalidateQueries({
-      queryKey: [url.studyListing.queryKey],
+      queryKey: homepageKeys.studyList(),
       exact: false,
     });
     await queryClient.refetchQueries({
-      queryKey: [url.studyListing.queryKey],
+      queryKey: homepageKeys.studyList(),
       exact: false,
       type: "active",
     });
   };
 
   const { mutate: submitQuestionById } = mutationStructure({
-    mutationKey: ["questions", studyID],
+    mutationKey: [url.questionView.mutationKey, studyID, "chat"],
     mutationFn: async (questionId: string) => {
       const res = await apiRequest(
         url.questionView.method,
@@ -140,9 +142,11 @@ export const useChat = () => {
     }
 
     if (data.add && data.liveLink && studyID) {
-      await queryClient.invalidateQueries({ queryKey: ["studyInfo", studyID] });
+      await queryClient.invalidateQueries({
+        queryKey: publishSurveyKeys.studyInfo(studyID),
+      });
       await queryClient.refetchQueries({
-        queryKey: ["studyInfo", studyID],
+        queryKey: publishSurveyKeys.studyInfo(studyID),
         type: "all",
       });
     }
@@ -163,7 +167,7 @@ export const useChat = () => {
     isPending: isChatPending,
     data: chatResponse,
   } = mutationStructure({
-    mutationKey: ["chatBot", pageName, studyID],
+    mutationKey: [url.studyChatbot.mutationKey, pageName, studyID],
     mutationFn: async (payload: { prompt: string }) => {
       const res = await apiRequest(url.studyChatbot.method, url.studyChatbot.endpoint, { apiToken, prompt: payload.prompt, pageName, followUp, studyID });
       return res.response;

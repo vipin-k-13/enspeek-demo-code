@@ -5,6 +5,7 @@ import { setFilterStudys, setStudys } from "../../store/CrosstabStudySlice";
 import url from "../url";
 import queryStructure from "../query-template";
 import { SyncUserInfo } from "../../store/UserSlice";
+import homepageKeys from "./keys";
 
 export const useStudyList = (enableTab: string) => {
     const { apiToken } = useSelector((state: RootState) => state.user);
@@ -20,7 +21,7 @@ export const useStudyList = (enableTab: string) => {
         return res.response;
     }
     const { data: studyList = {}, isLoading: isListLoading } = queryStructure({
-        queryKey: [url.studyListing.queryKey, enableTab],
+        queryKey: homepageKeys.studyList(enableTab),
         queryFn: TestFn,
         enable: !!apiToken,
     });
@@ -50,7 +51,7 @@ export const useHomepageUserInfo = () => {
     };
 
     const { error, isLoading } = queryStructure({
-        queryKey: [url.userInfo.queryKey],
+        queryKey: homepageKeys.userInfo(),
         queryFn: syncUserInfo,
         enable: !!user.apiToken,
     });

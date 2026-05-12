@@ -11,7 +11,11 @@ import { HiSearch } from "react-icons/hi";
 import DeleteModel from "../common/list/DeleteModel";
 import ListingCopyModel from "./ListingCopyModal";
 import ArchiveModel from "../common/list/ArchiveModel";
-import { type StudyListSelection } from "../../utils/studyListRefresh";
+import {
+  REFRESH_STUDY_LIST_EVENT,
+  type RefreshStudyListEventDetail,
+  type StudyListSelection
+} from "../../utils/studyListRefresh";
 import { useStudyList } from "../../api-network/homepage/query";
 
 const HomeSidebar: React.FC = () => {
@@ -28,6 +32,39 @@ const HomeSidebar: React.FC = () => {
   useEffect(() => {
     activeTabRef.current = activeTab;
   }, [activeTab]);
+
+  useEffect(() => {
+    const handleRefreshStudyList = (event: Event) => {
+      const customEvent = event as CustomEvent<RefreshStudyListEventDetail>;
+      const detail = customEvent.detail;
+
+      if (!detail) return;
+
+      if (detail.selection && detail.selection !== activeTabRef.current) {
+        setActiveTab(detail.selection);
+      }
+
+      if (detail.resetSearch) {
+        setSearchTerm("");
+      }
+
+      setPage(1);
+      setPageInput("1");
+      detail.resolve?.();
+    };
+
+    window.addEventListener(
+      REFRESH_STUDY_LIST_EVENT,
+      handleRefreshStudyList as EventListener
+    );
+
+    return () => {
+      window.removeEventListener(
+        REFRESH_STUDY_LIST_EVENT,
+        handleRefreshStudyList as EventListener
+      );
+    };
+  }, []);
 
   const { studyList, isListLoading } = useStudyList(activeTab);
 

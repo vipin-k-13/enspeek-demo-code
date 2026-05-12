@@ -91,7 +91,10 @@ export const useDelete = () => {
       if (!data) {
         return;
       }
-      await refreshStudyList();
+      await refreshStudyList({
+        selection: "myactive",
+        resetSearch: true,
+      });
       dispatch(setSelectedId(""));
       dispatch(setSelectedStudyName(""));
       dispatch(setDeleteModel(false));
