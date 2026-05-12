@@ -13,6 +13,7 @@ import homepageKeys from "../homepage/keys";
 import questionnaireKeys from "../questionnaire/keys";
 import publishSurveyKeys from "../publish-survey/keys";
 import { setSubmitItems } from "../../store/QuestionSlice";
+import { setStudyInfo } from "../../store/CrosstabStudySlice";
 import { REFRESH_STUDY_LIST_EVENT } from "../../utils/studyListRefresh";
 
 const MAX_RECALL_CHAIN_CALLS = 10;
@@ -142,6 +143,10 @@ export const useChat = () => {
     }
 
     if (data.add && data.liveLink && studyID) {
+      const currentStudyState = store.getState().study;
+      await queryClient.cancelQueries({
+        queryKey: publishSurveyKeys.studyInfo(studyID),
+      });
       queryClient.setQueryData(
         publishSurveyKeys.studyInfo(studyID),
         (previous: any) => ({
@@ -149,14 +154,22 @@ export const useChat = () => {
           studyID: data.studyID ?? studyID,
           livelink: data.liveLink,
           link: data.liveLink,
+          launch: 1,
         })
       );
-      await queryClient.invalidateQueries({
+      dispatch(
+        setStudyInfo({
+          studyID: data.studyID ?? studyID,
+          hasQuestionnaire: currentStudyState.hasQuestionnaire,
+          launch: 1,
+          name: currentStudyState.name,
+          output: currentStudyState.output,
+          link: 1,
+          closed: 0,
+        })
+      );
+      void queryClient.invalidateQueries({
         queryKey: publishSurveyKeys.studyInfo(studyID),
-      });
-      await queryClient.refetchQueries({
-        queryKey: publishSurveyKeys.studyInfo(studyID),
-        type: "all",
       });
     }
 

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
 import { apiRequest } from "../../services/apiService";
@@ -6,7 +7,6 @@ import url from "../url";
 import reportKeys from "./keys";
 import { setStudyInfo } from "../../store/CrosstabStudySlice";
 import { setFilterList, setFliterReportData, setReportFilterList, setTableQList } from "../../store/FiltersSlice";
-import { ChartResponseReFactor, getTableDataFromSurvey } from "../../utils";
 
 const mapFilterList = (filterListResponse: any) => (filterListResponse?.seq ?? []).map((seq: string) => {
   const value = filterListResponse[seq];
@@ -21,6 +21,141 @@ const mapReportFilterList = (reportFilterResponse: any) => (reportFilterResponse
   const value = reportFilterResponse[seq];
   return { id: seq, ...value };
 });
+
+const normalizeReportViewResponse = (response: any) => {
+  if (Array.isArray(response)) {
+    return response[0] ?? null;
+  }
+
+  if (response?.response && typeof response.response === "object") {
+    return response.response;
+  }
+
+  return response ?? null;
+};
+
+const buildReportViewData = (response: any) => {
+  if (!response?.seq?.length) {
+    return {
+      rawData: null,
+      tableData: null,
+      chartData: null,
+    };
+  }
+
+  const qID = response.seq[0];
+  const questionData = response?.[qID];
+
+  if (!qID || !questionData) {
+    return {
+      rawData: null,
+      tableData: null,
+      chartData: null,
+    };
+  }
+
+  const resolvedQuestionData = {
+    ...questionData,
+    base: response.BASE,
+    base_text: response.BASE_TEXT,
+  };
+
+  const isCrosstab =
+    typeof Object.values(resolvedQuestionData.data || {})[0] === "object";
+
+  const chartData = resolvedQuestionData.external === 1
+    ? {
+        external: resolvedQuestionData.external,
+        Image: resolvedQuestionData.external_link,
+        title: resolvedQuestionData.label,
+        chartData: [],
+        categories: [],
+        baseText:
+          typeof resolvedQuestionData.base_text === "string" &&
+          resolvedQuestionData.base_text.trim()
+            ? resolvedQuestionData.base_text
+            : `Base: (n = ${resolvedQuestionData.base ?? 0})`,
+        questionText: resolvedQuestionData.text || "",
+        totalRespondents: resolvedQuestionData.base ?? 0,
+      }
+    : {
+        external: resolvedQuestionData.external,
+        title: resolvedQuestionData.label,
+        chartData: isCrosstab
+          ? (resolvedQuestionData._colorder || []).map((colId: string) => ({
+              name: resolvedQuestionData._coloptions?.[colId] ?? colId,
+              color: "#3F72AF",
+              data: (resolvedQuestionData._roworder || []).map((rowId: string) => {
+                return resolvedQuestionData.data?.[colId]?.[rowId] ?? 0;
+              }),
+            }))
+          : [
+              {
+                name: "Responses",
+                color: "#3F72AF",
+                data: (resolvedQuestionData._roworder || []).map(
+                  (rowId: string) => resolvedQuestionData.data?.[rowId] ?? 0
+                ),
+              },
+            ],
+        categories: (resolvedQuestionData._roworder || []).map(
+          (rowId: string) => resolvedQuestionData._rowoptions?.[rowId]
+        ),
+        baseText:
+          typeof resolvedQuestionData.base_text === "string" &&
+          resolvedQuestionData.base_text.trim()
+            ? resolvedQuestionData.base_text
+            : `Base: (n = ${resolvedQuestionData.base ?? 0})`,
+        questionText: resolvedQuestionData.text || "",
+        totalRespondents: resolvedQuestionData.base ?? 0,
+      };
+
+  const tableData = {
+    questionId: qID,
+    title: resolvedQuestionData.label,
+    baseText:
+      typeof resolvedQuestionData.base_text === "string" &&
+      resolvedQuestionData.base_text.trim()
+        ? resolvedQuestionData.base_text
+        : `Base: (n = ${resolvedQuestionData.base ?? 0})`,
+    questionText: resolvedQuestionData.text || "",
+    headers: !isCrosstab
+      ? ["Total"]
+      : (resolvedQuestionData._colorder || []).map(
+          (colId: string) => resolvedQuestionData._coloptions?.[colId] ?? colId
+        ),
+    baseRow: !isCrosstab
+      ? [resolvedQuestionData.base ?? 0]
+      : (resolvedQuestionData._colorder || []).map((colId: string) => {
+          const val =
+            resolvedQuestionData.base?.[colId] ??
+            resolvedQuestionData.responding_base?.[colId]?.[
+              resolvedQuestionData._roworder?.[0]
+            ];
+          return val ?? 0;
+        }),
+    rows: (resolvedQuestionData._roworder || []).map((rowId: string) => {
+      const rowLabel = resolvedQuestionData._rowoptions?.[rowId] || rowId;
+      const values = !isCrosstab
+        ? [`${resolvedQuestionData.data?.[rowId] ?? 0}%`]
+        : (resolvedQuestionData._colorder || []).map(
+            (colId: string) =>
+              `${resolvedQuestionData.data?.[colId]?.[rowId] ?? 0}%`
+          );
+
+      return {
+        rowLabel,
+        values,
+      };
+    }),
+  };
+
+  return {
+    rawData: response,
+    tableData,
+    chartData,
+  };
+};
 
 export const useReportStudyInfo = (studyID?: string) => {
   const { apiToken } = useSelector((state: RootState) => state.user);
@@ -75,14 +210,18 @@ export const useReportViewList = (studyID?: string) => {
         }
       );
 
-      const sequence = res.response?.[0]?.groupList?.seq ?? [];
-      dispatch(setTableQList(sequence));
-      dispatch(setFliterReportData(sequence));
-
       return res.response;
     },
     enable: !!apiToken && !!studyID,
   });
+
+  useEffect(() => {
+    const sequence = reportViewListQuery.data?.[0]?.groupList?.seq ?? [];
+    if (!sequence.length) return;
+
+    dispatch(setTableQList(sequence));
+    dispatch(setFliterReportData(sequence));
+  }, [dispatch, reportViewListQuery.data, studyID]);
 
   return {
     reportViewList: reportViewListQuery.data,
@@ -99,9 +238,12 @@ export const useReportViewById = (
   sideBySide?: string
 ) => {
   const { apiToken } = useSelector((state: RootState) => state.user);
+  const normalizedSideBySide = sideBySide ?? "0";
+  const subgroupID =
+    normalizedSideBySide === "0" ? "Cell" : selected || "Cell";
 
   const reportViewByIdQuery = queryStructure({
-    queryKey: reportKeys.viewById(studyID, qID, selected, sideBySide),
+    queryKey: reportKeys.viewById(studyID, qID, selected, normalizedSideBySide),
     queryFn: async () => {
       const res = await apiRequest(
         url.reportViewById.method,
@@ -110,17 +252,17 @@ export const useReportViewById = (
           apiToken,
           studyID,
           filter_data: {},
-          side_by_side: sideBySide,
-          subgroupID: sideBySide === "0" ? "" : selected,
+          side_by_side: normalizedSideBySide,
+          subgroupID,
         }
       );
 
-      return {
-        tableData: getTableDataFromSurvey(res.response),
-        chartData: ChartResponseReFactor(res.response),
-      };
+      const normalizedResponse = normalizeReportViewResponse(res.response);
+
+      return buildReportViewData(normalizedResponse);
     },
     enable: !!apiToken && !!studyID && !!qID,
+    retry: 0,
   });
 
   return {

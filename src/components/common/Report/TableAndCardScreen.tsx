@@ -26,8 +26,15 @@ const TableAndCardScreen: FC<TableAndCardScreenProp> = ({
     isReportViewByIdError,
   } = useReportViewById(state.studyID, qid, selected, side_by_side);
 
-  const tableData = reportViewByIdData?.tableData;
-  const chartData = reportViewByIdData?.chartData;
+  const rawData = reportViewByIdData?.rawData;
+  const rawQuestionId = rawData?.seq?.[0];
+  const questionData = rawQuestionId
+    ? {
+        ...rawData?.[rawQuestionId],
+        base: rawData?.BASE,
+        base_text: rawData?.BASE_TEXT,
+      }
+    : null;
 
   if (isReportViewByIdLoading) {
     return (
@@ -39,13 +46,78 @@ const TableAndCardScreen: FC<TableAndCardScreenProp> = ({
     );
   }
 
-  if (isReportViewByIdError || !chartData || !tableData) return null;
+  if (isReportViewByIdError || !rawQuestionId || !questionData) return null;
 
-  if (chartData.external) {
+  const isCrosstab =
+    typeof Object.values(questionData.data || {})[0] === "object";
+
+  const chartData = isCrosstab
+    ? (questionData._colorder || []).map((colId: string) => ({
+        name: questionData._coloptions?.[colId] ?? colId,
+        color: "#3F72AF",
+        data: (questionData._roworder || []).map(
+          (rowId: string) => questionData.data?.[colId]?.[rowId] ?? 0
+        ),
+      }))
+    : [
+        {
+          name: "Responses",
+          color: "#3F72AF",
+          data: (questionData._roworder || []).map(
+            (rowId: string) => questionData.data?.[rowId] ?? 0
+          ),
+        },
+      ];
+
+  const categories = (questionData._roworder || []).map(
+    (rowId: string) => questionData._rowoptions?.[rowId]
+  );
+
+  const baseText =
+    typeof questionData.base_text === "string" && questionData.base_text.trim()
+      ? questionData.base_text
+      : `Base: (n = ${questionData.base ?? 0})`;
+
+  const tableData = {
+    questionId: rawQuestionId,
+    title: questionData.label,
+    baseText,
+    questionText: questionData.text || "",
+    headers: !isCrosstab
+      ? ["Total"]
+      : (questionData._colorder || []).map(
+          (colId: string) => questionData._coloptions?.[colId] ?? colId
+        ),
+    baseRow: !isCrosstab
+      ? [questionData.base ?? 0]
+      : (questionData._colorder || []).map((colId: string) => {
+          const val =
+            questionData.base?.[colId] ??
+            questionData.responding_base?.[colId]?.[
+              questionData._roworder?.[0]
+            ];
+          return val ?? 0;
+        }),
+    rows: (questionData._roworder || []).map((rowId: string) => {
+      const rowLabel = questionData._rowoptions?.[rowId] || rowId;
+      const values = !isCrosstab
+        ? [`${questionData.data?.[rowId] ?? 0}%`]
+        : (questionData._colorder || []).map(
+            (colId: string) => `${questionData.data?.[colId]?.[rowId] ?? 0}%`
+          );
+
+      return {
+        rowLabel,
+        values,
+      };
+    }),
+  };
+
+  if (questionData.external === 1 && questionData.external_link) {
     return (
-      <QuestionCard title={chartData.title} qId={qid}>
+      <QuestionCard title={questionData.label} qId={qid}>
         <img
-          src={chartData.Image}
+          src={questionData.external_link}
           alt=""
           className="mx-auto max-h-[300px]"
         />
@@ -58,15 +130,15 @@ const TableAndCardScreen: FC<TableAndCardScreenProp> = ({
   }
 
   return (
-    <QuestionCard title={chartData.title} qId={qid}>
+    <QuestionCard title={questionData.label} qId={qid}>
       <SingleSelectChart
-        categories={chartData.categories}
+        categories={categories}
         questionId={qid}
-        hasData={chartData.chartData?.length > 0}
-        chartData={chartData.chartData}
-        baseText={chartData.baseText}
-        questionText={chartData.questionText}
-        totalRespondents={chartData.totalRespondents}
+        hasData={!!questionData.data}
+        chartData={chartData}
+        baseText={baseText}
+        questionText={questionData.text || ""}
+        totalRespondents={questionData.base ?? 0}
       />
     </QuestionCard>
   );
