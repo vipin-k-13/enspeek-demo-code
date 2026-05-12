@@ -401,7 +401,7 @@ declare type QuesLogicPayload = {
 };
 
 declare type QueryStructureProps = {
-  queryKey: string[];
+  queryKey: readonly unknown[];
   queryFn: () => any;
   enable?: boolean;
   refetchOnWindowFocus?: boolean;

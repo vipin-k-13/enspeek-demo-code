@@ -1,70 +1,37 @@
-import React, { useEffect, type DragEvent } from "react";
+import { useEffect, type DragEvent } from "react";
 import { useLocation, useNavigate } from "react-router";
-import QuestionnaireForm from "./QuestionnaireForm";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { apiRequest } from "../../../services/apiService";
 import { useDispatch, useSelector } from "react-redux";
-import { type AppDispatch, type RootState } from "../../../store/store";
-import DataList from "./DataList";
-import {
-  setAllSubmitItems,
-  setLogic2Skip,
-  setQuestionGroup,
-  setQuestionList,
-  setSubmitItems,
-} from "../../../store/QuestionSlice";
 import { toast } from "sonner";
-import { cn, getTimeGreeting, normalizeDisplayName } from "../../../utils";
-import { setStudyInfo } from "../../../store/CrosstabStudySlice";
-import { setIsAddingQuestion } from "../../../store/TriggerSlice";
-import { useQtype } from "./Api";
 import { MdArrowForwardIos } from "react-icons/md";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import {
-  LuBotMessageSquare,
-  LuCircleCheckBig,
-  LuPlus,
-  LuSparkles,
-  LuWandSparkles,
-} from "react-icons/lu";
+import { LuBotMessageSquare, LuCircleCheckBig, LuPlus, LuSparkles, LuWandSparkles } from "react-icons/lu";
+import type { AppDispatch, RootState } from "../../../store/store";
+import { cn, getTimeGreeting, normalizeDisplayName } from "../../../utils";
+import { setEditingQuestion } from "../../../store/QuestionSlice";
+import { setIsAddingQuestion } from "../../../store/TriggerSlice";
+import QuestionnaireForm from "./QuestionnaireForm";
+import DataList from "./DataList";
 import PageSubheader from "../../ui/PageSubheader";
 import Button from "../../ui/Button";
 import useAiChat from "../../../api-network/global/ai-chat";
+import { useHydrateQuestionnaireSubmitItems } from "../../../api-network/questionnaire/mutation";
+import { useQuestionnaireList, useQuestionnaireQuestionTypes, useQuestionnaireStudyInfo } from "../../../api-network/questionnaire/query";
 
 export default function QuestionList() {
   const navigate = useNavigate();
-  const [editData, setEditData] = React.useState<Question | null>(null);
-  const { qType } = useSelector((state: RootState) => state.trigger);
-  const dispatch = useDispatch<AppDispatch>();
-  const { launch, output } = useSelector(
-    (state: RootState) => state.study
-  );
-  const isDragDisabled = launch === 1 && output === 1;
-
-  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const type = e.dataTransfer.getData("questionType");
-    if (type) {
-    }
-  };
-
-  const handleEditItem = (data: Question) => {
-    setEditData(data);
-    dispatch(setIsAddingQuestion(true));
-  };
-
   const location = useLocation();
   const studyID = location.state?.studyID;
+  const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.user);
   const { isAddingQuestion } = useSelector((state: RootState) => state.trigger);
+  const { submitItems } = useSelector((state: RootState) => state.question);
+  const { launch, output } = useSelector((state: RootState) => state.study);
+  const isDragDisabled = launch === 1 && output === 1;
   const firstName = user.firstName || "there";
   const normalizedFirstName = normalizeDisplayName(firstName);
   const greeting = getTimeGreeting();
   const { openChat, openChatWithMessage } = useAiChat();
+
   const emptyStatePrompts = [
     {
       title: "Generate screening questions",
@@ -78,123 +45,32 @@ export default function QuestionList() {
     },
   ];
 
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const { isStudyInfoLoading } = useQuestionnaireStudyInfo(studyID);
+  useQuestionnaireQuestionTypes(studyID);
   const {
-    data: StudyInfo,
-    isLoading: isInfoLoading,
-    refetch: StudyInfoRefetch,
-  } = useQuery({
-    queryKey: ["studyInfo", studyID],
-    queryFn: async () => {
-      const res = await apiRequest("post", "study/info", {
-        apiToken: user.apiToken,
-        studyID,
-      });
-      dispatch(
-        setStudyInfo({
-          studyID: studyID,
-          hasQuestionnaire: res.response.hasquestionnaire,
-          launch: res.response.launch,
-          name: res.response.studyname,
-          output: res.response.output,
-          link: res.response.link,
-          closed: res.response.closed,
-        })
-      );
-      return res.response;
-    },
-    enabled: !!user.apiToken && !!studyID,
-    refetchOnWindowFocus: false,
-    retry: 1,
-  });
+    questionnaireList,
+    isQuestionnaireListLoading,
+    isQuestionnaireListRefetching,
+  } = useQuestionnaireList(studyID);
 
-  const {} = useQtype(studyID);
-  const { submitItems } = useSelector((state: RootState) => state.question);
-  const { mutate: submit, isPending } = useMutation({
-    mutationKey: ["questions", studyID],
-    mutationFn: async (CQID: string) => {
-      const res = await apiRequest("post", `questionnaire/view/${CQID}`, {
-        apiToken: user.apiToken,
-        studyID,
-      });
-      return res.response;
-    },
-    onSuccess: (data: Question) => {
-      dispatch(setSubmitItems(data));
-      const logicMap: Record<string, string> = {};
-      data.logic2?.forEach((entry: Record<string, string>) => {
-        const logicType = Object.keys(entry)[0];
-        const logicValue = entry[logicType];
-        logicMap[logicType] = logicValue;
-      });
-      dispatch(setLogic2Skip({ qID: data.qID, message: logicMap }));
-    },
-  });
-
-  const {
-    data,
-    isLoading: ListLoading,
-    isRefetching: RefetchListLoading,
-  } = useQuery({
-    queryKey: ["viewCustomList", studyID],
-    queryFn: async () => {
-      const res = await apiRequest("post", "questionnaire/fetch/qlist", {
-        apiToken: user.apiToken,
-        studyID,
-      });
-      const apiData =
-        Array.isArray(res.response) && res.response[0]?.qList
-          ? res.response[0]
-          : { qList: [] };
-      dispatch(setQuestionList(apiData.qList));
-
-      return apiData;
-    },
-    enabled: !!user.apiToken && !!studyID,
-    refetchOnWindowFocus: false,
-    retry: 1,
-  });
-
-  useEffect(() => {
-    if (data) {
-      dispatch(setQuestionGroup(data));
-    } else {
-      dispatch(
-        setQuestionGroup({
-          groupID: "",
-          groupText: "",
-          groupLogic: "",
-          qList: [],
-          logicPayload: {},
-          logic2Skip: {},
-          getLogicRes: {},
-          questionList: [],
-          submitItems: [],
-        })
-      );
-    }
-  }, [data]);
-
-  useEffect(() => {
-    StudyInfoRefetch();
-    if (data?.qList && Array.isArray(data.qList) && data.qList.length) {
-      const newItems = data.qList.filter((item: any) => item && item.qID);
-      dispatch(setAllSubmitItems(newItems));
-      newItems.forEach((item: any) => submit(item.qID));
-    } else {
-      dispatch(setAllSubmitItems([]));
-    }
-  }, [data, submit]);
+  useHydrateQuestionnaireSubmitItems(studyID, questionnaireList?.qList);
 
   useEffect(() => {
     if (!studyID) {
       navigate("/");
-      toast.warning(
-        "Invalid access route detected. Redirecting you to the homepage for a better experience."
-      );
+      toast.warning("Invalid access route detected. Redirecting you to the homepage for a better experience.");
     }
-  }, [studyID]);
+  }, [navigate, studyID]);
 
-  if (isInfoLoading || ListLoading || RefetchListLoading) {
+  if (isStudyInfoLoading || isQuestionnaireListLoading || isQuestionnaireListRefetching) {
     return (
       <div className="flex items-center justify-center w-full h-full">
         <AiOutlineLoading3Quarters
@@ -233,7 +109,7 @@ export default function QuestionList() {
                 varinat="theme"
                 onClick={() => {
                   navigate("/publish-survey", {
-                    state: { studyID: studyID },
+                    state: { studyID },
                   });
                 }}
               >
@@ -252,90 +128,86 @@ export default function QuestionList() {
         >
           {isAddingQuestion ? (
             <QuestionnaireForm
-              data={editData}
-              onSubmit={(CQID) => submit(CQID)}
               onClose={() => {
                 dispatch(setIsAddingQuestion(false));
+                dispatch(setEditingQuestion(null));
                 openChat();
-                setEditData(null);
               }}
-              qType={qType}
-              studyInfo={StudyInfo}
             />
           ) : submitItems.length === 0 ? (
             <div className="flex min-h-full w-full items-center justify-center px-5 py-4 md:px-6 md:py-5">
-                <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
-                  <div className="grid gap-4 xl:grid-cols-[minmax(0,1.16fr)_minmax(280px,0.84fr)] xl:items-stretch">
-                    <div className="questionnaire-card questionnaire-border overflow-hidden rounded-[30px] border shadow-[0_18px_44px_rgba(79,86,230,0.08)]">
-                      <div className="bg-[radial-gradient(circle_at_top_left,_rgba(109,99,255,0.18),_transparent_36%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.12),_transparent_34%),linear-gradient(180deg,_rgba(255,255,255,0.96)_0%,_rgba(251,250,255,0.98)_100%)] px-5 py-5 md:px-6 md:py-6">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="home-panel-soft-bg home-highlight inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                            <LuSparkles className="h-3.5 w-3.5" />
-                            AI-assisted questionnaire
-                          </span>
+              <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+                <div className="grid gap-4 xl:grid-cols-[minmax(0,1.16fr)_minmax(280px,0.84fr)] xl:items-stretch">
+                  <div className="questionnaire-card questionnaire-border overflow-hidden rounded-[30px] border shadow-[0_18px_44px_rgba(79,86,230,0.08)]">
+                    <div className="bg-[radial-gradient(circle_at_top_left,_rgba(109,99,255,0.18),_transparent_36%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.12),_transparent_34%),linear-gradient(180deg,_rgba(255,255,255,0.96)_0%,_rgba(251,250,255,0.98)_100%)] px-5 py-5 md:px-6 md:py-6">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="home-panel-soft-bg home-highlight inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                          <LuSparkles className="h-3.5 w-3.5" />
+                          AI-assisted questionnaire
+                        </span>
+                      </div>
+
+                      <div className="mt-4 flex items-center gap-3">
+                        <div className="relative flex h-12 w-12 items-center justify-center rounded-[18px] bg-gradient-to-br from-login-primary to-action shadow-lg">
+                          <LuBotMessageSquare className="h-6 w-6 text-white" />
+                          <LuSparkles className="absolute -right-2 -top-2 h-4 w-4 text-amber-400" />
                         </div>
-
-                        <div className="mt-4 flex items-center gap-3">
-                          <div className="relative flex h-12 w-12 items-center justify-center rounded-[18px] bg-gradient-to-br from-login-primary to-action shadow-lg">
-                            <LuBotMessageSquare className="h-6 w-6 text-white" />
-                            <LuSparkles className="absolute -right-2 -top-2 h-4 w-4 text-amber-400" />
-                          </div>
-                          <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold questionnaire-heading shadow-sm">
-                            {`${greeting}, ${normalizedFirstName}`}
-                          </div>
-                        </div>
-
-                        <h2 className="questionnaire-heading mt-4 max-w-3xl text-[clamp(1.9rem,3vw,2.65rem)] font-semibold leading-[1.05] tracking-[-0.04em]">
-                          Start building your questionnaire
-                        </h2>
-                        <p className="home-highlight mt-2.5 max-w-2xl text-[14px] leading-6 md:text-[16px] md:leading-6">
-                          Tell Enspeek what your study is about and it can generate
-                          your first set of questions in plain language.
-                        </p>
-
-                        <Button
-                          type="button"
-                          varinat="outline"
-                          size="sm"
-                          onClick={() =>
-                            openChatWithMessage("Generate 5 questions about my study.")
-                          }
-                          className="mt-4 rounded-full home-muted shadow-sm hover:border-login-primary/30 hover:bg-login-primary/5"
-                        >
-                          Try:
-                          <span className="font-semibold text-login-primary">
-                            "Generate 5 questions about my study."
-                          </span>
-                        </Button>
-
-                        <div className="mt-3.5 grid gap-3 md:grid-cols-2">
-                          {emptyStatePrompts.map((prompt) => (
-                            <Button
-                              key={prompt.title}
-                              type="button"
-                              varinat="outline"
-                              onClick={() => openChatWithMessage(prompt.text)}
-                              className="home-panel-soft-bg questionnaire-border group h-auto w-full items-start justify-start whitespace-normal rounded-[20px] px-4 py-3 text-left leading-normal transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-                            >
-                              <span className="home-dropdown-icon-wrap flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl">
-                                {prompt.icon}
-                              </span>
-                              <span className="min-w-0 flex-1">
-                                <span className="questionnaire-heading block break-words text-sm font-semibold leading-5">
-                                  {prompt.title}
-                                </span>
-                                <span className="questionnaire-muted mt-0.5 block break-words text-sm leading-5">
-                                  {prompt.text}
-                                </span>
-                              </span>
-                            </Button>
-                          ))}
+                        <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold questionnaire-heading shadow-sm">
+                          {`${greeting}, ${normalizedFirstName}`}
                         </div>
                       </div>
-                    </div>
 
-                    <div className="questionnaire-card questionnaire-border h-full rounded-[28px] border px-5 py-5 shadow-[0_14px_36px_rgba(79,86,230,0.07)]">
-                      <div className="flex h-full flex-col">
+                      <h2 className="questionnaire-heading mt-4 max-w-3xl text-[clamp(1.9rem,3vw,2.65rem)] font-semibold leading-[1.05] tracking-[-0.04em]">
+                        Start building your questionnaire
+                      </h2>
+                      <p className="home-highlight mt-2.5 max-w-2xl text-[14px] leading-6 md:text-[16px] md:leading-6">
+                        Tell Enspeek what your study is about and it can generate
+                        your first set of questions in plain language.
+                      </p>
+
+                      <Button
+                        type="button"
+                        varinat="outline"
+                        size="sm"
+                        onClick={() =>
+                          openChatWithMessage("Generate 5 questions about my study.")
+                        }
+                        className="mt-4 rounded-full home-muted shadow-sm hover:border-login-primary/30 hover:bg-login-primary/5"
+                      >
+                        Try:
+                        <span className="font-semibold text-login-primary">
+                          "Generate 5 questions about my study."
+                        </span>
+                      </Button>
+
+                      <div className="mt-3.5 grid gap-3 md:grid-cols-2">
+                        {emptyStatePrompts.map((prompt) => (
+                          <Button
+                            key={prompt.title}
+                            type="button"
+                            varinat="outline"
+                            onClick={() => openChatWithMessage(prompt.text)}
+                            className="home-panel-soft-bg questionnaire-border group h-auto w-full items-start justify-start whitespace-normal rounded-[20px] px-4 py-3 text-left leading-normal transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                          >
+                            <span className="home-dropdown-icon-wrap flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl">
+                              {prompt.icon}
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="questionnaire-heading block break-words text-sm font-semibold leading-5">
+                                {prompt.title}
+                              </span>
+                              <span className="questionnaire-muted mt-0.5 block break-words text-sm leading-5">
+                                {prompt.text}
+                              </span>
+                            </span>
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="questionnaire-card questionnaire-border h-full rounded-[28px] border px-5 py-5 shadow-[0_14px_36px_rgba(79,86,230,0.07)]">
+                    <div className="flex h-full flex-col">
                       <div className="flex items-center gap-3">
                         <div className="home-panel-soft-bg flex h-10 w-10 items-center justify-center rounded-2xl">
                           <LuCircleCheckBig className="h-5 w-5 text-login-primary" />
@@ -385,20 +257,13 @@ export default function QuestionList() {
                           </div>
                         ))}
                       </div>
-                      </div>
                     </div>
                   </div>
-
                 </div>
               </div>
+            </div>
           ) : (
-            <DataList
-              submittedItems={submitItems}
-              setAllSubmittedItems={(e) => dispatch(setAllSubmitItems(e))}
-              onSubmit={(e) => submit(e)}
-              handleEdit={(e) => handleEditItem(e)}
-              isPending={isPending}
-            />
+            <DataList />
           )}
         </div>
       </div>

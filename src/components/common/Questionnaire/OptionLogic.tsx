@@ -1,16 +1,13 @@
 import { useState, type ChangeEvent, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../../store/store";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "../../../services/apiService";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store/store";
 import { useLocation } from "react-router";
-import { toast } from "sonner";
-import { setSubmitItems } from "../../../store/QuestionSlice";
 import { TbRefresh } from "react-icons/tb";
 import { LuBan, LuChevronDown } from "react-icons/lu";
 import Button from "../../ui/Button";
 import IconActionButton from "../../ui/IconActionButton";
 import Select from "../../ui/Select";
+import { useUpdateOptionLogicMutation } from "../../../api-network/questionnaire/mutation";
 
 type RowLogic = {
   row: string;
@@ -33,93 +30,31 @@ export default function OptionLogic({
   rowIndex,
   optionText,
 }: OptionLogicProps) {
+  const location = useLocation();
+  const studyID = location.state?.studyID;
   const [logic, setLogic] = useState<RowLogic[]>(INITIAL_LOGIC);
   const submitItems = useSelector(
     (state: RootState) => state.question.submitItems
   );
   const questionList = useSelector((state: RootState) => state.question.qList);
-  const location = useLocation();
-  const studyID = location.state?.studyID;
-  const user = useSelector((state: RootState) => state.user);
-  const dispatch = useDispatch<AppDispatch>();
-  const { mutate: submit } = useMutation({
-    mutationKey: ["questions", studyID],
-    mutationFn: async (CQID: string) => {
-      const res = await apiRequest("post", `questionnaire/view/${CQID}`, {
-        apiToken: user.apiToken,
-        studyID,
-      });
-      return res.response;
-    },
-    onSuccess: (data: Question) => {
-      dispatch(setSubmitItems(data));
-    },
-  });
-
-  
-  const { mutate } = useMutation({
-    mutationKey: ["questions", studyID],
-    mutationFn: async ({
-      terminate,
-      skipTo,
-      isReset,
-      isRemoveTerminate,
-      isRemoveSkip,
-    }: {
-      terminate: boolean;
-      skipTo: string;
-      isReset?: boolean;
-      isRemoveTerminate?: boolean;
-      isRemoveSkip?: boolean;
-    }) => {
-      const option_id = rowIndex;
-      const res = await apiRequest(
-        "post",
-        `questionnaire/edit/logic/${option_id}`,
-        {
-          apiToken: user.apiToken,
-          studyID,
-          option_terminate: terminate ? 1 : 0,
-          option_skip: terminate ? "" : skipTo,
-        }
-      );
-      return {
-        response: res.response,
-        terminate,
-        skipTo,
-        isReset,
-        isRemoveTerminate,
-        isRemoveSkip,
-      };
-    },
-    onSuccess: ({ terminate, isReset, isRemoveTerminate, isRemoveSkip }) => {
-      if (isReset) {
-        toast.success(`Logic reset successfully for → ${qID} ${optionText}`);
-      } else if (isRemoveTerminate) {
-        toast.success(
-          `Remove terminate successfully for → ${qID} ${optionText}`
-        );
-      } else if (isRemoveSkip) {
-        toast.success(
-          `Remove skip logic successfully for → ${qID} ${optionText}`
-        );
-      } else {
-        const logicType = terminate ? "Terminate" : "Skip logic";
-        toast.success(`${logicType} applied in → ${qID} ${optionText}`);
-      }
-      submit(qID);
-    },
-  });
+  const { mutate: updateOptionLogic } = useUpdateOptionLogicMutation(
+    studyID,
+    qID,
+    rowIndex,
+    optionText
+  );
 
   const handleLogicChange = (idx: number, value: string) => {
     const wasSkipApplied = !!logic[idx].value?.trim();
     const isRemoving = wasSkipApplied && value === "";
 
     setLogic((prev) =>
-      prev.map((r, i) => (i === idx ? { ...r, value, terminate: false } : r))
+      prev.map((row, rowIndexValue) =>
+        rowIndexValue === idx ? { ...row, value, terminate: false } : row
+      )
     );
 
-    mutate({
+    updateOptionLogic({
       terminate: false,
       skipTo: value,
       isRemoveSkip: isRemoving,
@@ -128,12 +63,16 @@ export default function OptionLogic({
 
   const toggleTerminate = (idx: number) => {
     const isRemoving = logic[idx].terminate;
+
     setLogic((prev) =>
-      prev.map((r, i) =>
-        i === idx ? { ...r, terminate: !r.terminate, value: "" } : r
+      prev.map((row, rowIndexValue) =>
+        rowIndexValue === idx
+          ? { ...row, terminate: !row.terminate, value: "" }
+          : row
       )
     );
-    mutate({
+
+    updateOptionLogic({
       terminate: !logic[idx].terminate,
       skipTo: "",
       isRemoveTerminate: isRemoving,
@@ -142,38 +81,37 @@ export default function OptionLogic({
 
   const handleReset = (idx: number) => {
     setLogic((prev) =>
-      prev.map((r, i) =>
-        i === idx ? { ...r, value: "", terminate: false } : r
+      prev.map((row, rowIndexValue) =>
+        rowIndexValue === idx ? { ...row, value: "", terminate: false } : row
       )
     );
-    mutate({ terminate: false, skipTo: "", isReset: true });
+
+    updateOptionLogic({ terminate: false, skipTo: "", isReset: true });
   };
 
   useEffect(() => {
-    const question = submitItems.find((q) => q.qID === qID);
-    if (question && question.rowOptionList) {
-      const row = question.rowOptionList.find((q) => q.optionID === rowIndex);
-      if (row) {
-        setLogic((prev) => {
-          const apiValue = row.skip_to ?? "";
-          const apiTerminate = row.terminate === 1;
+    const question = submitItems.find((item) => item.qID === qID);
+    if (!question?.rowOptionList) return;
 
-          if (
-            prev[0]?.value !== apiValue ||
-            prev[0]?.terminate !== apiTerminate
-          ) {
-            return [
-              {
-                row: `row${rowIndex + 1}`,
-                value: apiValue,
-                terminate: apiTerminate,
-              },
-            ];
-          }
-          return prev;
-        });
+    const row = question.rowOptionList.find((item) => item.optionID === rowIndex);
+    if (!row) return;
+
+    setLogic((prev) => {
+      const apiValue = row.skip_to ?? "";
+      const apiTerminate = row.terminate === 1;
+
+      if (prev[0]?.value !== apiValue || prev[0]?.terminate !== apiTerminate) {
+        return [
+          {
+            row: `row${rowIndex + 1}`,
+            value: apiValue,
+            terminate: apiTerminate,
+          },
+        ];
       }
-    }
+
+      return prev;
+    });
   }, [submitItems, qID, rowIndex]);
 
   return (
@@ -198,10 +136,16 @@ export default function OptionLogic({
               tooltip={row.terminate ? "Remove termination" : "Apply termination"}
               onClick={() => toggleTerminate(idx)}
               disabled={!!row.value}
-              className={row.terminate ? "questionnaire-logic-chip-danger" : "questionnaire-logic-chip-muted"}
+              className={
+                row.terminate
+                  ? "questionnaire-logic-chip-danger"
+                  : "questionnaire-logic-chip-muted"
+              }
             >
               <LuBan className="h-4 w-4" />
-              <span>{row.terminate ? "Termination Applied" : "Apply Termination"}</span>
+              <span>
+                {row.terminate ? "Termination Applied" : "Apply Termination"}
+              </span>
             </Button>
 
             <div

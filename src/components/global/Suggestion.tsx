@@ -5,6 +5,7 @@ import { setIsAddingQuestion, setQType } from "../../store/TriggerSlice";
 import { setChatOpen } from "../../store/ChatSlice";
 import useAiChat from "../../api-network/global/ai-chat";
 import Button from "../ui/Button";
+import { setEditingQuestion } from "../../store/QuestionSlice";
 
 type SuggestionAction = {
   label: string;
@@ -40,6 +41,7 @@ const Suggestion = () => {
       {
         label: "Create New Question",
         onClick: () => {
+          dispatch(setEditingQuestion(null));
           dispatch(setIsAddingQuestion(true));
           dispatch(setQType("text-only"));
           dispatch(setChatOpen(false));
