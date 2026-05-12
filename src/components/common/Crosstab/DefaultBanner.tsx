@@ -1,30 +1,17 @@
 import { useState } from "react";
-import {
-  LuCopy,
-  LuDownload,
-  LuPencilLine,
-  LuInfo,
-  LuSettings2,
-  LuTable2,
-  LuTrash2,
-} from "react-icons/lu";
+import { LuDownload, LuCopy, LuPencilLine, LuInfo, LuSettings2, LuTable2, LuTrash2 } from "react-icons/lu";
 import DynamicModel from "../../global/DynamicModel";
 import Input from "../../ui/Input";
 import { toast } from "sonner";
 import BannerSettings from "./BannerSettings";
 import { useLocation, useNavigate } from "react-router";
-import {
-  useBannerPointerList,
-  useDeleteBanner,
-  useDownloadtable,
-  useReplicateBanner,
-} from "./CrossTab.Api";
-import { useProcessHook } from "../Report/ReportMutations";
+import { useBannerPointerList, useDeleteBanner, useDownloadtable, useReplicateBanner } from "./CrossTab.Api";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../../store/store";
 import { setBannerName } from "../../../store/CrosstabSlice";
 import IconActionButton from "../../ui/IconActionButton";
 import Button from "../../ui/Button";
+import { useReportProcessDownload } from "../../../api-network/report/mutation";
 
 interface DefaultBannerProps {
   Id: string;
@@ -34,13 +21,7 @@ interface DefaultBannerProps {
   tableIDList: string[];
 }
 
-export default function DefaultBanner({
-  Id,
-  Title,
-  description,
-  OwnerName,
-  tableIDList,
-}: DefaultBannerProps) {
+export default function DefaultBanner({ Id, Title, description, OwnerName, tableIDList }: DefaultBannerProps) {
   const { state } = useLocation();
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -65,12 +46,12 @@ export default function DefaultBanner({
     cb: () => setIsDeleteModalOpen(false),
   });
   const { bannerPointerListData } = useBannerPointerList(Id, state.studyID);
-  const { Process } = useProcessHook();
+  const { processDownload } = useReportProcessDownload();
   const { downloadTableMutate } = useDownloadtable({
     studyID: state.studyID,
     cb: ({ studyID, pid }) => {
       if (studyID && pid) {
-        Process({ studyID, pid });
+        processDownload({ studyID, pid });
       }
     },
   });
@@ -84,12 +65,11 @@ export default function DefaultBanner({
         <div className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-start md:justify-between">
           <div>
             <h2
-              className={`crosstab-title text-xl font-semibold ${
-                Array.isArray(bannerPointerListData) &&
+              className={`crosstab-title text-xl font-semibold ${Array.isArray(bannerPointerListData) &&
                 bannerPointerListData.length > 0
-                  ? "cursor-pointer"
-                  : "cursor-default"
-              }`}
+                ? "cursor-pointer"
+                : "cursor-default"
+                }`}
               onClick={() => {
                 if (
                   Array.isArray(bannerPointerListData) &&
@@ -116,7 +96,7 @@ export default function DefaultBanner({
                       dispatch(setBannerName(Title));
                       navigate("/crosstab/table-list", {
                         state: { studyID: state.studyID, bannerID: Id },
-                        });
+                      });
                     }}
                   >
                     <LuTable2 size={18} />
@@ -180,7 +160,7 @@ export default function DefaultBanner({
         <div className="px-4 py-1">
           <div className="flex flex-wrap items-center justify-center gap-2">
             {Array.isArray(bannerPointerListData) &&
-            bannerPointerListData.length ? (
+              bannerPointerListData.length ? (
               bannerPointerListData.map((info) => (
                 <div
                   key={info.pointID}

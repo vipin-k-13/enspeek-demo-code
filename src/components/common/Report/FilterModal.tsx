@@ -2,50 +2,33 @@ import { useState } from "react";
 import DynamicModel from "../../global/DynamicModel";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "../../../services/apiService";
 import LoaderSpinner from "../../global/LoaderSpinner";
 import { setTrigger } from "../../../store/TriggerSlice";
 import { useLocation } from "react-router";
 import ModalInstruction from "../../ui/ModalInstruction";
 import Checkbox from "../../ui/Checkbox";
+import { useReportIncludeFiltersMutation } from "../../../api-network/report/mutation";
 
-export default function FilterModal({isOpen, setIsOpen}:{isOpen:boolean, setIsOpen:()=>void}) {
+export default function FilterModal({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: () => void }) {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const filter = useSelector((state: RootState) => state.filter);
-  const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>()
-  const {state} = useLocation();
+  const { state } = useLocation();
 
   const toggleFilter = (id: string) => {
-    setSelectedFilters((prev) =>
-      prev.includes(id)
-        ? prev.filter((filterId) => filterId !== id)
-        : [...prev, id]
-    );
+    setSelectedFilters((prev) => prev.includes(id) ? prev.filter((filterId) => filterId !== id) : [...prev, id]);
   };
 
-  const {mutate, isPending} = useMutation({
-    mutationKey: ["includesFilter"],
-    mutationFn: async () => {
-      const res = await apiRequest("post", "report/filters/include", {
-        apiToken: user.apiToken,
-        "question-list": selectedFilters,
-        studyID: state.studyID,
-      });
-
-      return res.response;
-    },
-    onSuccess: () => {
+  const { includeReportFilters, isIncludeReportFiltersPending } =
+    useReportIncludeFiltersMutation(state.studyID, () => {
       setIsOpen();
-      dispatch(setTrigger(true))
-    },
-  });
+      dispatch(setTrigger(true));
+    });
 
   if (!isOpen) return null;
 
-  if(isPending){
-    return <LoaderSpinner/>
+  if (isIncludeReportFiltersPending) {
+    return <LoaderSpinner />
   }
 
   return (
@@ -53,7 +36,7 @@ export default function FilterModal({isOpen, setIsOpen}:{isOpen:boolean, setIsOp
       Title="Add Report Filters"
       ButtonText="Save Filter List"
       isOpen={isOpen}
-      onClick={()=>mutate()}
+      onClick={() => includeReportFilters(selectedFilters)}
       onClose={() => setIsOpen()}
       className="max-w-lg"
     >

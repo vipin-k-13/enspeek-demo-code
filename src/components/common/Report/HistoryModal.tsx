@@ -1,17 +1,18 @@
 import DynamicModel from "../../global/DynamicModel";
 import Button from "../../ui/Button";
 import { FiDownload } from "react-icons/fi";
-import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "../../../services/apiService";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import LoaderSpinner from "../../global/LoaderSpinner";
 import { cn } from "../../../utils";
-import { useClearHistoryHook, useProcessHook } from "./ReportMutations";
-import { queryClient } from "../../../App";
 import { useState } from "react";
 import { useLocation } from "react-router";
 import { LuEraser } from "react-icons/lu";
+import { useReportProcessList } from "../../../api-network/report/query";
+import {
+  useReportClearHistory,
+  useReportProcessDownload,
+} from "../../../api-network/report/mutation";
 
 export default function HistoryModal({
   open,
@@ -20,45 +21,27 @@ export default function HistoryModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const user = useSelector((state: RootState) => state.user);
   const { name } = useSelector((state: RootState) => state.study);
   const [pid, setPid] = useState<string[]>([]);
-  const callback = () => {
-    queryClient.invalidateQueries({ queryKey: ["processList"] });
-    onOpenChange(false);
-  };
   const { state } = useLocation();
-  const { Process } = useProcessHook(() => setPid([]));
-  const { ClearHistory, isClearHistoryPending } = useClearHistoryHook({
+  const { processDownload } = useReportProcessDownload(() => setPid([]));
+  const { clearHistory, isClearHistoryPending } = useReportClearHistory({
     studyID: state.studyID,
-    cb: callback,
+    cb: () => onOpenChange(false),
   });
-
   const {
-    data: List,
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["processList"],
-    queryFn: async () => {
-      const res = await apiRequest("post", "report/processList", {
-        apiToken: user.apiToken,
-        studyID: state.studyID,
-      });
-
-      return res.response;
-    },
-    refetchOnWindowFocus: false,
-    retry: 1,
-  });
+    reportProcessList,
+    isReportProcessListLoading,
+    isReportProcessListError,
+  } = useReportProcessList(state.studyID);
 
   const DownloadHandle = (pid: string) => {
     setPid((prev) => [pid, ...prev]);
-    Process({ studyID: state.studyID, pid: pid });
+    processDownload({ studyID: state.studyID, pid });
   };
-  const hasHistory = Boolean(List?.data?.length);
+  const hasHistory = Boolean(reportProcessList?.data?.length);
 
-  if (isError) {
+  if (isReportProcessListError) {
     return null;
   }
 
@@ -80,7 +63,7 @@ export default function HistoryModal({
       isOpen={open}
       onClick={() => {
         if (hasHistory) {
-          ClearHistory();
+          clearHistory();
         }
       }}
       onClose={() => onOpenChange(false)}
@@ -99,17 +82,17 @@ export default function HistoryModal({
       }
     >
       <div className="py-1">
-        {isPending ? (
+        {isReportProcessListLoading ? (
           <LoaderSpinner />
-        ) : List.data.length ? (
-          List.data.map((item: any, index: number) => (
+        ) : reportProcessList?.data?.length ? (
+          reportProcessList.data.map((item: any, index: number) => (
             <div
               data-test-id={`${item.req_name}_${index + 1}`}
               key={index}
               className={cn(
                 "mb-3 flex items-center justify-between rounded-[18px] border home-border-soft p-4 shadow-sm",
                 item.status === 0 ? "home-panel-soft-bg" : "bg-white",
-                index === List.data.length - 1 && "pb-4"
+                index === reportProcessList.data.length - 1 && "pb-4"
               )}
             >
               <div className="flex-1">

@@ -2,13 +2,13 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import { useLocation } from "react-router";
-import { useProcessHook } from "../components/common/Report/ReportMutations";
 import { useDownloadtable } from "../components/common/Crosstab/CrossTab.Api";
 import { setIsDownloadDropdownOpen, setIsHistoryModalOpen } from "../store/CrosstabSlice";
 import { LuDownload, LuFileSpreadsheet } from "react-icons/lu";
 import Header from "../components/common/table-List/Header";
 import CrossTabTable from "../components/common/table-List/CrossTabTable";
 import PageContentShell from "../components/ui/PageContentShell";
+import { useReportProcessDownload } from "../api-network/report/mutation";
 
 const TableList_page = () => {
   const dispatch = useDispatch();
@@ -19,12 +19,12 @@ const TableList_page = () => {
     (state: RootState) => state.crossTabData
   );
 
-   const { Process } = useProcessHook();
+   const { processDownload } = useReportProcessDownload();
     const { downloadTableMutate } = useDownloadtable({
       studyID: state.studyID,
       cb: ({ studyID, pid }) => {
         if (studyID && pid) {
-          Process({ studyID, pid });
+          processDownload({ studyID, pid });
         }
       },
     });

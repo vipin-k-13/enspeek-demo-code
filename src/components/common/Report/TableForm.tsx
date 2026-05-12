@@ -1,7 +1,10 @@
 import { LuDownload } from "react-icons/lu";
 import Button from "../../ui/Button";
 import { useLocation } from "react-router";
-import { useProcessHook, useTableDownload } from "./ReportMutations";
+import {
+  useReportProcessDownload,
+  useReportTableDownload,
+} from "../../../api-network/report/mutation";
 import {
   SurfaceCard,
   SurfaceCardHeader,
@@ -33,11 +36,11 @@ export default function TableForm({
   studyID,
 }: TableFormProps) {
   const { state } = useLocation();
-  const { Process } = useProcessHook();
-  const { DownloadTable } = useTableDownload({
+  const { processDownload } = useReportProcessDownload();
+  const { downloadTable } = useReportTableDownload({
     studyID: studyID ? studyID : state?.studyID,
     cb: ({ studyID, pid }) => {
-      Process({ studyID, pid });
+      processDownload({ studyID, pid });
     },
   });
   return (
@@ -51,7 +54,7 @@ export default function TableForm({
         <Button
           className="report-toolbar-btn bg-[var(--color-brand-primary-softest)] text-login-primary hover:bg-[var(--color-brand-primary-soft)] hover:text-white"
           onClick={() => {
-            DownloadTable(questionId);
+            downloadTable(questionId);
           }}
         >
           <LuDownload />

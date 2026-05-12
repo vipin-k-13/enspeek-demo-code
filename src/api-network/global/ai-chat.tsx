@@ -8,7 +8,7 @@ import { apiRequest } from "../../services/apiService";
 import { store, type AppDispatch, type RootState } from "../../store/store";
 import { setChatOpen, setFollowUp, setIsTyping, setMessage, setMessages, setPending } from "../../store/ChatSlice";
 import { getPageName } from "../../utils/getPageName";
-import { useProcessHook } from "../../components/common/Report/ReportMutations";
+import { useReportProcessDownload } from "../report/mutation";
 import { setSubmitItems } from "../../store/QuestionSlice";
 import { REFRESH_STUDY_LIST_EVENT } from "../../utils/studyListRefresh";
 
@@ -18,7 +18,7 @@ export const useChat = () => {
   const { pathname, state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { Process } = useProcessHook();
+  const { processDownload } = useReportProcessDownload();
   const pageName = getPageName(pathname);
   const studyID = state?.studyID;
 
@@ -160,7 +160,7 @@ export const useChat = () => {
     }
 
     if (data.download === true && data?.pid) {
-      Process({ studyID: data.studyID, pid: data.pid });
+      processDownload({ studyID: data.studyID, pid: data.pid });
     }
   };
 

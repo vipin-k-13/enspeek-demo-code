@@ -12,22 +12,7 @@ function EmptyState() {
   );
 }
 
-export default function SingleSelectChart({
-  hasData = true,
-  chartData,
-  baseText,
-  questionText,
-  categories,
-  totalRespondents,
-}: {
-  questionId: string;
-  hasData?: boolean;
-  chartData: any[]
-  categories: string[];
-  baseText: string;
-  questionText: string;
-  totalRespondents: number;
-}) {
+export default function SingleSelectChart({ hasData = true, chartData, baseText, questionText, categories, totalRespondents, }: { questionId: string; hasData?: boolean; chartData: any[]; categories: string[]; baseText: string; questionText: string; totalRespondents: number }) {
   if (!hasData) return <EmptyState />;
 
   const options: Highcharts.Options = {
@@ -72,15 +57,15 @@ export default function SingleSelectChart({
       },
     },
     series: chartData,
-    legend:{ enabled: chartData.length > 1 },
+    legend: { enabled: chartData.length > 1 },
     credits: { enabled: false },
     tooltip: {
       formatter: function () {
         return `<b>${this.x}</b><br/>
                         ${this.series.name}: <b>${this.y}%</b><br/>
                         Count: <b>${Math.round(
-                          ((this.y as number) / 100) * totalRespondents
-                        )}</b>`;
+          ((this.y as number) / 100) * totalRespondents
+        )}</b>`;
       },
       backgroundColor: "#ffffff",
       borderColor: "#e7e4fb",
