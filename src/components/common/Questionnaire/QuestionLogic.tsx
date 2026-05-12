@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaPlus, FaRotateLeft } from "react-icons/fa6";
 import { LuGitBranchPlus, LuTrash2 } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
@@ -71,11 +71,16 @@ export default function QuestionLogic({
   const { mutate: fetchLogicOptions } = useQuestionLogicOptionsMutation(
     state.studyID
   );
+  const fetchLogicOptionsRef = useRef(fetchLogicOptions);
   const { questionGetData: data } = useQuestionnaireGetQuestion(
     studyID,
     questionID,
     isOpen
   );
+
+  useEffect(() => {
+    fetchLogicOptionsRef.current = fetchLogicOptions;
+  }, [fetchLogicOptions]);
 
   useEffect(() => {
     if (!Object.keys(LogicData).length) {
@@ -355,13 +360,13 @@ export default function QuestionLogic({
 
     [...new Set(uniqueVariables)].forEach((variable) => {
       if (variable.trim()) {
-        fetchLogicOptions(variable);
+        fetchLogicOptionsRef.current(variable);
       }
     });
-  }, [data, fetchLogicOptions, isOpen]);
+  }, [data, isOpen]);
 
   useEffect(() => {
-    if (resetFlag === undefined) return;
+    if (!resetFlag) return;
 
     const resetRows = [
       {
@@ -384,7 +389,7 @@ export default function QuestionLogic({
     );
     dispatch(setLogic({ ...logic, [storeComponent as string]: [] }));
     dispatch(setLogicPayload({ logic1: {} }));
-  }, [activeTab, dispatch, logic, resetFlag, storeComponent, validateLogic]);
+  }, [activeTab, dispatch, resetFlag, storeComponent]);
 
   useEffect(() => {
     if (!rows.length) return;
