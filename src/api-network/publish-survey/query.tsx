@@ -80,6 +80,7 @@ export const usePublishSurveyQuotaReport = (studyID?: string) => {
       return res.response;
     },
     enable: !!studyID && !!apiToken,
+    refetchOnWindowFocus: true,
   });
 
   return {
