@@ -9,6 +9,7 @@ import { store, type AppDispatch, type RootState } from "../../store/store";
 import { setChatOpen, setFollowUp, setIsTyping, setMessage, setMessages, setPending } from "../../store/ChatSlice";
 import { getPageName } from "../../utils/getPageName";
 import { useReportProcessDownload } from "../report/mutation";
+import questionnaireKeys from "../questionnaire/keys";
 import { setSubmitItems } from "../../store/QuestionSlice";
 import { REFRESH_STUDY_LIST_EVENT } from "../../utils/studyListRefresh";
 
@@ -59,11 +60,8 @@ export const useChat = () => {
   const refreshQuestionnaireList = async () => {
     if (!studyID) return;
 
-    await queryClient.invalidateQueries({
-      queryKey: ["viewCustomList", studyID],
-    });
     await queryClient.refetchQueries({
-      queryKey: ["viewCustomList", studyID],
+      queryKey: questionnaireKeys.questionList(studyID),
       type: "all",
     });
   };
@@ -137,7 +135,7 @@ export const useChat = () => {
       navigate(data.route, { state: { studyID: data?.studyId } });
     }
 
-    if (data.add && !data.questions) {
+    if (pageName === "qnr" && data.add) {
       await refreshQuestionnaireList();
     }
 
@@ -154,10 +152,6 @@ export const useChat = () => {
     }
 
     dispatch(setFollowUp(data.followUp));
-
-    if (data.questions?.questions?.length > 0 && data.add) {
-      await refreshQuestionnaireList();
-    }
 
     if (data.download === true && data?.pid) {
       processDownload({ studyID: data.studyID, pid: data.pid });

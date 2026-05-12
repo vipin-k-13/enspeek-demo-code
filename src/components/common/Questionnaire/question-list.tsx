@@ -70,7 +70,10 @@ export default function QuestionList() {
     }
   }, [navigate, studyID]);
 
-  if (isStudyInfoLoading || isQuestionnaireListLoading || isQuestionnaireListRefetching) {
+  const isInitialQuestionnaireLoading =
+    isStudyInfoLoading || (isQuestionnaireListLoading && submitItems.length === 0);
+
+  if (isInitialQuestionnaireLoading) {
     return (
       <div className="flex items-center justify-center w-full h-full">
         <AiOutlineLoading3Quarters
@@ -126,6 +129,14 @@ export default function QuestionList() {
           onDragOver={isDragDisabled ? undefined : handleDragOver}
           onDrop={isDragDisabled ? undefined : handleDrop}
         >
+          {isQuestionnaireListRefetching && submitItems.length > 0 && (
+            <div className="pointer-events-none absolute right-4 top-4 z-10">
+              <div className="inline-flex items-center gap-2 rounded-full border border-login-primary/20 bg-white/95 px-3 py-1.5 text-sm font-semibold text-login-primary shadow-sm">
+                <AiOutlineLoading3Quarters className="h-4 w-4 animate-spin" />
+                Updating
+              </div>
+            </div>
+          )}
           {isAddingQuestion ? (
             <QuestionnaireForm
               onClose={() => {

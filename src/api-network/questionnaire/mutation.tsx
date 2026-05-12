@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import type { AppDispatch, RootState } from "../../store/store";
@@ -26,9 +26,6 @@ const mapLogic2Skip = (data: Question) => {
 const refreshQuestionnaireQueries = async (studyID?: string) => {
   if (!studyID) return;
 
-  await queryClient.invalidateQueries({
-    queryKey: questionnaireKeys.questionList(studyID),
-  });
   await queryClient.refetchQueries({
     queryKey: questionnaireKeys.questionList(studyID),
     type: "active",
@@ -54,7 +51,7 @@ export const useQuestionViewMutation = (studyID?: string) => {
       return res.response as Question;
     },
     onSuccess: (data: Question) => {
-      dispatch(setSubmitItems(data));
+      dispatch(setSubmitItems({ ...data, isLoaded: true }));
       dispatch(setLogic2Skip({ qID: data.qID, message: mapLogic2Skip(data) }));
     },
   });
@@ -65,21 +62,49 @@ export const useHydrateQuestionnaireSubmitItems = (
   questionList?: { qID: string }[]
 ) => {
   const dispatch = useDispatch<AppDispatch>();
+  const submitItems = useSelector((state: RootState) => state.question.submitItems);
   const { mutate: fetchQuestionById } = useQuestionViewMutation(studyID);
+  const lastHydratedKeyRef = useRef("");
+  const questionIdsKey = useMemo(
+    () => (questionList?.length ? questionList.map((item) => item.qID).join("|") : ""),
+    [questionList]
+  );
 
   useEffect(() => {
     if (questionList?.length) {
-      dispatch(setAllSubmitItems(questionList));
-      questionList.forEach((item) => {
-        if (item?.qID) {
+      if (lastHydratedKeyRef.current === questionIdsKey) {
+        return;
+      }
+
+      lastHydratedKeyRef.current = questionIdsKey;
+      const existingItemsMap = new Map(
+        submitItems.map((item) => [item.qID, item])
+      );
+      const mergedItems: any[] = questionList.map((item) => {
+        const existingItem = existingItemsMap.get(item.qID);
+        return existingItem
+          ? existingItem
+          : {
+              ...item,
+              isLoaded: false,
+            };
+      });
+
+      dispatch(
+        setAllSubmitItems(mergedItems)
+      );
+
+      mergedItems.forEach((item) => {
+        if (item?.qID && item.isLoaded === false) {
           fetchQuestionById(item.qID);
         }
       });
       return;
     }
 
+    lastHydratedKeyRef.current = "";
     dispatch(setAllSubmitItems([]));
-  }, [dispatch, fetchQuestionById, questionList]);
+  }, [dispatch, fetchQuestionById, questionIdsKey, questionList, submitItems]);
 };
 
 export const useCreateQuestionMutation = (studyID?: string) => {

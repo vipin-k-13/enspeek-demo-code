@@ -10,6 +10,7 @@ interface QuestionGroup {
   getLogicRes: Record<string, any>;
   questionList: any[];
   submitItems: Question[];
+  hydratingQuestionIds: string[];
   editingQuestion: Question | null;
 }
 
@@ -23,6 +24,7 @@ const initialState: QuestionGroup = {
   getLogicRes: {},
   questionList: [],
   submitItems: [],
+  hydratingQuestionIds: [],
   editingQuestion: null,
 };
 
@@ -36,6 +38,7 @@ const resetQuestionState = (): QuestionGroup => ({
   getLogicRes: {},
   questionList: [],
   submitItems: [],
+  hydratingQuestionIds: [],
   editingQuestion: null,
 });
 
@@ -76,6 +79,14 @@ const QuestionSlice = createSlice({
       state.submitItems = action.payload;
       return state;
     },
+    setHydratingQuestionIds: (state, action: PayloadAction<string[]>) => {
+      state.hydratingQuestionIds = action.payload;
+    },
+    clearHydratingQuestionId: (state, action: PayloadAction<string>) => {
+      state.hydratingQuestionIds = state.hydratingQuestionIds.filter(
+        (questionId) => questionId !== action.payload
+      );
+    },
     setSubmitItems: (state, action: PayloadAction<any>) => {
       const data = action.payload;
       const exists = state.submitItems.some((item) => item.qID === data.qID);
@@ -87,6 +98,10 @@ const QuestionSlice = createSlice({
       } else if (Object.keys(data).length > 0) {
         state.submitItems = [...state.submitItems, data];
       }
+
+      state.hydratingQuestionIds = state.hydratingQuestionIds.filter(
+        (questionId) => questionId !== data.qID
+      );
     },
     setEditingQuestion: (state, action: PayloadAction<Question | null>) => {
       state.editingQuestion = action.payload;
@@ -103,6 +118,8 @@ export const {
   setQuestionList,
   setSubmitItems,
   setAllSubmitItems,
+  setHydratingQuestionIds,
+  clearHydratingQuestionId,
   setEditingQuestion,
 } = QuestionSlice.actions;
 export default QuestionSlice.reducer;

@@ -126,6 +126,7 @@ export const useQuestionnaireList = (studyID?: string) => {
         getLogicRes: apiData.getLogicRes ?? {},
         questionList: apiData.questionList ?? [],
         submitItems: apiData.submitItems ?? [],
+        hydratingQuestionIds: [],
         editingQuestion: null,
       }));
 

@@ -11,11 +11,14 @@ import QuesLogicModal from "./QuestionLogicModal";
 import { useCopyQuestionMutation, useDeleteQuestionMutation, useRearrangeQuestionMutation } from "../../../api-network/questionnaire/mutation";
 import { setAllSubmitItems, setEditingQuestion } from "../../../store/QuestionSlice";
 import { setIsAddingQuestion } from "../../../store/TriggerSlice";
+import { useLocation } from "react-router";
 
 interface DataListProps { }
 
 const DataList: FC<DataListProps> = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { state } = useLocation();
+  const studyID = state?.studyID;
   const submittedItems = useSelector(
     (state: RootState) => state.question.submitItems
   );
@@ -30,9 +33,9 @@ const DataList: FC<DataListProps> = () => {
   const [selectedLogicQID, setSelectedLogicQID] = useState<string | null>(null);
   const MainDiv = useRef<HTMLDivElement | null>(null);
 
-  const { mutate: deleteQuestion, isPending: isDeletePending } = useDeleteQuestionMutation();
-  const { mutate: copyQuestion, isPending: isCopyPending } = useCopyQuestionMutation();
-  const { mutate: rearrangeQuestions, isPending: isRearrangePending } = useRearrangeQuestionMutation();
+  const { mutate: deleteQuestion, isPending: isDeletePending } = useDeleteQuestionMutation(studyID);
+  const { mutate: copyQuestion, isPending: isCopyPending } = useCopyQuestionMutation(studyID);
+  const { mutate: rearrangeQuestions, isPending: isRearrangePending } = useRearrangeQuestionMutation(studyID);
 
   const onDragStart = (e: DragEvent<HTMLDivElement>, index: number) => {
     setDraggedIndex(index);
@@ -70,10 +73,10 @@ const DataList: FC<DataListProps> = () => {
         {submittedItems.map((data, index) => (
           <div
             key={data.qID}
-            draggable={!isDragDisabled}
-            onDragStart={!isDragDisabled ? (e) => onDragStart(e, index) : undefined}
-            onDragOver={!isDragDisabled ? (e) => onDragOver(e) : undefined}
-            onDrop={!isDragDisabled ? (e) => onDrop(e, index) : undefined}
+            draggable={!isDragDisabled && (data as Question & { isLoaded?: boolean }).isLoaded !== false}
+            onDragStart={!isDragDisabled && (data as Question & { isLoaded?: boolean }).isLoaded !== false ? (e) => onDragStart(e, index) : undefined}
+            onDragOver={!isDragDisabled && (data as Question & { isLoaded?: boolean }).isLoaded !== false ? (e) => onDragOver(e) : undefined}
+            onDrop={!isDragDisabled && (data as Question & { isLoaded?: boolean }).isLoaded !== false ? (e) => onDrop(e, index) : undefined}
             className={cn(index === draggedIndex && "opacity-70")}
           >
             <QuestionAccordionItem

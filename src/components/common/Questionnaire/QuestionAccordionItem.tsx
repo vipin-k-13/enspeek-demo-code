@@ -40,6 +40,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
   const { isExpanded } = useAccordionContext();
   const { launch, output } = useSelector((state: RootState) => state.study);
   const disableActions = launch === 1 && output === 1;
+  const isLoaded = (Data as Question & { isLoaded?: boolean }).isLoaded !== false;
   const displayLabel =
     Data.qLabel?.replace(/^[A-Za-z0-9_-]+\s*:\s*/, "").trim() || Data.qLabel;
   const logic2Skip = useSelector(
@@ -48,20 +49,21 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
   const expanded = isExpanded(Data.qID);
 
   return (
-    <AccordionItem value={Data.qID} className="border-0">
+    <AccordionItem value={Data.qID} className="border-0" disabled={!isLoaded}>
       <AccordionTrigger>
         <div
           data-test-id={Data.qID}
           className={cn(
             "questionnaire-card questionnaire-border w-full rounded-[24px] border px-4 py-4 shadow-sm transition-shadow md:px-6",
-            expanded && "rounded-b-none border-b-0 shadow-none"
+            expanded && "rounded-b-none border-b-0 shadow-none",
+            !isLoaded && "cursor-not-allowed pointer-events-none"
           )}
         >
           <div className="flex w-full items-center gap-3">
             <div
               className={cn(
                 "questionnaire-muted shrink-0",
-                disableActions ? "cursor-default" : "cursor-move"
+                disableActions || !isLoaded ? "cursor-default" : "cursor-move"
               )}
             >
               <LuGripVertical className="h-5 w-5" />
@@ -104,7 +106,7 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
                 {formatQuestionTypeLabel(Data.qType)}
               </span>
             </div>
-            {!disableActions && (
+            {!disableActions && isLoaded && (
               <div
                 className="questionnaire-muted flex items-center gap-2 md:gap-3"
                 onClick={(e) => e.stopPropagation()}
@@ -154,10 +156,22 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
               </div>
             )}
             <div
-              title={expanded ? "Collapse question" : "Expand question"}
+              title={
+                !isLoaded
+                  ? "Loading question details"
+                  : expanded
+                    ? "Collapse question"
+                    : "Expand question"
+              }
               className="questionnaire-muted questionnaire-clickable shrink-0"
             >
-              {expanded ? (
+              {!isLoaded ? (
+                <span className="copying-dots inline-flex w-[1.5em] justify-start text-lg font-bold leading-none">
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
+              ) : expanded ? (
                 <LuChevronDown className="h-5 w-5" />
               ) : (
                 <LuChevronRight className="h-5 w-5" />
