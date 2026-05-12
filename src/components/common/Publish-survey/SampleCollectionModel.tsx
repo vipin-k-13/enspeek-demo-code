@@ -1,16 +1,14 @@
 import { useEffect, useState, type FC } from "react";
 import DynamicModel from "../../global/DynamicModel";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "../../../services/apiService";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import { useLocation } from "react-router";
 import { toast } from "sonner";
-import { queryClient } from "../../../App";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import { LuInfo, LuPlay, LuUsers } from "react-icons/lu";
 import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
+import { useInitiateSampleCollectionMutation } from "../../../api-network/publish-survey/mutation";
 
 interface SampleCollectionModelProps {
   isOpen: boolean;
@@ -24,25 +22,9 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
   studyName,
 }) => {
   const [inputValueInitiate, setInputValueInitiate] = useState("");
-  const user = useSelector((state: RootState) => state.user);
   const studyInfo = useSelector((state: RootState) => state.study);
   const { state } = useLocation();
-  const { mutate, isPending } = useMutation({
-    mutationKey: ["Initiate Sample", state.studyID],
-    mutationFn: async () => {
-      const res = await apiRequest("post", "study/set/launch", {
-        apiToken: user.apiToken,
-        studyID: state.studyID,
-      });
-      return res.response;
-    },
-    onSuccess: () => {
-      toast.success("Study set for sample collection");
-      queryClient.invalidateQueries({ queryKey: ["studyInfo"] });
-      setInputValueInitiate("");
-      Closed();
-    },
-  });
+  const { mutate, isPending } = useInitiateSampleCollectionMutation(state.studyID);
 
   useEffect(() => {
     if (isOpen && !isPending) {
@@ -55,7 +37,12 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
       toast.error("Please type 'collect' to confirm sample collection.");
       return;
     }
-    mutate();
+    mutate(undefined, {
+      onSuccess: () => {
+        setInputValueInitiate("");
+        Closed();
+      },
+    });
   };
 
   return (

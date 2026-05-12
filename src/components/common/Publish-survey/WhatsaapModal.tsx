@@ -1,21 +1,13 @@
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router";
-import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { FaWhatsapp } from "react-icons/fa";
-import {
-  LuCopy,
-  LuInfo,
-  LuLink,
-  LuMessageSquareQuote,
-} from "react-icons/lu";
-import type { RootState } from "../../../store/store";
-import { apiRequest } from "../../../services/apiService";
+import { LuCopy, LuInfo, LuLink, LuMessageSquareQuote } from "react-icons/lu";
 import Modal from "../../ui/Modal";
 import Button from "../../ui/Button";
 import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
 import ModalHeader from "../../ui/modal/ModalHeader";
+import { useWhatsappLink } from "../../../api-network/publish-survey/query";
 
 interface WhatsaapModalProps {
   onSave: (selected: string) => void;
@@ -25,25 +17,7 @@ interface WhatsaapModalProps {
 const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
   const location = useLocation();
   const studyID = location.state?.studyID;
-  const user = useSelector((state: RootState) => state.user);
-
-  const { data } = useQuery({
-    queryKey: ["whatsaap"],
-    queryFn: async () => {
-      const res = await apiRequest(
-        "post",
-        "questionnaire/generate/whatsapp/link",
-        {
-          apiToken: user.apiToken,
-          studyID,
-        }
-      );
-      return res.response;
-    },
-    enabled: !!studyID && !!user.apiToken,
-    refetchOnWindowFocus: false,
-    retry: 1,
-  });
+  const { whatsappLinkData: data } = useWhatsappLink(studyID);
 
   const copyContent = data?.short_url || "";
 
@@ -118,7 +92,7 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
               className="gap-5 rounded-lg px-5 py-5"
               icon={
                 <span className="modal-header-icon text-[var(--color-study-activated)]">
-                <LuInfo className="h-5 w-5" />
+                  <LuInfo className="h-5 w-5" />
                 </span>
               }
             >

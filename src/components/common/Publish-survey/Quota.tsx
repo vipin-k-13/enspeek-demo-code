@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { AiOutlineSave } from "react-icons/ai";
 import { MdCancel } from "react-icons/md";
-import { toast } from "sonner";
-import { useSetQuota } from "./SurveyApi";
 import { LuCircleCheck, LuCircleX, LuClock3, LuPencilLine } from "react-icons/lu";
 import IconActionButton from "../../ui/IconActionButton";
 import Input from "../../ui/Input";
+import { useSetQuotaMutation } from "../../../api-network/publish-survey/mutation";
 
 interface QuotaProps {
   studyID: string;
@@ -24,15 +23,14 @@ const Quota: React.FC<QuotaProps> = ({
 }) => {
   const [isEditingTotal, setIsEditingTotal] = useState(false);
   const [editTotal, setEditTotal] = useState(totalQuota || 100);
-  const { setQuota, isSetQuotaPending } = useSetQuota({
-    studyID,
-    quota: editTotal || 100,
-  });
+  const { mutate: setQuota, isPending: isSetQuotaPending } = useSetQuotaMutation(studyID);
 
   const handleSaveTotal = () => {
-    setQuota();
-    setIsEditingTotal(false);
-    toast.success("Quota updated successfully!");
+    setQuota(editTotal || 100, {
+      onSuccess: () => {
+        setIsEditingTotal(false);
+      },
+    });
   };
 
   const safeTotalQuota = totalQuota || 0;
