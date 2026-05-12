@@ -48,9 +48,12 @@ export const useTableOutput = (
   } = useSuspenseQuery({
     queryKey: crosstabKeys.tableOutput(bannerID, tableID, studyID),
     queryFn: async () => {
+      const endpoint = url.crosstabTableOutput.endpoint
+        .replace(":bannerId", bannerID)
+        .replace(":tableId", tableID);
       const res = await apiRequest(
         url.crosstabTableOutput.method,
-        `${url.crosstabTableOutput.endpoint}/${bannerID}/${tableID}`,
+        endpoint,
         {
           studyID,
           apiToken,
@@ -79,9 +82,12 @@ export const useTableOutputEditRows = (
   } = useQuery({
     queryKey: crosstabKeys.tableOutputEditRows(bannerID, tableID, studyID),
     queryFn: async () => {
+      const endpoint = url.crosstabTableOutput.endpoint
+        .replace(":bannerId", bannerID)
+        .replace(":tableId", tableID);
       const res = await apiRequest(
         url.crosstabTableOutput.method,
-        `${url.crosstabTableOutput.endpoint}/${bannerID}/${tableID}`,
+        endpoint,
         {
           studyID,
           apiToken,
@@ -108,9 +114,12 @@ export const useOpList = (
   const { data: opListData, isPending: isOpListPending } = useQuery({
     queryKey: crosstabKeys.opList(tableID, qID, bannerID, studyID),
     queryFn: async () => {
+      const endpoint = url.crosstabTableOptionList.endpoint
+        .replace(":tableId", tableID)
+        .replace(":qId", qID);
       const res = await apiRequest(
         url.crosstabTableOptionList.method,
-        `${url.crosstabTableOptionList.endpoint}/${tableID}/${qID}`,
+        endpoint,
         {
           studyID,
           apiToken,

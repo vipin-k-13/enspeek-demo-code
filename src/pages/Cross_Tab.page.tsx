@@ -13,17 +13,14 @@ const Cross_Tab_Page = () => {
   );
 
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      const filtered = searchTerm.trim()
-        ? BannersAll.filter((banner) =>
-            banner.title.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-        : BannersAll;
+    const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+    const filtered = normalizedSearchTerm
+      ? BannersAll.filter((banner) =>
+          banner.title?.trim().toLowerCase().includes(normalizedSearchTerm)
+        )
+      : BannersAll;
 
-      dispatch(setBanners(filtered));
-    }, 300);
-
-    return () => clearTimeout(delayDebounce);
+    dispatch(setBanners(filtered));
   }, [searchTerm, BannersAll, dispatch]);
 
   return (

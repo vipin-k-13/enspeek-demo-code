@@ -17,11 +17,11 @@ export const useAddCustomTable = (studyID: string) => {
   const { apiToken } = useSelector((state: RootState) => state.user);
 
   const mutation = mutationStructure({
-    mutationKey: [url.crosstabTableCustomAdd.mutationKey, studyID],
+    mutationKey: [url.crosstabCustomTableAdd.mutationKey, studyID],
     mutationFn: async (payload: AddCustomTablePayload) => {
       const res = await apiRequest(
-        url.crosstabTableCustomAdd.method,
-        url.crosstabTableCustomAdd.endpoint,
+        url.crosstabCustomTableAdd.method,
+        url.crosstabCustomTableAdd.endpoint,
         {
           studyID,
           ...payload,
@@ -56,11 +56,11 @@ export const useEditTableListQuestion = ({
   const { apiToken } = useSelector((state: RootState) => state.user);
 
   const mutation = mutationStructure({
-    mutationKey: [url.crosstabTableEdit.mutationKey, qId, studyID],
+    mutationKey: [url.crosstabTableEditByQuestionId.mutationKey, qId, studyID],
     mutationFn: async (data: EditTableListQuestionPayload) => {
       const res = await apiRequest(
-        url.crosstabTableEdit.method,
-        `${url.crosstabTableEdit.endpoint}/${qId}`,
+        url.crosstabTableEditByQuestionId.method,
+        url.crosstabTableEditByQuestionId.endpoint.replace(":qId", qId),
         {
           apiToken,
           studyID,

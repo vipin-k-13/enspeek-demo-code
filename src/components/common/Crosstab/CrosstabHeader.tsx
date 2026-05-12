@@ -51,6 +51,9 @@ export default function CrosstabHeader({
               className="home-text border-0 bg-transparent px-2 py-0 focus:outline-none focus-visible:ring-0"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyUp={(e) =>
+                setSearchTerm((e.target as HTMLInputElement).value)
+              }
             />
           </div>
           <Button
