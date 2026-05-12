@@ -2,7 +2,11 @@ import DynamicModel from "../../global/DynamicModel";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
-import { useEditBanner, useQList, useTableListAdd } from "./CrossTab.Api";
+import {
+  useEditBanner,
+  useTableListAdd,
+} from "../../../api-network/crosstab/mutation";
+import { useQList } from "../../../api-network/crosstab/query";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import BannerLogic from "../../global/BannerLogic";
 import { useLocation } from "react-router";

@@ -3,7 +3,7 @@ import DynamicModel from "../../global/DynamicModel";
 import { toast } from "sonner";
 import AddCustomTableListModal from "./TableAdd";
 import BannerLogic from "../../global/BannerLogic";
-import { useAddCustomTable } from "../Crosstab/CrossTab.Api";
+import { useAddCustomTable } from "../../../api-network/crosstab/tablelist/mutation";
 import { useLocation } from "react-router";
 import Input from "../../ui/Input";
 import ModalInstruction from "../../ui/ModalInstruction";

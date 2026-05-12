@@ -3,7 +3,11 @@ import DynamicModel from "../../global/DynamicModel";
 import { LuArrowUpDown, LuSave, LuTable, LuTrash2 } from "react-icons/lu";
 import { toast } from "sonner";
 import BannerLogic from "../../global/BannerLogic";
-import { useEditTableListQuestion, useOpList } from "../Crosstab/CrossTab.Api";
+import { useEditTableListQuestion } from "../../../api-network/crosstab/tablelist/mutation";
+import {
+  useOpList,
+  useTableOutputEditRows,
+} from "../../../api-network/crosstab/tablelist/query";
 import { useLocation } from "react-router";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Button from "../../ui/Button";
@@ -11,10 +15,6 @@ import Input from "../../ui/Input";
 import Select from "../../ui/Select";
 import IconActionButton from "../../ui/IconActionButton";
 import Checkbox from "../../ui/Checkbox";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../../store/store";
-import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "../../../services/apiService";
 
 interface EditTableModalProps {
   qid: string;
@@ -30,30 +30,16 @@ export default function EditTableModal({
   tid,
 }: EditTableModalProps) {
   const { state } = useLocation();
-  const { apiToken } = useSelector((store: RootState) => store.user);
   const { opListData, isOpListPending } = useOpList(
     tid,
     qid,
     state.bannerID,
     state.studyID
   );
-  const { data: tableOutputData, isPending: isTableOutputPending } = useQuery({
-    queryKey: ["tableOutputEditRows", state.bannerID, tid, state.studyID],
-    queryFn: async () => {
-      const res = await apiRequest(
-        "post",
-        `crosstab/tableList/output/${state.bannerID}/${tid}`,
-        {
-          studyID: state.studyID,
-          apiToken,
-        }
-      );
-      return res.response;
-    },
-    enabled: open && !!apiToken && !!state.bannerID && !!tid && !!state.studyID,
-    refetchOnWindowFocus: false,
-    retry: 1,
-  });
+  const {
+    tableOutputEditRowsData: tableOutputData,
+    isTableOutputEditRowsPending: isTableOutputPending,
+  } = useTableOutputEditRows(state.bannerID, tid, state.studyID, open);
   const [tableLabel, setTableLabel] = useState("");
   const [tableText, setTableText] = useState("");
   const [rows, setRows] = useState<QuestionOption[]>([]);

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useQList } from "./CrossTab.Api";
+import { useQList } from "../../../api-network/crosstab/query";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { setSelectedQuestions } from "../../../store/CrosstabSlice";
 import { useLocation } from "react-router";

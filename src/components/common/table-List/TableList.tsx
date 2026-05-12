@@ -6,9 +6,13 @@ import {
   setSelectedTable,
 } from "../../../store/CrosstabSlice";
 import { useLocation } from "react-router";
-import { useBannerPointerList, useDownloadtable, useTableOutput } from "../Crosstab/CrossTab.Api";
 import IconActionButton from "../../ui/IconActionButton";
 import { useReportProcessDownload } from "../../../api-network/report/mutation";
+import { useDownloadtable } from "../../../api-network/crosstab/tablelist/mutation";
+import {
+  useBannerPointerList,
+} from "../../../api-network/crosstab/query";
+import { useTableOutput } from "../../../api-network/crosstab/tablelist/query";
 
 interface TableListProp {
   Id: string;

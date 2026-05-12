@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { FaPlus, FaRotateLeft } from "react-icons/fa6";
 import { LuTrash2 } from "react-icons/lu";
-import { useLogicOpts, useLogicVar } from "../common/Crosstab/CrossTab.Api";
+import { useLogicOpts } from "../../api-network/crosstab/mutation";
+import { useLogicVar } from "../../api-network/crosstab/query";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogic, setValidateLogic } from "../../store/CrosstabSlice";
 import type { AppDispatch, RootState } from "../../store/store";

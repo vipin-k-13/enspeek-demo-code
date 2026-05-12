@@ -3,10 +3,12 @@ import DefaultBanner from "./DefaultBanner";
 import AddBannerModal from "./BannerModal";
 import {
   useAddBanner,
+  useTableListAdd,
+} from "../../../api-network/crosstab/mutation";
+import {
   useBannerList,
   useQList,
-  useTableListAdd,
-} from "./CrossTab.Api";
+} from "../../../api-network/crosstab/query";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
 import {

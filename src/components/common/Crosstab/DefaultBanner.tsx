@@ -5,7 +5,12 @@ import Input from "../../ui/Input";
 import { toast } from "sonner";
 import BannerSettings from "./BannerSettings";
 import { useLocation, useNavigate } from "react-router";
-import { useBannerPointerList, useDeleteBanner, useDownloadtable, useReplicateBanner } from "./CrossTab.Api";
+import {
+  useDeleteBanner,
+  useReplicateBanner,
+} from "../../../api-network/crosstab/mutation";
+import { useBannerPointerList } from "../../../api-network/crosstab/query";
+import { useDownloadtable } from "../../../api-network/crosstab/tablelist/mutation";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../../store/store";
 import { setBannerName } from "../../../store/CrosstabSlice";
@@ -49,7 +54,7 @@ export default function DefaultBanner({ Id, Title, description, OwnerName, table
   const { processDownload } = useReportProcessDownload();
   const { downloadTableMutate } = useDownloadtable({
     studyID: state.studyID,
-    cb: ({ studyID, pid }) => {
+    cb: ({ studyID, pid }: { studyID?: string; pid?: string }) => {
       if (studyID && pid) {
         processDownload({ studyID, pid });
       }

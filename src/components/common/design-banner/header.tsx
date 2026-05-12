@@ -5,7 +5,7 @@ import Button from "../../ui/Button";
 import { toast } from "sonner";
 import { resetLogicData } from "../../../store/CrossTabDataSlice";
 import { LuSendHorizontal } from "react-icons/lu";
-import { useAddBannerPointer } from "./designBanner_Api";
+import { useAddBannerPointer } from "../../../api-network/crosstab/designbanner/mutation";
 import PageBreadcrumbs from "../../ui/PageBreadcrumbs";
 import PageSubheader from "../../ui/PageSubheader";
 

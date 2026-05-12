@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import TabButtons from "../components/common/design-banner/tabButtons";
 import PointDetails from "../components/common/design-banner/pointerDetails";
-import { useBannerPointerList } from "../components/common/design-banner/designBanner_Api";
 import PageContentShell from "../components/ui/PageContentShell";
+import { useBannerPointerList } from "../api-network/crosstab/designbanner/query";
 
 const BannerDesign_page = () => {
   const { state } = useLocation();
