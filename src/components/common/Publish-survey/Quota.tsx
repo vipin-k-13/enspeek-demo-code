@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineSave } from "react-icons/ai";
 import { MdCancel } from "react-icons/md";
 import { LuCircleCheck, LuCircleX, LuClock3, LuPencilLine } from "react-icons/lu";
@@ -24,6 +24,12 @@ const Quota: React.FC<QuotaProps> = ({
   const [isEditingTotal, setIsEditingTotal] = useState(false);
   const [editTotal, setEditTotal] = useState(totalQuota || 100);
   const { mutate: setQuota, isPending: isSetQuotaPending } = useSetQuotaMutation(studyID);
+
+  useEffect(() => {
+    if (!isEditingTotal) {
+      setEditTotal(totalQuota || 0);
+    }
+  }, [isEditingTotal, totalQuota]);
 
   const handleSaveTotal = () => {
     setQuota(editTotal || 100, {
@@ -52,7 +58,7 @@ const Quota: React.FC<QuotaProps> = ({
                   Total Quota
                 </span>
                 <span className="questionnaire-heading text-sm font-bold">
-                  {isSetQuotaPending ? "Updating..." : editTotal}
+                  {isSetQuotaPending ? "Updating..." : safeTotalQuota}
                 </span>
                 <IconActionButton
                   tone="primary"
@@ -81,7 +87,10 @@ const Quota: React.FC<QuotaProps> = ({
                 <IconActionButton
                   tone="danger"
                   tooltip="Cancel"
-                  onClick={() => setIsEditingTotal(false)}
+                  onClick={() => {
+                    setEditTotal(safeTotalQuota);
+                    setIsEditingTotal(false);
+                  }}
                 >
                   <MdCancel size={18} />
                 </IconActionButton>

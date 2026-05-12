@@ -79,13 +79,35 @@ export const usePublishSurveyQuotaReport = (studyID?: string) => {
       );
       return res.response;
     },
-    enable: !!studyID,
+    enable: !!studyID && !!apiToken,
   });
 
   return {
     quotaReport: quotaReportQuery.data,
     isQuotaReportLoading: quotaReportQuery.isLoading,
     refetchQuotaReport: quotaReportQuery.refetch,
+  };
+};
+
+export const usePublishSurveyQuota = (studyID?: string) => {
+  const { apiToken } = useSelector((state: RootState) => state.user);
+
+  const quotaQuery = queryStructure({
+    queryKey: publishSurveyKeys.quota(studyID),
+    queryFn: async () => {
+      const res = await apiRequest(url.getQuota.method, url.getQuota.endpoint, {
+        apiToken,
+        studyID,
+      });
+      return res.response;
+    },
+    enable: !!studyID && !!apiToken,
+  });
+
+  return {
+    quotaData: quotaQuery.data,
+    isQuotaLoading: quotaQuery.isLoading,
+    refetchQuota: quotaQuery.refetch,
   };
 };
 

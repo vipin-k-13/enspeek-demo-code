@@ -31,6 +31,18 @@ const refetchPublishSurveyQuotaReport = async (studyID?: string) => {
   });
 };
 
+const refetchPublishSurveyQuota = async (studyID?: string) => {
+  if (!studyID) return;
+
+  await queryClient.invalidateQueries({
+    queryKey: publishSurveyKeys.quota(studyID),
+  });
+  await queryClient.refetchQueries({
+    queryKey: publishSurveyKeys.quota(studyID),
+    type: "active",
+  });
+};
+
 export const useGenerateGlobalLinkMutation = (studyID?: string, studyName?: string) => {
   const { apiToken } = useSelector((state: RootState) => state.user);
 
@@ -63,11 +75,12 @@ export const useSetQuotaMutation = (studyID?: string) => {
       const res = await apiRequest(url.setQuota.method, url.setQuota.endpoint, {
         apiToken,
         studyID,
-        quota,
+        quota_limit: quota,
       });
       return res.response;
     },
     onSuccess: async () => {
+      await refetchPublishSurveyQuota(studyID);
       await refetchPublishSurveyQuotaReport(studyID);
       toast.success("Quota updated successfully!");
     },

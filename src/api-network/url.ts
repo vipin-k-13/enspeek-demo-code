@@ -92,11 +92,18 @@ const url = {
     mutationKey: "set_launch",
   },
 
+  getQuota: {
+    endpoint: "/study/get/quota",
+    method: "post",
+    queryKey: "getStudyQuota",
+    mutationKey: "get_study_quota",
+  },
+
   setQuota: {
     endpoint: "/study/set/quota",
     method: "post",
-    queryKey: "setQuota",
-    mutationKey: "set_quota",
+    queryKey: "setStudyQuota",
+    mutationKey: "set_study_quota",
   },
 
   getSubgroup: {

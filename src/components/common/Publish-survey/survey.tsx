@@ -9,7 +9,7 @@ import Quota from "./Quota";
 import { cn, handleCopy, handleLinkClick } from "../../../utils";
 import Button from "../../ui/Button";
 import IconActionButton from "../../ui/IconActionButton";
-import { usePublishSurveyQuotaReport, usePublishSurveyStudyInfo, usePublishSurveySubgroup } from "../../../api-network/publish-survey/query";
+import { usePublishSurveyQuota, usePublishSurveyQuotaReport, usePublishSurveyStudyInfo, usePublishSurveySubgroup } from "../../../api-network/publish-survey/query";
 import { useGenerateGlobalLinkMutation } from "../../../api-network/publish-survey/mutation";
 
 export default function PublishSurvey() {
@@ -33,6 +33,7 @@ export default function PublishSurvey() {
     isStudyInfoLoading,
   } = usePublishSurveyStudyInfo(studyID);
   usePublishSurveySubgroup(studyID);
+  const { quotaData } = usePublishSurveyQuota(studyID);
   const { quotaReport } = usePublishSurveyQuotaReport(studyID);
   const { mutate: activateSurvey, isPending: isActivatePending } =
     useGenerateGlobalLinkMutation(studyID, studyInfo?.studyname);
@@ -152,7 +153,7 @@ export default function PublishSurvey() {
                 )}
                 <Quota
                   complete={quotaReport?.completes || 0}
-                  totalQuota={quotaReport?.quota || 0}
+                  totalQuota={quotaData?.limit || 0}
                   disqualified={quotaReport?.disqualified || 0}
                   incomplete={quotaReport?.incompletes || 0}
                   studyID={studyID}

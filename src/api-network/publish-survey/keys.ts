@@ -7,6 +7,8 @@ export const publishSurveyKeys = {
 
   subgroup: (studyID?: string) => [...publishSurveyKeys.all, url.getSubgroup.queryKey, studyID] as const,
 
+  quota: (studyID?: string) => [...publishSurveyKeys.all, url.getQuota.queryKey, studyID] as const,
+
   quotaReport: (studyID?: string) => [...publishSurveyKeys.all, url.crosstabFinalReport.queryKey, studyID] as const,
 
   facebookLink: (studyID?: string) => [...publishSurveyKeys.all, url.facebookLink.queryKey, studyID] as const,
