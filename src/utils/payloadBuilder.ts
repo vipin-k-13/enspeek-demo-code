@@ -5,13 +5,11 @@ export function createNullQuestionObject(
   qText: string,
   qLabel: string,
   qText2: string,
-  apiToken: string,
   options: Option[],
   minSelection: number,
   maxSelection: number
 ): QuestionPayload {
   return {
-    apiToken,
     studyID,
     newQID,
     qType,

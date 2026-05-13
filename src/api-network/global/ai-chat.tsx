@@ -26,7 +26,6 @@ export const useChat = () => {
   const pageName = getPageName(pathname);
   const studyID = state?.studyID;
 
-  const { apiToken } = useSelector((storeState: RootState) => storeState.user);
   const { followUp, isChatOpen, isTyping, message, messages, pending } = useSelector((storeState: RootState) => storeState.chat);
 
   const getLatestMessages = () => store.getState().chat.messages;
@@ -53,7 +52,7 @@ export const useChat = () => {
   };
 
   const requestRecallResponse = async () => {
-    const payload = studyID ? { apiToken, studyID, recallFlag: 1 } : { apiToken, recallFlag: 1 };
+    const payload = studyID ? { studyID, recallFlag: 1 } : { recallFlag: 1 };
     const res = await apiRequest(url.studyChatbot.method, url.studyChatbot.endpoint, payload);
     return res?.response;
   };
@@ -99,7 +98,7 @@ export const useChat = () => {
     mutationFn: async (questionId: string) => {
       const res = await apiRequest(
         url.questionView.method,
-        url.questionView.endpoint.replace(":qId", questionId), { apiToken, studyID }
+        url.questionView.endpoint.replace(":qId", questionId), { studyID }
       );
       return res.response;
     },
@@ -191,7 +190,7 @@ export const useChat = () => {
   } = mutationStructure({
     mutationKey: [url.studyChatbot.mutationKey, pageName, studyID],
     mutationFn: async (payload: { prompt: string }) => {
-      const res = await apiRequest(url.studyChatbot.method, url.studyChatbot.endpoint, { apiToken, prompt: payload.prompt, pageName, followUp, studyID });
+      const res = await apiRequest(url.studyChatbot.method, url.studyChatbot.endpoint, { prompt: payload.prompt, pageName, followUp, studyID });
       return res.response;
     },
     onSuccess: async (data) => {

@@ -165,7 +165,6 @@ export const useReportStudyInfo = (studyID?: string) => {
     queryKey: reportKeys.studyInfo(studyID),
     queryFn: async () => {
       const res = await apiRequest(url.studyInfo.method, url.studyInfo.endpoint, {
-        apiToken,
         studyID,
       });
 
@@ -204,7 +203,6 @@ export const useReportViewList = (studyID?: string) => {
         url.reportViewList.method,
         url.reportViewList.endpoint,
         {
-          apiToken,
           studyID,
           side_by_side: "0",
         }
@@ -249,7 +247,6 @@ export const useReportViewById = (
         url.reportViewById.method,
         url.reportViewById.endpoint.replace(":qId", qID as string),
         {
-          apiToken,
           studyID,
           filter_data: {},
           side_by_side: normalizedSideBySide,
@@ -282,7 +279,6 @@ export const useReportProcessList = (studyID?: string) => {
         url.reportProcessList.method,
         url.reportProcessList.endpoint,
         {
-          apiToken,
           studyID,
         }
       );
@@ -309,7 +305,6 @@ export const useReportSideBySideVariables = (studyID?: string) => {
         url.reportSideBySideVariables.method,
         url.reportSideBySideVariables.endpoint,
         {
-          apiToken,
           studyID,
         }
       );
@@ -334,7 +329,6 @@ export const useReportAppliedFilter = (studyID?: string, refreshKey?: unknown) =
         url.reportAppliedFilter.method,
         url.reportAppliedFilter.endpoint,
         {
-          apiToken,
           filter_data: {},
           studyID,
         }
@@ -364,7 +358,6 @@ export const useReportFiltersList = (studyID?: string, refreshKey?: unknown) => 
         url.reportFiltersList.endpoint,
         {
           studyID,
-          apiToken,
           side_by_side: 0,
         }
       );
@@ -393,7 +386,6 @@ export const useReportFilters = (studyID?: string, refreshKey?: unknown) => {
         url.reportFilters.method,
         url.reportFilters.endpoint,
         {
-          apiToken,
           side_by_side: 0,
           studyID,
           filter_data: {},

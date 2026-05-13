@@ -16,7 +16,6 @@ interface CustomHooks {
 }
 
 export const useAddBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
 
   const mutation = mutationStructure({
@@ -33,7 +32,6 @@ export const useAddBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
         url.crosstabBannerAdd.endpoint,
         {
           studyID,
-          apiToken,
           title,
           description,
           logic,
@@ -63,8 +61,6 @@ export const useAddBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
 };
 
 export const useEditBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const mutation = mutationStructure({
     mutationKey: [url.crosstabBannerEdit.mutationKey, studyID],
     mutationFn: async ({
@@ -81,7 +77,6 @@ export const useEditBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
         url.crosstabBannerEdit.endpoint,
         {
           studyID,
-          apiToken,
           bannerID,
           title,
           description,
@@ -106,8 +101,6 @@ export const useEditBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
 };
 
 export const useDeleteBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const mutation = mutationStructure({
     mutationKey: [url.crosstabBannerDelete.mutationKey, studyID],
     mutationFn: async (bannerID: string) => {
@@ -116,7 +109,6 @@ export const useDeleteBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
         url.crosstabBannerDelete.endpoint,
         {
           studyID,
-          apiToken,
           bannerID,
         }
       );
@@ -143,8 +135,6 @@ export const useDeleteBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
 };
 
 export const useReplicateBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const mutation = mutationStructure({
     mutationKey: [url.crosstabBannerCopy.mutationKey, studyID],
     mutationFn: async ({
@@ -159,7 +149,6 @@ export const useReplicateBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
         url.crosstabBannerCopy.endpoint,
         {
           studyID,
-          apiToken,
           bannerID,
           title,
         }
@@ -187,7 +176,6 @@ export const useReplicateBanner = ({ studyID, cb = () => {} }: CustomHooks) => {
 };
 
 export const useTableListAdd = (bannerID: string, studyID: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const { selectedQuestions } = useSelector((state: RootState) => state.crosstab);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -200,7 +188,6 @@ export const useTableListAdd = (bannerID: string, studyID: string) => {
         {
           studyID,
           bannerID,
-          apiToken,
           quest_info: selectedQuestions,
         }
       );
@@ -223,7 +210,6 @@ export const useTableListAdd = (bannerID: string, studyID: string) => {
 };
 
 export const useLogicOpts = (studyID: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
   const mutation = mutationStructure({
@@ -234,7 +220,6 @@ export const useLogicOpts = (studyID: string) => {
         url.crosstabLogicOptions.endpoint,
         {
           studyID,
-          apiToken,
           qID,
         }
       );
@@ -253,7 +238,6 @@ export const useLogicOpts = (studyID: string) => {
 };
 
 export const useQuesLogicOpts = (studyID: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
   const mutation = mutationStructure({
@@ -264,7 +248,6 @@ export const useQuesLogicOpts = (studyID: string) => {
         url.questionLogicOptions.endpoint,
         {
           studyID,
-          apiToken,
           qID,
         }
       );
@@ -283,7 +266,6 @@ export const useQuesLogicOpts = (studyID: string) => {
 };
 
 export const useAddBannerPointer = (studyID: string = "CS_FWypI6XEdjwl9U") => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
 
   const mutation = mutationStructure({
@@ -300,7 +282,6 @@ export const useAddBannerPointer = (studyID: string = "CS_FWypI6XEdjwl9U") => {
         url.crosstabBannerPointAdd.endpoint,
         {
           studyID,
-          apiToken,
           bannerID,
           allSegment,
         }

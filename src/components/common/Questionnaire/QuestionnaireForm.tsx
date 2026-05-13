@@ -31,7 +31,6 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ onClose }) => {
   const { editingQuestion: data } = useSelector(
     (state: RootState) => state.question
   );
-  const user = useSelector((state: RootState) => state.user);
 
   const [id, setId] = React.useState<string>(data?.qID ? data.qID : "");
   const [maxSelection, setMaxSelection] = React.useState<number>(1);
@@ -182,7 +181,6 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ onClose }) => {
       qtext,
       label,
       qtext2,
-      user.apiToken,
       options,
       minSelection,
       maxSelection

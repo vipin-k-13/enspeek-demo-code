@@ -1,6 +1,4 @@
-import { useSelector } from "react-redux";
 import { toast } from "sonner";
-import type { RootState } from "../../../store/store";
 import { apiRequest } from "../../../services/apiService";
 import { queryClient } from "../../../App";
 import mutationStructure from "../../mutation-template";
@@ -14,8 +12,6 @@ interface CustomHooks {
 }
 
 export const useAddCustomTable = (studyID: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const mutation = mutationStructure({
     mutationKey: [url.crosstabCustomTableAdd.mutationKey, studyID],
     mutationFn: async (payload: AddCustomTablePayload) => {
@@ -25,7 +21,6 @@ export const useAddCustomTable = (studyID: string) => {
         {
           studyID,
           ...payload,
-          apiToken,
         }
       );
       return res.response;
@@ -53,8 +48,6 @@ export const useEditTableListQuestion = ({
   studyID?: string;
   cb?: () => void;
 }) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const mutation = mutationStructure({
     mutationKey: [url.crosstabTableEditByQuestionId.mutationKey, qId, studyID],
     mutationFn: async (data: EditTableListQuestionPayload) => {
@@ -62,7 +55,6 @@ export const useEditTableListQuestion = ({
         url.crosstabTableEditByQuestionId.method,
         url.crosstabTableEditByQuestionId.endpoint.replace(":qId", qId),
         {
-          apiToken,
           studyID,
           ...data,
         }
@@ -93,8 +85,6 @@ export const useEditTableListQuestion = ({
 };
 
 export const useDownloadtable = ({ studyID, cb }: CustomHooks) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const mutation = mutationStructure({
     mutationKey: [url.crosstabTableDownload.mutationKey, studyID],
     mutationFn: async ({
@@ -110,7 +100,6 @@ export const useDownloadtable = ({ studyID, cb }: CustomHooks) => {
         {
           studyID,
           bannerID,
-          apiToken,
           tableID,
         }
       );

@@ -14,7 +14,6 @@ export const usePublishSurveyStudyInfo = (studyID?: string) => {
     queryKey: publishSurveyKeys.studyInfo(studyID),
     queryFn: async () => {
       const res = await apiRequest(url.studyInfo.method, url.studyInfo.endpoint, {
-        apiToken,
         studyID,
       });
 
@@ -49,7 +48,6 @@ export const usePublishSurveySubgroup = (studyID?: string) => {
     queryKey: publishSurveyKeys.subgroup(studyID),
     queryFn: async () => {
       const res = await apiRequest(url.getSubgroup.method, url.getSubgroup.endpoint, {
-        apiToken,
         studyID,
       });
       return res.response;
@@ -73,7 +71,6 @@ export const usePublishSurveyQuotaReport = (studyID?: string) => {
         url.crosstabFinalReport.method,
         url.crosstabFinalReport.endpoint,
         {
-          apiToken,
           studyID,
         }
       );
@@ -97,7 +94,6 @@ export const usePublishSurveyQuota = (studyID?: string) => {
     queryKey: publishSurveyKeys.quota(studyID),
     queryFn: async () => {
       const res = await apiRequest(url.getQuota.method, url.getQuota.endpoint, {
-        apiToken,
         studyID,
       });
       return res.response;
@@ -122,7 +118,6 @@ export const useFacebookLink = (studyID?: string) => {
         url.facebookLink.method,
         url.facebookLink.endpoint,
         {
-          apiToken,
           studyID,
         }
       );
@@ -147,7 +142,6 @@ export const useWhatsappLink = (studyID?: string) => {
         url.whatsappLink.method,
         url.whatsappLink.endpoint,
         {
-          apiToken,
           studyID,
         }
       );

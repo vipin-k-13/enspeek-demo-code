@@ -18,7 +18,6 @@ export const useTableList = (bannerID: string, studyID: string) => {
         url.crosstabTableList.endpoint,
         {
           studyID,
-          apiToken,
           bannerID,
         }
       );
@@ -39,8 +38,6 @@ export const useTableOutput = (
   bannerID: string,
   studyID: string
 ) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const {
     data: tableOutputData,
     refetch: TableOutputData,
@@ -56,7 +53,6 @@ export const useTableOutput = (
         endpoint,
         {
           studyID,
-          apiToken,
         }
       );
       return res.response;
@@ -90,7 +86,6 @@ export const useTableOutputEditRows = (
         endpoint,
         {
           studyID,
-          apiToken,
         }
       );
       return res.response;
@@ -122,7 +117,6 @@ export const useOpList = (
         endpoint,
         {
           studyID,
-          apiToken,
           bannerID,
         }
       );

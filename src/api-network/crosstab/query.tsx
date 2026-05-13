@@ -14,14 +14,12 @@ import {
 import { setStudyInfo } from "../../store/CrosstabStudySlice";
 
 export const useCrosstabStudyInfo = (studyID: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
   const { data: StudyInfo } = useSuspenseQuery({
     queryKey: crosstabKeys.studyInfo(studyID),
     queryFn: async () => {
       const res = await apiRequest(url.studyInfo.method, url.studyInfo.endpoint, {
-        apiToken,
         studyID,
       });
 
@@ -58,7 +56,6 @@ export const useBannerList = (studyID: string) => {
         url.crosstabBannerList.endpoint,
         {
           studyID,
-          apiToken,
         }
       );
       dispatch(setBannersAll(res.response));
@@ -89,7 +86,6 @@ export const useQList = (studyID: string, bannerID: string) => {
         url.crosstabQuestionList.endpoint,
         {
           studyID,
-          apiToken,
           bannerID,
         }
       );
@@ -118,7 +114,6 @@ export const useQuesLogicVar = (studyID: string, questionID?: string) => {
         url.questionLogicVars.endpoint,
         {
           studyID,
-          apiToken,
           qID: questionID,
         }
       );
@@ -148,7 +143,6 @@ export const useLogicVar = (studyID: string) => {
         url.crosstabLogicVars.endpoint,
         {
           studyID,
-          apiToken,
         }
       );
       dispatch(setVarsData(res.response));
@@ -169,7 +163,6 @@ export const useBannerPointerList = (
   bannerID: string = "HBUipTq7IZOwA",
   studyID: string = "CS_FWypI6XEdjwl9U"
 ) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
   const bannerPointerQuery = useQuery({
@@ -181,7 +174,6 @@ export const useBannerPointerList = (
         {
           studyID,
           bannerID,
-          apiToken,
         }
       );
       dispatch(

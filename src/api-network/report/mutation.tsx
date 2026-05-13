@@ -46,8 +46,6 @@ const triggerBlobDownload = (blobData: BlobPart, contentDisposition?: string) =>
 };
 
 export const useReportExcelDownload = ({ studyID, cb }: ReportDownloadHookProps) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const mutation = mutationStructure({
     mutationKey: [url.reportExportExcel.mutationKey, studyID],
     mutationFn: async () => {
@@ -55,7 +53,6 @@ export const useReportExcelDownload = ({ studyID, cb }: ReportDownloadHookProps)
         url.reportExportExcel.method,
         url.reportExportExcel.endpoint,
         {
-          apiToken,
           studyID,
         }
       );
@@ -75,8 +72,6 @@ export const useReportExcelDownload = ({ studyID, cb }: ReportDownloadHookProps)
 };
 
 export const useReportProcessDownload = (cb?: () => void) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const mutation = mutationStructure({
     mutationKey: [url.reportProcess.mutationKey],
     mutationFn: async ({ studyID, pid }: { studyID: string; pid: string }) => {
@@ -84,7 +79,6 @@ export const useReportProcessDownload = (cb?: () => void) => {
         url.reportProcess.method,
         url.reportProcess.endpoint,
         {
-          apiToken,
           studyID,
           pid,
         },
@@ -111,8 +105,6 @@ export const useReportProcessDownload = (cb?: () => void) => {
 };
 
 export const useReportSpssDownload = ({ studyID, cb }: ReportDownloadHookProps) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const mutation = mutationStructure({
     mutationKey: [url.reportExportSpss.mutationKey, studyID],
     mutationFn: async () => {
@@ -120,7 +112,6 @@ export const useReportSpssDownload = ({ studyID, cb }: ReportDownloadHookProps) 
         url.reportExportSpss.method,
         url.reportExportSpss.endpoint,
         {
-          apiToken,
           studyID,
         }
       );
@@ -145,8 +136,6 @@ export const useReportClearHistory = ({
   studyID?: string;
   cb: () => void;
 }) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const mutation = mutationStructure({
     mutationKey: [url.reportProcessClear.mutationKey, studyID],
     mutationFn: async () => {
@@ -154,7 +143,6 @@ export const useReportClearHistory = ({
         url.reportProcessClear.method,
         url.reportProcessClear.endpoint,
         {
-          apiToken,
           studyID,
         }
       );
@@ -173,7 +161,6 @@ export const useReportClearHistory = ({
 };
 
 export const useReportTableDownload = ({ studyID, cb }: ReportDownloadHookProps) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const { tableQList } = useSelector((state: RootState) => state.filter);
 
   const mutation = mutationStructure<any, Error, string | void>({
@@ -185,7 +172,6 @@ export const useReportTableDownload = ({ studyID, cb }: ReportDownloadHookProps)
         url.reportTableReadyAll.method,
         url.reportTableReadyAll.endpoint,
         {
-          apiToken,
           studyID,
           filter_data: {},
           side_by_side: 0,
@@ -210,7 +196,6 @@ export const useReportTableDownload = ({ studyID, cb }: ReportDownloadHookProps)
 };
 
 export const useReportPptDownload = ({ studyID, cb }: ReportDownloadHookProps) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const { tableQList, selected } = useSelector((state: RootState) => state.filter);
 
   const mutation = mutationStructure<any, Error, string | void>({
@@ -222,7 +207,6 @@ export const useReportPptDownload = ({ studyID, cb }: ReportDownloadHookProps) =
         url.reportReadyAll.method,
         url.reportReadyAll.endpoint,
         {
-          apiToken,
           studyID,
           filter_data: {},
           side_by_side: 0,
@@ -249,8 +233,6 @@ export const useReportIncludeFiltersMutation = (
   studyID?: string,
   onSuccess?: () => void
 ) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const mutation = mutationStructure({
     mutationKey: [url.reportFiltersInclude.mutationKey, studyID],
     mutationFn: async (selectedFilters: string[]) => {
@@ -258,7 +240,6 @@ export const useReportIncludeFiltersMutation = (
         url.reportFiltersInclude.method,
         url.reportFiltersInclude.endpoint,
         {
-          apiToken,
           "question-list": selectedFilters,
           studyID,
         }

@@ -12,7 +12,6 @@ export const useStudyList = (enableTab: string) => {
     const dispatch = useDispatch<AppDispatch>();
     const TestFn = async () => {
         const res = await apiRequest(url.studyListing.method, url.studyListing.endpoint, {
-            apiToken: apiToken,
             selection: enableTab,
             page: 1,
         });
@@ -33,9 +32,7 @@ export const useHomepageUserInfo = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     const syncUserInfo = async () => {
-        const res = await apiRequest(url.userInfo.method, url.userInfo.endpoint, {
-            apiToken: user.apiToken,
-        });
+        const res = await apiRequest(url.userInfo.method, url.userInfo.endpoint, {});
 
         dispatch(SyncUserInfo({
             firstName: res.response.firstname ?? user.firstName,

@@ -33,7 +33,6 @@ const refreshQuestionnaireQueries = async (studyID?: string) => {
 };
 
 export const useQuestionViewMutation = (studyID?: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
   return mutationStructure({
@@ -43,7 +42,6 @@ export const useQuestionViewMutation = (studyID?: string) => {
         url.questionView.method,
         url.questionView.endpoint.replace(":qId", questionID),
         {
-          apiToken,
           studyID,
         }
       );
@@ -140,7 +138,6 @@ export const useCreateQuestionMutation = (studyID?: string) => {
 };
 
 export const useEditQuestionMutation = (studyID?: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const { mutateAsync: refreshQuestion } = useQuestionViewMutation(studyID);
 
@@ -151,7 +148,6 @@ export const useEditQuestionMutation = (studyID?: string) => {
         url.questionnaireEdit.method,
         url.questionnaireEdit.endpoint,
         {
-          apiToken,
           studyID,
           QID: data.qID,
           ...data,
@@ -172,8 +168,6 @@ export const useEditQuestionMutation = (studyID?: string) => {
 };
 
 export const useDeleteQuestionMutation = (studyID?: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   return mutationStructure({
     mutationKey: [url.deleteQuestion.mutationKey, studyID],
     mutationFn: async (questionID: string) => {
@@ -181,7 +175,6 @@ export const useDeleteQuestionMutation = (studyID?: string) => {
         url.deleteQuestion.method,
         url.deleteQuestion.endpoint,
         {
-          apiToken,
           studyID,
           QID: questionID,
         }
@@ -195,8 +188,6 @@ export const useDeleteQuestionMutation = (studyID?: string) => {
 };
 
 export const useCopyQuestionMutation = (studyID?: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   return mutationStructure({
     mutationKey: [url.questionCopy.mutationKey, studyID],
     mutationFn: async (data: {
@@ -205,7 +196,6 @@ export const useCopyQuestionMutation = (studyID?: string) => {
       label: string;
     }) => {
       const res = await apiRequest(url.questionCopy.method, url.questionCopy.endpoint, {
-        apiToken,
         studyID,
         oldQID: data.questionID,
         newQID: data.newId,
@@ -221,8 +211,6 @@ export const useCopyQuestionMutation = (studyID?: string) => {
 };
 
 export const useRearrangeQuestionMutation = (studyID?: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   return mutationStructure({
     mutationKey: [url.questionRearrange.mutationKey, studyID],
     mutationFn: async (sequence: Record<number, string>) => {
@@ -230,7 +218,6 @@ export const useRearrangeQuestionMutation = (studyID?: string) => {
         url.questionRearrange.method,
         url.questionRearrange.endpoint,
         {
-          apiToken,
           studyID,
           seq: sequence,
         }
@@ -241,7 +228,6 @@ export const useRearrangeQuestionMutation = (studyID?: string) => {
 };
 
 export const useQuestionLogicOptionsMutation = (studyID?: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
   return mutationStructure({
@@ -252,7 +238,6 @@ export const useQuestionLogicOptionsMutation = (studyID?: string) => {
         url.questionLogicOptions.endpoint,
         {
           studyID,
-          apiToken,
           qID: questionID,
         }
       );
@@ -269,7 +254,6 @@ export const useSaveQuestionLogicMutation = (
   studyID?: string,
   questionID?: string | null
 ) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const { mutateAsync: refreshQuestion } = useQuestionViewMutation(studyID);
 
   return mutationStructure({
@@ -286,7 +270,6 @@ export const useSaveQuestionLogicMutation = (
         url.questionEditLogic.endpoint.replace(":qId", questionID as string),
         {
           studyID,
-          apiToken,
           ...payload,
         }
       );
@@ -312,7 +295,6 @@ export const useUpdateOptionLogicMutation = (
   optionID?: string,
   optionText?: string
 ) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const { mutateAsync: refreshQuestion } = useQuestionViewMutation(studyID);
 
   return mutationStructure({
@@ -334,7 +316,6 @@ export const useUpdateOptionLogicMutation = (
         url.questionnaireEdit.method,
         `/questionnaire/edit/logic/${optionID}`,
         {
-          apiToken,
           studyID,
           option_terminate: terminate ? 1 : 0,
           option_skip: terminate ? "" : skipTo,

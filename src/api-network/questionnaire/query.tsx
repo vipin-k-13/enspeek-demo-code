@@ -17,7 +17,6 @@ export const useQuestionnaireStudyInfo = (studyID?: string) => {
     queryKey: questionnaireKeys.studyInfo(studyID),
     queryFn: async () => {
       const res = await apiRequest(url.studyInfo.method, url.studyInfo.endpoint, {
-        apiToken,
         studyID,
       });
 
@@ -54,7 +53,6 @@ export const useQuestionnaireQuestionTypes = (studyID?: string) => {
         url.questionnaireQuestionType.method,
         url.questionnaireQuestionType.endpoint,
         {
-          apiToken,
           studyID,
         }
       );
@@ -82,7 +80,6 @@ export const useQuestionnaireRI = (studyID?: string) => {
         url.questionnaireAddRi.method,
         url.questionnaireAddRi.endpoint,
         {
-          apiToken,
           qtype: qType,
           studyID,
         }
@@ -112,7 +109,6 @@ export const useQuestionnaireList = (studyID?: string) => {
         url.fetchQuestionList.method,
         url.fetchQuestionList.endpoint,
         {
-          apiToken,
           studyID,
         }
       );
@@ -158,7 +154,6 @@ export const useQuestionnaireGetQuestion = (
         url.questionGet.method,
         url.questionGet.endpoint.replace(":questionId", questionID as string),
         {
-          apiToken,
           studyID,
         }
       );
@@ -186,7 +181,6 @@ export const useQuestionnaireLogicVars = (studyID?: string, questionID?: string)
         url.questionLogicVars.endpoint,
         {
           studyID,
-          apiToken,
           qID: questionID,
         }
       );

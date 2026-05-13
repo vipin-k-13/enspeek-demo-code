@@ -94,7 +94,6 @@ declare type Study = {
 };
 
 declare type QuestionPayload = {
-  apiToken: string;
   studyID: string;
   newQID: string;
   qType: string;

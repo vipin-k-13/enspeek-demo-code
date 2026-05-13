@@ -1,6 +1,4 @@
-import { useSelector } from "react-redux";
 import { toast } from "sonner";
-import type { RootState } from "../../store/store";
 import mutationStructure from "../mutation-template";
 import { apiRequest } from "../../services/apiService";
 import url from "../url";
@@ -44,8 +42,6 @@ const refetchPublishSurveyQuota = async (studyID?: string) => {
 };
 
 export const useGenerateGlobalLinkMutation = (studyID?: string, studyName?: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   return mutationStructure({
     mutationKey: [url.generateGlobalLink.mutationKey, studyID],
     mutationFn: async () => {
@@ -53,7 +49,6 @@ export const useGenerateGlobalLinkMutation = (studyID?: string, studyName?: stri
         url.generateGlobalLink.method,
         url.generateGlobalLink.endpoint,
         {
-          apiToken,
           studyID,
         }
       );
@@ -67,13 +62,10 @@ export const useGenerateGlobalLinkMutation = (studyID?: string, studyName?: stri
 };
 
 export const useSetQuotaMutation = (studyID?: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   return mutationStructure({
     mutationKey: [url.setQuota.mutationKey, studyID],
     mutationFn: async (quota: number) => {
       const res = await apiRequest(url.setQuota.method, url.setQuota.endpoint, {
-        apiToken,
         studyID,
         quota_limit: quota,
       });
@@ -88,13 +80,10 @@ export const useSetQuotaMutation = (studyID?: string) => {
 };
 
 export const useInitiateSampleCollectionMutation = (studyID?: string) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   return mutationStructure({
     mutationKey: [url.setLaunch.mutationKey, studyID],
     mutationFn: async () => {
       const res = await apiRequest(url.setLaunch.method, url.setLaunch.endpoint, {
-        apiToken,
         studyID,
       });
       return res.response;
