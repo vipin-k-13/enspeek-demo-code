@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { handleKeyPress } from "../../../utils";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
@@ -34,11 +34,19 @@ export default function NameCopyModal({
   isPending = false,
 }: NameCopyModalProps) {
   const [value, setValue] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const definition = modalDefinitions[titleKey];
 
   useEffect(() => {
     if (isOpen) {
       setValue(defaultValue);
+      requestAnimationFrame(() => {
+        const input = inputRef.current;
+        if (!input) return;
+        input.focus();
+        const caretPosition = input.value.length;
+        input.setSelectionRange(caretPosition, caretPosition);
+      });
     }
   }, [isOpen, defaultValue]);
 
@@ -91,6 +99,7 @@ export default function NameCopyModal({
         </p>
         <ModalField label={fieldLabel} required>
           <Input
+            ref={inputRef}
             variant="modal"
             value={value}
             onChange={(e) => setValue(e.target.value)}

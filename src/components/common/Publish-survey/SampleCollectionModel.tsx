@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from "react";
+import { useEffect, useRef, useState, type FC } from "react";
 import DynamicModel from "../../global/DynamicModel";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
@@ -23,6 +23,7 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
   studyName,
 }) => {
   const [inputValueInitiate, setInputValueInitiate] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const isConfirmed = inputValueInitiate.trim().toLowerCase() === "collect";
   const studyInfo = useSelector((state: RootState) => state.study);
   const { state } = useLocation();
@@ -31,6 +32,13 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
   useEffect(() => {
     if (isOpen && !isPending) {
       setInputValueInitiate("");
+      requestAnimationFrame(() => {
+        const input = inputRef.current;
+        if (!input) return;
+        input.focus();
+        const caretPosition = input.value.length;
+        input.setSelectionRange(caretPosition, caretPosition);
+      });
     }
   }, [isOpen, isPending]);
 
@@ -100,6 +108,7 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
         </ModalInfoBlock>
       </div>
       <Input
+        ref={inputRef}
         variant="modal"
         type="text"
         data-test-id="Initiate_INPUT"

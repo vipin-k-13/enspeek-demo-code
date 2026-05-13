@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { handleKeyPress } from "../../../utils";
 import Button from "../../ui/Button";
@@ -41,6 +41,7 @@ export default function ConfirmKeywordModal({
   fieldLabel = "Confirmation",
 }: ConfirmKeywordModalProps) {
   const [value, setValue] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const definition = modalDefinitions[titleKey];
   const normalizedKeyword = keyword.trim().toLowerCase();
   const isConfirmed = value.trim().toLowerCase() === normalizedKeyword;
@@ -54,6 +55,13 @@ export default function ConfirmKeywordModal({
   useEffect(() => {
     if (isOpen) {
       setValue("");
+      requestAnimationFrame(() => {
+        const input = inputRef.current;
+        if (!input) return;
+        input.focus();
+        const caretPosition = input.value.length;
+        input.setSelectionRange(caretPosition, caretPosition);
+      });
     }
   }, [isOpen, targetLabel]);
 
@@ -122,6 +130,7 @@ export default function ConfirmKeywordModal({
         </ModalInfoBlock>
         <ModalField label={fieldLabel} required>
           <Input
+            ref={inputRef}
             variant="modal"
             data-test-id={testId}
             placeholder={`Type '${keyword}' here...`}

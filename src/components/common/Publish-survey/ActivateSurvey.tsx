@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from "react";
+import { useEffect, useRef, useState, type FC } from "react";
 import DynamicModel from "../../global/DynamicModel";
 import { toast } from "sonner";
 import { handleKeyPress } from "../../../utils";
@@ -23,11 +23,19 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
   isPending,
 }) => {
   const [inputValue, setInputValue] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const isConfirmed = inputValue.trim().toLowerCase() === "activate";
 
   useEffect(() => {
     if (isOpen && !isPending) {
       setInputValue("");
+      requestAnimationFrame(() => {
+        const input = inputRef.current;
+        if (!input) return;
+        input.focus();
+        const caretPosition = input.value.length;
+        input.setSelectionRange(caretPosition, caretPosition);
+      });
     }
   }, [isOpen, isPending]);
 
@@ -103,6 +111,7 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
         </ModalInfoBlock>
       </div>
       <Input
+        ref={inputRef}
         variant="modal"
         type="text"
         data-test-id="ACTIVATE_INPUT"
