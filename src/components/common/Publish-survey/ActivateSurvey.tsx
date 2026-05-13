@@ -9,7 +9,7 @@ import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
 
 interface ActivateSurveyProps {
   isOpen: boolean;
-  activate: () => void;
+  activate: (variables: void, options?: { onSuccess?: () => void }) => void;
   onClose: () => void;
   studyInfo: any;
   isPending: boolean;
@@ -23,6 +23,7 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
   isPending,
 }) => {
   const [inputValue, setInputValue] = useState("");
+  const isConfirmed = inputValue.trim().toLowerCase() === "activate";
 
   useEffect(() => {
     if (isOpen && !isPending) {
@@ -34,7 +35,12 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
     if (inputValue.trim().toLowerCase() !== "activate") {
         return toast.warning(`Please type "activate" to confirm`)
     }
-    activate();
+    activate(undefined, {
+      onSuccess: () => {
+        setInputValue("");
+        onClose();
+      },
+    });
   };
 
   return (
@@ -58,14 +64,14 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
       onClick={handleActivateSurvey}
       onClose={() => !isPending && onClose()}
       className="max-w-lg"
-      disable={isPending}
+      disable={isPending || !isConfirmed}
       bodyClassName="bg-white"
       secondaryAction={
         <Button
           type="button"
           varinat="cancel"
-          onClick={onClose}
-          disabled={isPending}
+        onClick={() => !isPending && onClose()}
+        disabled={isPending}
         >
           Cancel
         </Button>
@@ -80,9 +86,11 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
           ?
         </p>
         <ModalInfoBlock
-          className="modal-card rounded-[20px] bg-[var(--color-surface-base)] px-4 py-4"
+          // className="modal-card rounded-[20px] bg-[var(--color-surface-base)] px-4 py-4 force_align_center"
+          className="modal-info-block"
           icon={
-            <span className="modal-header-icon h-10 w-10 text-[var(--color-brand-primary)]">
+            <span className="modal-info-icon text-[var(--color-brand-primary)]">
+              {/* modal-header-icon h-10 w-10 */}
               <LuInfo className="h-4 w-4" />
             </span>
           }
@@ -102,7 +110,7 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
         className="questionnaire-heading mt-4 rounded-[18px]"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={(e)=>handleKeyPress(e, handleActivateSurvey)}
+        onKeyDown={(e) => handleKeyPress(e, handleActivateSurvey)}
         disabled={isPending}
       />
     </DynamicModel>

@@ -89,7 +89,7 @@ const FacebookModal: React.FC<FacebookModalProps> = ({ onClose }) => {
             )}
 
             <ModalInfoBlock
-              className="gap-5 rounded-lg px-5 py-5"
+              className="gap-5 rounded-lg px-5 py-5 force_align_center"
               icon={
                 <span className="modal-header-icon text-[var(--color-brand-info)]">
                   <LuInfo className="h-5 w-5" />

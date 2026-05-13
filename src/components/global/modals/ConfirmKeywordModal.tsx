@@ -4,9 +4,10 @@ import { handleKeyPress } from "../../../utils";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import ModalScaffold from "../../ui/modal/ModalScaffold";
+import ModalField from "../../ui/modal/ModalField";
 import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
 import { LuInfo, LuTrash2 } from "react-icons/lu";
-import { modalDefinitions } from "../../../config/modalDefinitions";
+import { modalDefinitions, renderModalIcon } from "../../../config/modalDefinitions";
 
 type ConfirmKeywordModalProps = {
   isOpen: boolean;
@@ -19,6 +20,9 @@ type ConfirmKeywordModalProps = {
   warningToneClass?: string;
   isPending?: boolean;
   testId?: string;
+  infoText?: React.ReactNode;
+  appendIrreversibleWarning?: boolean;
+  fieldLabel?: React.ReactNode;
 };
 
 export default function ConfirmKeywordModal({
@@ -32,11 +36,20 @@ export default function ConfirmKeywordModal({
   warningToneClass = "text-[var(--color-questionnaire-stop)]",
   isPending = false,
   testId,
+  infoText,
+  appendIrreversibleWarning = true,
+  fieldLabel = "Confirmation",
 }: ConfirmKeywordModalProps) {
   const [value, setValue] = useState("");
   const definition = modalDefinitions[titleKey];
   const normalizedKeyword = keyword.trim().toLowerCase();
   const isConfirmed = value.trim().toLowerCase() === normalizedKeyword;
+  const submitVariant =
+    definition.tone === "danger"
+      ? "danger"
+      : definition.tone === "success"
+        ? "success"
+        : "theme";
 
   useEffect(() => {
     if (isOpen) {
@@ -59,7 +72,7 @@ export default function ConfirmKeywordModal({
       onClose={onClose}
       className={definition.maxWidthClass}
       title={definition.title}
-      icon={<LuTrash2 className="h-5 w-5" />}
+      icon={renderModalIcon(definition.icon ?? LuTrash2)}
       closeDisabled={isPending}
       footerLeft={
         <Button type="button" varinat="cancel" onClick={onClose} disabled={isPending}>
@@ -69,7 +82,7 @@ export default function ConfirmKeywordModal({
       footerRight={
         <Button
           type="button"
-          varinat="danger"
+          varinat={submitVariant as any}
           onClick={handleConfirm}
           disabled={isPending || !isConfirmed}
         >
@@ -93,22 +106,30 @@ export default function ConfirmKeywordModal({
           <span className={`font-semibold ${warningToneClass}`}>
             {targetLabel}
           </span>
-          ? This action cannot be undone.
+          ?{appendIrreversibleWarning ? " This action cannot be undone." : ""}
         </p>
         <ModalInfoBlock
           icon={<LuInfo className={`h-4 w-4 ${warningToneClass}`} />}
         >
-          Type <span className={`font-semibold ${warningToneClass}`}>{keyword}</span>{" "}
-          to confirm this action.
+          {infoText ? (
+            infoText
+          ) : (
+            <>
+              Type <span className={`font-semibold ${warningToneClass}`}>{keyword}</span>{" "}
+              to confirm this action.
+            </>
+          )}
         </ModalInfoBlock>
-        <Input
-          variant="modalDanger"
-          data-test-id={testId}
-          placeholder={`Type '${keyword}' here...`}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={(e) => handleKeyPress(e, handleConfirm)}
-        />
+        <ModalField label={fieldLabel} required>
+          <Input
+            variant="modal"
+            data-test-id={testId}
+            placeholder={`Type '${keyword}' here...`}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={(e) => handleKeyPress(e, handleConfirm)}
+          />
+        </ModalField>
       </div>
     </ModalScaffold>
   );

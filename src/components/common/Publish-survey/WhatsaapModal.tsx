@@ -56,7 +56,7 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
                         href={data.short_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="min-w-0 truncate text-[22px] leading-8 text-[var(--color-study-activated)] underline decoration-dashed underline-offset-4"
+                        className="min-w-0 truncate text-[22px] leading-8 text-[var(--color-brand-primary)] underline decoration-dashed underline-offset-4"
                       >
                         {data.short_url}
                       </a>
@@ -89,7 +89,7 @@ const WhatsaapModal: React.FC<WhatsaapModalProps> = ({ onClose }) => {
             )}
 
             <ModalInfoBlock
-              className="gap-5 rounded-lg px-5 py-5"
+              className="gap-5 rounded-lg px-5 py-5 force_align_center"
               icon={
                 <span className="modal-header-icon text-[var(--color-study-activated)]">
                   <LuInfo className="h-5 w-5" />

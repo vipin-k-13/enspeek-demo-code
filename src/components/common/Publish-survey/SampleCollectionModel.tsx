@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import { useLocation } from "react-router";
 import { toast } from "sonner";
+import { handleKeyPress } from "../../../utils";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import { LuInfo, LuPlay, LuUsers } from "react-icons/lu";
@@ -22,6 +23,7 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
   studyName,
 }) => {
   const [inputValueInitiate, setInputValueInitiate] = useState("");
+  const isConfirmed = inputValueInitiate.trim().toLowerCase() === "collect";
   const studyInfo = useSelector((state: RootState) => state.study);
   const { state } = useLocation();
   const { mutate, isPending } = useInitiateSampleCollectionMutation(state.studyID);
@@ -66,7 +68,7 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
       onClick={handleInitiate}
       onClose={() => !isPending && Closed()}
       className="max-w-lg"
-      disable={isPending}
+      disable={isPending || !isConfirmed}
       bodyClassName="bg-white"
       secondaryAction={
         <Button
@@ -86,9 +88,9 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
           ?
         </p>
         <ModalInfoBlock
-          className="modal-card rounded-[20px] bg-[var(--color-surface-base)] px-4 py-4"
+          className="modal-info-block"
           icon={
-            <span className="modal-header-icon h-10 w-10 text-[var(--color-brand-primary)]">
+            <span className="modal-info-icon text-[var(--color-brand-primary)]">
               <LuInfo className="h-4 w-4" />
             </span>
           }
@@ -105,6 +107,7 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
         className="questionnaire-heading mt-4 rounded-[18px]"
         value={inputValueInitiate}
         onChange={(e) => setInputValueInitiate(e.target.value)}
+        onKeyDown={(e) => handleKeyPress(e, handleInitiate)}
         disabled={isPending}
       />
     </DynamicModel>

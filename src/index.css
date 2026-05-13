@@ -865,4 +865,9 @@ body{
     width: 2.6rem;
     min-width: 2.6rem;
   }
+
+}
+
+.force_align_center {
+  align-items: center !important;
 }
