@@ -162,7 +162,7 @@ const Header: React.FC<CrosstabHeaderProps> = ({
                 );
                 return;
               }
-              tableListAddMutate();
+              tableListAddMutate(undefined);
               dispatch(setSelectedQuestions(selectedQuestions));
             }}
             disabled={isTableListAddPending}

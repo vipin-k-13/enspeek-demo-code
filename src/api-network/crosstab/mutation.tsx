@@ -181,14 +181,14 @@ export const useTableListAdd = (bannerID: string, studyID: string) => {
 
   const mutation = mutationStructure({
     mutationKey: [url.crosstabTableAdd.mutationKey, bannerID, studyID],
-    mutationFn: async () => {
+    mutationFn: async (questionIds?: string[]) => {
       const res = await apiRequest(
         url.crosstabTableAdd.method,
         url.crosstabTableAdd.endpoint,
         {
           studyID,
           bannerID,
-          quest_info: selectedQuestions,
+          quest_info: questionIds ?? selectedQuestions,
         }
       );
       return res.response;
@@ -196,6 +196,10 @@ export const useTableListAdd = (bannerID: string, studyID: string) => {
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: crosstabKeys.tableList(bannerID, studyID),
+      });
+      await queryClient.refetchQueries({
+        queryKey: crosstabKeys.tableList(bannerID, studyID),
+        type: "active",
       });
       dispatch(setSelectedQuestions([]));
       toast.success("Questions added successfully");
