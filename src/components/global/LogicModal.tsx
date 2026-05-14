@@ -10,6 +10,7 @@ interface LogicModelProps {
   description?: React.ReactNode;
   children: React.ReactNode;
   disable?: boolean;
+  closeDisabled?: boolean;
   className?: string;
   footerContent?: React.ReactNode;
 }
@@ -20,6 +21,7 @@ const LogicModel: React.FC<LogicModelProps> = ({
   Title,
   description,
   children,
+  closeDisabled = false,
   className = "",
   footerContent,
 }) => {
@@ -34,6 +36,7 @@ const LogicModel: React.FC<LogicModelProps> = ({
       icon={<LuGitBranchPlus className="h-5 w-5" />}
       description={description}
       descriptionClassName="text-black"
+      closeDisabled={closeDisabled}
       footerRight={footerContent}
     >
       <div tabIndex={-1} className="w-full">

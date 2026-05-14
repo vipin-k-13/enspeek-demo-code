@@ -77,6 +77,7 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
       onClose={() => !isPending && Closed()}
       className="max-w-lg"
       disable={isPending || !isConfirmed}
+      closeDisabled={isPending}
       bodyClassName="bg-white"
       secondaryAction={
         <Button

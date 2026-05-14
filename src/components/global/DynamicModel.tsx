@@ -16,6 +16,7 @@ interface DynamicModelProps {
   children: React.ReactNode;
   onClick: () => void;
   disable?: boolean;
+  closeDisabled?: boolean;
   className?: string;
   bodyClassName?: string;
   footerContent?: React.ReactNode;
@@ -36,6 +37,7 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
   children,
   onClick,
   disable,
+  closeDisabled,
   className = "",
   bodyClassName = "theme-surface",
   footerContent,
@@ -62,7 +64,7 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
       icon={headerIcon}
       description={description}
       descriptionClassName={descriptionClassName}
-      closeDisabled={disable}
+      closeDisabled={closeDisabled ?? disable}
       bodyClassName={bodyClassName}
       footerNote={
         footerContent ? (

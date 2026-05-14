@@ -75,6 +75,7 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
       onClose={() => !isPending && onClose()}
       className="max-w-lg"
       disable={isPending || !isConfirmed}
+      closeDisabled={isPending}
       bodyClassName="bg-white"
       secondaryAction={
         <Button

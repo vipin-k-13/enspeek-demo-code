@@ -75,6 +75,7 @@ export default function QuesLogicModal({
       onClose={onClose}
       Title="Add/Edit Question Logic"
       description="Configure logic rules for this question. Save when the conditions, skip path, or termination behavior are ready."
+      closeDisabled={isPending}
       className="max-w-[90vw]"
       footerContent={
         <div className="flex flex-wrap items-center justify-end gap-3">
