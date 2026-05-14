@@ -8,16 +8,7 @@ import ModalField from "../ui/modal/ModalField";
 import ModalInfoBlock from "../ui/modal/ModalInfoBlock";
 import { modalDefinitions } from "../../config/modalDefinitions";
 
-interface CopyModelProps {
-  isOpen: boolean;
-  onClick: (id: string, value: string) => void;
-  onClose: () => void;
-  qID?: string;
-  label: string;
-  isPending?: boolean;
-}
-
-const CopyModel: React.FC<CopyModelProps> = ({
+const CopyModel: React.FC<CopyQuestionModalProps> = ({
   isOpen,
   onClick,
   onClose,

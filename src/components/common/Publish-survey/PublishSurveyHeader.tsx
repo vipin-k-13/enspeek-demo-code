@@ -196,7 +196,7 @@ const PublishSurveyHeader: FC<PublishSurveyHeaderProps> = ({
       />
       <SampleCollectionModel
         isOpen={isOpenInitiate}
-        Closed={() => setIsOpenInitiate(false)}
+        onClose={() => setIsOpenInitiate(false)}
         studyName={studyName}
       />
       {isWhatsappModalOpen && (

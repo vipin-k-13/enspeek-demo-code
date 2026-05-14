@@ -9,17 +9,11 @@ import Button from "../../ui/Button";
 import LogicModel from "../../global/LogicModal";
 import { useSaveQuestionLogicMutation } from "../../../api-network/questionnaire/mutation";
 
-interface QuesLogicModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  qID: string | null;
-}
-
 export default function QuesLogicModal({
   isOpen,
   onClose,
   qID,
-}: QuesLogicModalProps) {
+}: QuestionLogicModalProps) {
   const location = useLocation();
   const studyID = location.state?.studyID;
   const [resetFlag, setResetFlag] = useState(false);

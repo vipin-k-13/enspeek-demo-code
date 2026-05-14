@@ -16,19 +16,15 @@ import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import Checkbox from "../../ui/Checkbox";
 import { LuPanelsTopLeft, LuSave } from "react-icons/lu";
-
-interface BannerSettingsProps {
-  Id: string;
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
 export default function BannerSettings({
   Id,
   isOpen,
   onClose,
-}: BannerSettingsProps) {
+}: BannerSettingsModalProps) {
   if (!isOpen) return null;
+  const definition = modalDefinitions.bannerSettings;
   const [bannerLogic, setBannerLogic] = useState<{ pointLogic: string }[]>([]);
   const { BannersAll, BannerPointer, tableData } = useSelector(
     (state: RootState) => state.crossTabData
@@ -110,13 +106,13 @@ export default function BannerSettings({
 
   return (
     <DynamicModel
-      Title={`Banner Settings: ${value.title}`}
+      Title={`${definition.title}: ${value.title}`}
       headerIcon={
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
           <LuPanelsTopLeft className="h-5 w-5" />
         </span>
       }
-      ButtonText={isSaving ? "Saving..." : "Save Banner Settings"}
+      ButtonText={isSaving ? definition.submittingLabel! : definition.submitLabel!}
       buttonIcon={
         isSaving ? (
           <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
@@ -137,7 +133,7 @@ export default function BannerSettings({
           onClick={onClose}
           disabled={isSaving}
         >
-          Close
+          {definition.cancelLabel}
         </Button>
       }
       className="max-w-4xl"

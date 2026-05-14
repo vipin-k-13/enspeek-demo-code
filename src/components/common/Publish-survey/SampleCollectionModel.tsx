@@ -9,17 +9,12 @@ import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import { LuInfo, LuPlay, LuUsers } from "react-icons/lu";
 import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
+import { modalDefinitions } from "../../../config/modalDefinitions";
 import { useInitiateSampleCollectionMutation } from "../../../api-network/publish-survey/mutation";
 
-interface SampleCollectionModelProps {
-  isOpen: boolean;
-  Closed: () => void;
-  studyName?: string;
-}
-
-const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
+const SampleCollectionModel: FC<SampleCollectionModalProps> = ({
   isOpen,
-  Closed,
+  onClose,
   studyName,
 }) => {
   const [inputValueInitiate, setInputValueInitiate] = useState("");
@@ -28,6 +23,11 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
   const studyInfo = useSelector((state: RootState) => state.study);
   const { state } = useLocation();
   const { mutate, isPending } = useInitiateSampleCollectionMutation(state.studyID);
+  const definition = modalDefinitions.initiateSampleCollection;
+  const title =
+    studyInfo.closed === 1 ? "Relaunch Survey" : definition.title;
+  const submitLabel =
+    studyInfo.closed === 1 ? "Relaunch Survey" : definition.submitLabel!;
 
   useEffect(() => {
     if (isOpen && !isPending) {
@@ -50,20 +50,20 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
     mutate(undefined, {
       onSuccess: () => {
         setInputValueInitiate("");
-        Closed();
+        onClose();
       },
     });
   };
 
   return (
     <DynamicModel
-      Title={studyInfo.closed === 1 ? "Relaunch Survey" : "Initiate Sample Collection"}
+      Title={title}
       headerIcon={
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
           <LuUsers className="h-5 w-5" />
         </span>
       }
-      ButtonText={isPending ? "Collecting..." : studyInfo.closed === 1 ? "Relaunch Survey" : "Initiate Sample Collection"}
+      ButtonText={isPending ? definition.submittingLabel! : submitLabel}
       buttonVariant="success"
       buttonIcon={
         isPending ? (
@@ -74,7 +74,7 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
       }
       isOpen={isOpen}
       onClick={handleInitiate}
-      onClose={() => !isPending && Closed()}
+      onClose={() => !isPending && onClose()}
       className="max-w-lg"
       disable={isPending || !isConfirmed}
       closeDisabled={isPending}
@@ -83,10 +83,10 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
         <Button
           type="button"
           varinat="cancel"
-          onClick={Closed}
+          onClick={onClose}
           disabled={isPending}
         >
-          Cancel
+          {definition.cancelLabel}
         </Button>
       }
     >

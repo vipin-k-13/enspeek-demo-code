@@ -4,8 +4,10 @@ import type { RootState } from "../../../store/store";
 import DynamicModel from "../../global/DynamicModel";
 import Input from "../../ui/Input";
 import ModalInstruction from "../../ui/ModalInstruction";
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
 export default function AddGroupModal() {
+  const definition = modalDefinitions.addGroup;
   const dispatch = useDispatch();
   const { isOpenGroup, groupInput } = useSelector((state: RootState) => state.crosstab);
 
@@ -17,8 +19,8 @@ export default function AddGroupModal() {
 
   return (
     <DynamicModel
-      Title="Set Group Name"
-      ButtonText="Set Group Name"
+      Title={definition.title}
+      ButtonText={definition.submitLabel!}
       isOpen={isOpenGroup}
       onClose={() => dispatch(setIsOpenGroup(false))}
       onClick={handleSetGroup}

@@ -5,13 +5,7 @@ import SingleSelectChart from "../Report/Charts";
 import TableForm from "../Report/TableForm";
 import ModalInstruction from "../../ui/ModalInstruction";
 import { PRIMARY_CHART_COLOR } from "../../../utils/chartColors";
-
-interface TableAndChartModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  message: any;
-  type: "chart" | "table";
-}
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
 const TableAndChartModal: React.FC<TableAndChartModalProps> = ({
   isOpen,
@@ -19,6 +13,10 @@ const TableAndChartModal: React.FC<TableAndChartModalProps> = ({
   message,
   type,
 }) => {
+  const definition =
+    type === "chart"
+      ? modalDefinitions.fullChartView
+      : modalDefinitions.fullTableView;
   const qid = message?.sdata?.seq?.[0];
   const questionData = {
     ...message?.sdata?.[qid],
@@ -111,8 +109,8 @@ const TableAndChartModal: React.FC<TableAndChartModalProps> = ({
       className="max-w-5xl"
       isOpen={isOpen}
       onClose={onClose}
-      Title={type === "chart" ? "Full Chart View" : "Full Table View"}
-      ButtonText=""
+      Title={definition.title}
+      ButtonText={definition.submitLabel!}
       onClick={onClose}
     >
       <ModalInstruction>

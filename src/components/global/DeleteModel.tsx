@@ -1,16 +1,7 @@
 import React from "react";
 import ConfirmKeywordModal from "./modals/ConfirmKeywordModal";
 
-interface DeleteModelProps {
-  onClick: () => void;
-  isOpen: boolean;
-  onClose: () => void;
-  qID?: string;
-  label: string;
-  isPending?: boolean;
-}
-
-const DeleteModel: React.FC<DeleteModelProps> = ({
+const DeleteModel: React.FC<DeleteQuestionModalProps> = ({
   onClick,
   isOpen,
   onClose,

@@ -13,13 +13,6 @@ interface EmailEntry {
   output: boolean;
   initiateSample: boolean;
 }
-
-interface ShareStudyModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onClick: () => void;
-  studyName: string;
-}
 export default function ShareStudyModal({
   isOpen,
   onClose,

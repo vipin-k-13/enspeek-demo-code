@@ -15,13 +15,7 @@ import Input from "../../ui/Input";
 import Select from "../../ui/Select";
 import IconActionButton from "../../ui/IconActionButton";
 import Checkbox from "../../ui/Checkbox";
-
-interface EditTableModalProps {
-  qid: string;
-  tid: string;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
 export default function EditTableModal({
   open,
@@ -29,6 +23,7 @@ export default function EditTableModal({
   qid,
   tid,
 }: EditTableModalProps) {
+  const definition = modalDefinitions.updateTable;
   const { state } = useLocation();
   const { opListData, isOpListPending } = useOpList(
     tid,
@@ -160,7 +155,9 @@ export default function EditTableModal({
       }
       disable={isEditTableListQuestionPending}
       ButtonText={
-        isEditTableListQuestionPending ? "Updating..." : "Update Table"
+        isEditTableListQuestionPending
+          ? definition.submittingLabel!
+          : definition.submitLabel!
       }
       buttonIcon={
         isEditTableListQuestionPending ? (
@@ -185,7 +182,7 @@ export default function EditTableModal({
           onClick={() => onOpenChange(false)}
           disabled={isEditTableListQuestionPending}
         >
-          Cancel
+          {definition.cancelLabel}
         </Button>
       }
     >

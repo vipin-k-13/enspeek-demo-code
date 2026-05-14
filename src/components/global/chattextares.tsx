@@ -10,6 +10,7 @@ import PromptsList from "./PromptsList";
 import { CiCircleList } from "react-icons/ci";
 import useAiChat from "../../api-network/global/ai-chat";
 import Button from "../ui/Button";
+import { MODAL_CLOSE_FOCUS_CHAT_EVENT } from "../../utils/modalFocus";
 
 interface ChatTextAreaProps {
   placement?: "floating" | "panel";
@@ -26,6 +27,15 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
   const isHome = pathname === "/";
   const isPanelPlacement = placement === "panel";
   const { message, openChat, sendMessage, setDraftMessage } = useAiChat();
+
+  const focusChatInput = React.useCallback(() => {
+    const textarea = internalTextareaRef.current;
+    if (!textarea) return;
+
+    textarea.focus();
+    const caretPosition = textarea.value.length;
+    textarea.setSelectionRange(caretPosition, caretPosition);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDraftMessage(e.target.value);
@@ -51,15 +61,15 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
 
   React.useEffect(() => {
     if (isChatOpen && internalTextareaRef.current) {
-      internalTextareaRef.current?.focus();
+      focusChatInput();
     }
-  }, [isChatOpen]);
+  }, [focusChatInput, isChatOpen]);
 
   React.useEffect(() => {
     if (!isTyping && !pending && internalTextareaRef.current) {
-      internalTextareaRef.current?.focus();
+      focusChatInput();
     }
-  }, [isTyping, pending]);
+  }, [focusChatInput, isTyping, pending]);
 
   React.useEffect(() => {
     const handleShortcutFocus = (event: KeyboardEvent) => {
@@ -75,11 +85,7 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
       }
 
       requestAnimationFrame(() => {
-        internalTextareaRef.current?.focus();
-        internalTextareaRef.current?.setSelectionRange(
-          internalTextareaRef.current.value.length,
-          internalTextareaRef.current.value.length
-        );
+        focusChatInput();
       });
     };
 
@@ -87,7 +93,24 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
     return () => {
       window.removeEventListener("keydown", handleShortcutFocus);
     };
-  }, [isChatOpen, openChat]);
+  }, [focusChatInput, isChatOpen, openChat]);
+
+  React.useEffect(() => {
+    const handleModalCloseFocus = () => {
+      if (!isChatOpen) {
+        openChat();
+      }
+
+      requestAnimationFrame(() => {
+        focusChatInput();
+      });
+    };
+
+    window.addEventListener(MODAL_CLOSE_FOCUS_CHAT_EVENT, handleModalCloseFocus);
+    return () => {
+      window.removeEventListener(MODAL_CLOSE_FOCUS_CHAT_EVENT, handleModalCloseFocus);
+    };
+  }, [focusChatInput, isChatOpen, openChat]);
 
   return (
     <>

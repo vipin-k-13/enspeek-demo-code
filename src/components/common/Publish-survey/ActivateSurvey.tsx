@@ -8,15 +8,7 @@ import { LuBadgeCheck, LuInfo, LuPower } from "react-icons/lu";
 import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
 import { modalDefinitions } from "../../../config/modalDefinitions";
 
-interface ActivateSurveyProps {
-  isOpen: boolean;
-  activate: (variables: void, options?: { onSuccess?: () => void }) => void;
-  onClose: () => void;
-  studyInfo: any;
-  isPending: boolean;
-}
-
-const ActivateSurvey: FC<ActivateSurveyProps> = ({
+const ActivateSurvey: FC<ActivateSurveyModalProps> = ({
   isOpen,
   activate,
   onClose,

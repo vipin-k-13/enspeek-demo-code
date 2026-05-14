@@ -13,14 +13,13 @@ import {
   useReportClearHistory,
   useReportProcessDownload,
 } from "../../../api-network/report/mutation";
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
 export default function HistoryModal({
   open,
   onOpenChange,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) {
+}: HistoryModalProps) {
+  const definition = modalDefinitions.downloadHistory;
   const { name } = useSelector((state: RootState) => state.study);
   const [pid, setPid] = useState<string[]>([]);
   const { state } = useLocation();
@@ -47,9 +46,15 @@ export default function HistoryModal({
 
   return (
     <DynamicModel
-      Title={`Downloads : ${name}`}
+      Title={`${definition.title} : ${name}`}
       description="Review recent downloads for this study, or clear the history when you no longer need it."
-      ButtonText={hasHistory ? (isClearHistoryPending ? "Clearing..." : "Clear History") : ""}
+      ButtonText={
+        hasHistory
+          ? isClearHistoryPending
+            ? definition.submittingLabel!
+            : definition.submitLabel!
+          : ""
+      }
       buttonIcon={
         hasHistory
           ? isClearHistoryPending ? (
@@ -77,7 +82,7 @@ export default function HistoryModal({
           onClick={() => onOpenChange(false)}
           disabled={isClearHistoryPending}
         >
-          Cancel
+          {definition.cancelLabel}
         </Button>
       }
     >

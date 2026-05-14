@@ -8,19 +8,6 @@ import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
 import { LuCopy, LuInfo } from "react-icons/lu";
 import { modalDefinitions } from "../../../config/modalDefinitions";
 
-type NameCopyModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (value: string) => void;
-  titleKey: keyof typeof modalDefinitions;
-  sourceLabel: string;
-  fieldLabel: string;
-  placeholder: string;
-  defaultValue: string;
-  copyText: string;
-  isPending?: boolean;
-};
-
 export default function NameCopyModal({
   isOpen,
   onClose,

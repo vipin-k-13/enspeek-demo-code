@@ -9,22 +9,6 @@ import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
 import { LuInfo, LuTrash2 } from "react-icons/lu";
 import { modalDefinitions, renderModalIcon } from "../../../config/modalDefinitions";
 
-type ConfirmKeywordModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  titleKey: keyof typeof modalDefinitions;
-  targetLabel: string;
-  keyword?: string;
-  actionVerb?: string;
-  warningToneClass?: string;
-  isPending?: boolean;
-  testId?: string;
-  infoText?: React.ReactNode;
-  appendIrreversibleWarning?: boolean;
-  fieldLabel?: React.ReactNode;
-};
-
 export default function ConfirmKeywordModal({
   isOpen,
   onClose,

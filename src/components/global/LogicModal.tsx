@@ -3,19 +3,7 @@ import { cn } from "../../utils";
 import { LuGitBranchPlus } from "react-icons/lu";
 import ModalScaffold from "../ui/modal/ModalScaffold";
 
-interface LogicModelProps {
-  isOpen: boolean;
-  onClose: () => void;
-  Title: string;
-  description?: React.ReactNode;
-  children: React.ReactNode;
-  disable?: boolean;
-  closeDisabled?: boolean;
-  className?: string;
-  footerContent?: React.ReactNode;
-}
-
-const LogicModel: React.FC<LogicModelProps> = ({
+const LogicModel: React.FC<LogicModalProps> = ({
   isOpen,
   onClose,
   Title,

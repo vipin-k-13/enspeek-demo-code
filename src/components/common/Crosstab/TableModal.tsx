@@ -2,25 +2,19 @@ import React from "react";
 import DynamicModel from "../../global/DynamicModel";
 import TableList from "../table-List/TableList";
 import ModalInstruction from "../../ui/ModalInstruction";
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  message: any;
-}
-
-const TableModal: React.FC<Props> = ({ isOpen, onClose, message }) => {
+const TableModal: React.FC<CrosstabTableModalProps> = ({ isOpen, onClose, message }) => {
+  const definition = modalDefinitions.crosstabTable;
   if (!message?.sdata?.tableID) return null;
 
   return (
     <DynamicModel
       isOpen={isOpen}
       onClose={onClose}
-      Title="Crosstab Table"
-      ButtonText="Close"
-      onClick={() => {
-        onClose;
-      }}
+      Title={definition.title}
+      ButtonText={definition.submitLabel!}
+      onClick={onClose}
       className="max-w-5xl"
     >
       <ModalInstruction>

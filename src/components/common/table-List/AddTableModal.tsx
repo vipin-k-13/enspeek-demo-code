@@ -7,6 +7,7 @@ import { useAddCustomTable } from "../../../api-network/crosstab/tablelist/mutat
 import { useLocation } from "react-router";
 import Input from "../../ui/Input";
 import ModalInstruction from "../../ui/ModalInstruction";
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
 interface ControlItem {
   id: number;
@@ -20,20 +21,11 @@ interface TableRow {
   controls: ControlItem[];
 }
 
-interface AddCustomTableModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSubmit?: (data: {
-    label: string;
-    text: string;
-    logic: string;
-    rows: TableRow[];
-  }) => void;
-}
 export default function AddCustomTableModal({
   open,
   onOpenChange,
 }: AddCustomTableModalProps) {
+  const definition = modalDefinitions.addCustomTable;
   const [tableLabel, setTableLabel] = useState("");
   const [tableText, setTableText] = useState("");
   const [tableLogic, setTableLogic] = useState<{ pointLogic: string }[]>([]);
@@ -106,8 +98,8 @@ export default function AddCustomTableModal({
 
   return (
     <DynamicModel
-      Title="Add Custom Table"
-      ButtonText="Add Custom Table"
+      Title={definition.title}
+      ButtonText={definition.submitLabel!}
       isOpen={open}
       onClose={() => onOpenChange(false)}
       onClick={handleSubmit}
