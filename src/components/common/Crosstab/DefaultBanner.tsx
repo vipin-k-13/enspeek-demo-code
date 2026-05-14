@@ -94,6 +94,7 @@ export default function DefaultBanner({ Id, Title, description, OwnerName, table
                 <>
                   <IconActionButton
                     aria-label="Grid View"
+                    tooltip="View"
                     onClick={() => {
                       dispatch(setBannerName(Title));
                       navigate("/crosstab/table-list", {
@@ -107,6 +108,7 @@ export default function DefaultBanner({ Id, Title, description, OwnerName, table
                     data-test-id={`${Title}_COPY`}
                     tone="info"
                     aria-label="Copy"
+                    tooltip="Copy"
                     onClick={() => setIsCopyModalOpen(true)}
                   >
                     <LuCopy size={18} />
@@ -115,6 +117,7 @@ export default function DefaultBanner({ Id, Title, description, OwnerName, table
                     data-test-id={`${Title}_SETTING`}
                     tone="success"
                     aria-label="Settings"
+                    tooltip="Banner Settings"
                     onClick={() => setIsSettingsOpen(true)}
                   >
                     <LuSettings2 size={18} />
@@ -122,6 +125,7 @@ export default function DefaultBanner({ Id, Title, description, OwnerName, table
                   <IconActionButton
                     tone="warning"
                     aria-label="Download"
+                    tooltip="Download"
                     onClick={() => {
                       downloadTableMutate({
                         bannerID: Id,
@@ -136,6 +140,7 @@ export default function DefaultBanner({ Id, Title, description, OwnerName, table
             <IconActionButton
               tone="primary"
               aria-label="Edit"
+              tooltip="Edit"
               onClick={() => {
                 dispatch(setBannerName(Title));
                 navigate("/crosstab/edit-banner", {
@@ -149,6 +154,7 @@ export default function DefaultBanner({ Id, Title, description, OwnerName, table
               data-test-id={`${Title}_DELETE`}
               tone="danger"
               aria-label="Delete"
+              tooltip="Delete"
               onClick={() => setIsDeleteModalOpen(true)}
             >
               <LuTrash2 size={18} />

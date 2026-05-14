@@ -223,12 +223,25 @@ export default function BannerSettings({
         <div className="crosstab-surface p-4">
           <h3 className="crosstab-title mb-3 text-base font-semibold">Question list</h3>
           <div>
-            <div className="border border-[#e2e4f1] rounded-lg flex items-center px-4 py-3 mb-2">
-              <Checkbox
-                className="mr-3"
-                checked={isAllSelected}
-                onChange={toggleAll}
-              />
+            <div
+              className="border border-[#e2e4f1] rounded-lg flex cursor-pointer items-center px-4 py-3 mb-2"
+              role="button"
+              tabIndex={0}
+              onClick={toggleAll}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleAll();
+                }
+              }}
+            >
+              <div onClick={(e) => e.stopPropagation()}>
+                <Checkbox
+                  className="mr-3"
+                  checked={isAllSelected}
+                  onChange={toggleAll}
+                />
+              </div>
               <span className="crosstab-title font-medium">Select All Questions</span>
             </div>
 
@@ -238,14 +251,25 @@ export default function BannerSettings({
               QListData.map((question: any, idx: number) => (
                 <div
                   key={idx}
-                  className="border border-[#e2e4f1] rounded-lg mb-2 flex items-center px-4 py-3 last:mb-0"
+                  className="border border-[#e2e4f1] rounded-lg mb-2 flex cursor-pointer items-center px-4 py-3 last:mb-0"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => toggleQuestion(question.qID)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleQuestion(question.qID);
+                    }
+                  }}
                 >
-                  <Checkbox
-                    data-test-id={`Q_${idx}`}
-                    className="mr-3"
-                    checked={selectedQuestions.includes(question.qID)}
-                    onChange={() => toggleQuestion(question.qID)}
-                  />
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      data-test-id={`Q_${idx}`}
+                      className="mr-3"
+                      checked={selectedQuestions.includes(question.qID)}
+                      onChange={() => toggleQuestion(question.qID)}
+                    />
+                  </div>
                   <span className="home-text">{question.qLabel}</span>
                 </div>
               ))
