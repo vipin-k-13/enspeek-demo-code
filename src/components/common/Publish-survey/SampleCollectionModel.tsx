@@ -22,7 +22,7 @@ const SampleCollectionModel: FC<SampleCollectionModalProps> = ({
   const isConfirmed = inputValueInitiate.trim().toLowerCase() === "collect";
   const studyInfo = useSelector((state: RootState) => state.study);
   const { state } = useLocation();
-  const { mutate, isPending } = useInitiateSampleCollectionMutation(state.studyID);
+  const { mutateAsync, isPending } = useInitiateSampleCollectionMutation(state.studyID);
   const definition = modalDefinitions.initiateSampleCollection;
   const title =
     studyInfo.closed === 1 ? "Relaunch Survey" : definition.title;
@@ -42,17 +42,18 @@ const SampleCollectionModel: FC<SampleCollectionModalProps> = ({
     }
   }, [isOpen, isPending]);
 
-  const handleInitiate = () => {
+  const handleInitiate = async () => {
     if (inputValueInitiate.trim().toLowerCase() !== "collect") {
       toast.error("Please type 'collect' to confirm sample collection.");
       return;
     }
-    mutate(undefined, {
-      onSuccess: () => {
-        setInputValueInitiate("");
-        onClose();
-      },
-    });
+    try {
+      await mutateAsync();
+      setInputValueInitiate("");
+      onClose();
+    } catch {
+      return;
+    }
   };
 
   return (

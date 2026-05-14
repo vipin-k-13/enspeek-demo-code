@@ -35,7 +35,7 @@ export default function PublishSurvey() {
   usePublishSurveySubgroup(studyID);
   const { quotaData } = usePublishSurveyQuota(studyID);
   const { quotaReport } = usePublishSurveyQuotaReport(studyID);
-  const { mutate: activateSurvey, isPending: isActivatePending } =
+  const { mutateAsync: activateSurvey, isPending: isActivatePending } =
     useGenerateGlobalLinkMutation(studyID, studyInfo?.studyname);
 
   if (isStudyInfoLoading || !studyInfo) {

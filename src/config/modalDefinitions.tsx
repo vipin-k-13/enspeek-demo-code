@@ -108,7 +108,7 @@ export const modalDefinitions: Record<string, ModalDefinition> = {
     tone: "success",
     icon: LuUsers,
     submitLabel: "Initiate Sample Collection",
-    submittingLabel: "Collecting...",
+    submittingLabel: "Initiating...",
     cancelLabel: "Cancel",
     maxWidthClass: "max-w-lg",
   },
@@ -119,7 +119,7 @@ export const modalDefinitions: Record<string, ModalDefinition> = {
     icon: LuShare2,
     submitLabel: "Copy",
     cancelLabel: "Cancel",
-    maxWidthClass: "max-w-[90vw]",
+    maxWidthClass: "max-w-4xl",
   },
   whatsappLink: {
     id: "whatsappLink",
@@ -128,7 +128,7 @@ export const modalDefinitions: Record<string, ModalDefinition> = {
     icon: LuMessageCircle,
     submitLabel: "Copy",
     cancelLabel: "Cancel",
-    maxWidthClass: "max-w-[90vw]",
+    maxWidthClass: "max-w-4xl",
   },
   chooseSubgroup: {
     id: "chooseSubgroup",

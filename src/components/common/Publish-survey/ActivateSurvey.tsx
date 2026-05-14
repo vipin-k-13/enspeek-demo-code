@@ -33,16 +33,17 @@ const ActivateSurvey: FC<ActivateSurveyModalProps> = ({
     }
   }, [isOpen, isPending]);
 
-  const handleActivateSurvey = () => {
+  const handleActivateSurvey = async () => {
     if (inputValue.trim().toLowerCase() !== "activate") {
         return toast.warning(`Please type "activate" to confirm`)
     }
-    activate(undefined, {
-      onSuccess: () => {
-        setInputValue("");
-        onClose();
-      },
-    });
+    try {
+      await activate();
+      setInputValue("");
+      onClose();
+    } catch {
+      return;
+    }
   };
 
   return (

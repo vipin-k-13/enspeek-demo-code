@@ -525,7 +525,7 @@ declare type ShareStudyModalProps = BaseModalControlProps & {
 };
 
 declare type ActivateSurveyModalProps = BaseModalControlProps & {
-  activate: (variables: void, options?: { onSuccess?: () => void }) => void;
+  activate: () => Promise<unknown>;
   studyInfo: any;
   isPending: boolean;
 };

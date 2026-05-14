@@ -18,6 +18,7 @@ const CopyModel: React.FC<CopyQuestionModalProps> = ({
 }) => {
   const [QID, setQID] = React.useState<string>("");
   const [QLabel, setQlabel] = React.useState<string>("");
+  const questionIdInputRef = React.useRef<HTMLInputElement | null>(null);
   const displayLabel =
     label?.replace(/^[A-Za-z0-9_-]+\s*:\s*/, "").trim() || label;
   const definition = modalDefinitions.copyQuestion;
@@ -26,6 +27,13 @@ const CopyModel: React.FC<CopyQuestionModalProps> = ({
     if (isOpen) {
       setQID("");
       setQlabel("");
+      requestAnimationFrame(() => {
+        const input = questionIdInputRef.current;
+        if (!input) return;
+        input.focus();
+        const caretPosition = input.value.length;
+        input.setSelectionRange(caretPosition, caretPosition);
+      });
     }
   }, [isOpen, qID, label]);
 
@@ -81,6 +89,7 @@ const CopyModel: React.FC<CopyQuestionModalProps> = ({
               CQ
             </span>
             <Input
+              ref={questionIdInputRef}
               variant="modal"
               data-test-id="COPY_QUESTIONNAIRE_MODEL_1"
               placeholder="Enter question id"
