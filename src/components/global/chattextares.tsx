@@ -96,6 +96,16 @@ const ChatTextArea: React.FC<ChatTextAreaProps> = ({
   }, [focusChatInput, isChatOpen, openChat]);
 
   React.useEffect(() => {
+    if (!isChatOpen) {
+      openChat();
+    }
+
+    requestAnimationFrame(() => {
+      focusChatInput();
+    });
+  }, [focusChatInput, isChatOpen, openChat, pathname]);
+
+  React.useEffect(() => {
     const handleModalCloseFocus = () => {
       if (!isChatOpen) {
         openChat();

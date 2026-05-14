@@ -23,13 +23,20 @@ const ActivateSurvey: FC<ActivateSurveyModalProps> = ({
   useEffect(() => {
     if (isOpen && !isPending) {
       setInputValue("");
-      requestAnimationFrame(() => {
+      const focusInput = () => {
         const input = inputRef.current;
         if (!input) return;
         input.focus();
         const caretPosition = input.value.length;
         input.setSelectionRange(caretPosition, caretPosition);
-      });
+      };
+
+      requestAnimationFrame(focusInput);
+      const timeoutId = window.setTimeout(focusInput, 120);
+
+      return () => {
+        window.clearTimeout(timeoutId);
+      };
     }
   }, [isOpen, isPending]);
 
@@ -110,6 +117,7 @@ const ActivateSurvey: FC<ActivateSurveyModalProps> = ({
         ref={inputRef}
         variant="modal"
         type="text"
+        autoFocus={isOpen && !isPending}
         data-test-id="ACTIVATE_INPUT"
         placeholder="Type 'activate' here..."
         className="questionnaire-heading mt-4 rounded-[18px]"

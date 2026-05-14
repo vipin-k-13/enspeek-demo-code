@@ -68,6 +68,25 @@ export const useChat = () => {
     });
   };
 
+  const refreshPublishSurveyData = (targetStudyID?: string) => {
+    if (!targetStudyID) return;
+
+    window.setTimeout(() => {
+      void queryClient.refetchQueries({
+        queryKey: publishSurveyKeys.studyInfo(targetStudyID),
+        type: "active",
+      });
+      void queryClient.refetchQueries({
+        queryKey: publishSurveyKeys.quotaReport(targetStudyID),
+        type: "active",
+      });
+      void queryClient.refetchQueries({
+        queryKey: publishSurveyKeys.quota(targetStudyID),
+        type: "active",
+      });
+    }, 1000);
+  };
+
   const refreshHomeStudyList = async () => {
     if (pathname !== "/") return;
 
@@ -167,9 +186,7 @@ export const useChat = () => {
           closed: 0,
         })
       );
-      void queryClient.invalidateQueries({
-        queryKey: publishSurveyKeys.studyInfo(studyID),
-      });
+      refreshPublishSurveyData(studyID);
     }
 
     if (data.type === "activated" && data.liveLink) {

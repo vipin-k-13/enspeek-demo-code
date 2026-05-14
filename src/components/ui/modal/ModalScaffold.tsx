@@ -48,6 +48,14 @@ export default function ModalScaffold({
     wasOpenRef.current = isOpen;
   }, [isOpen]);
 
+  useEffect(() => {
+    return () => {
+      if (wasOpenRef.current) {
+        window.dispatchEvent(new CustomEvent(MODAL_CLOSE_FOCUS_CHAT_EVENT));
+      }
+    };
+  }, []);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} className={cn("w-full", className)}>
       <div className="w-full">

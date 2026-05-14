@@ -32,13 +32,20 @@ const SampleCollectionModel: FC<SampleCollectionModalProps> = ({
   useEffect(() => {
     if (isOpen && !isPending) {
       setInputValueInitiate("");
-      requestAnimationFrame(() => {
+      const focusInput = () => {
         const input = inputRef.current;
         if (!input) return;
         input.focus();
         const caretPosition = input.value.length;
         input.setSelectionRange(caretPosition, caretPosition);
-      });
+      };
+
+      requestAnimationFrame(focusInput);
+      const timeoutId = window.setTimeout(focusInput, 120);
+
+      return () => {
+        window.clearTimeout(timeoutId);
+      };
     }
   }, [isOpen, isPending]);
 
@@ -113,6 +120,7 @@ const SampleCollectionModel: FC<SampleCollectionModalProps> = ({
         ref={inputRef}
         variant="modal"
         type="text"
+        autoFocus={isOpen && !isPending}
         data-test-id="Initiate_INPUT"
         placeholder="eg. collect"
         className="questionnaire-heading mt-4 rounded-[18px]"
