@@ -27,13 +27,27 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({
     >
       {React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child, {
-            value,
-            disabled,
-            expanded,
-            headingId,
-            contentId,
-          } as any);
+          const childType = child.type;
+
+          if (childType === AccordionTrigger) {
+            return React.cloneElement(child, {
+              value,
+              disabled,
+              expanded,
+              headingId,
+              contentId,
+            } as any);
+          }
+
+          if (childType === AccordionContent) {
+            return React.cloneElement(child, {
+              expanded,
+              headingId,
+              contentId,
+            } as any);
+          }
+
+          return child;
         }
         return child;
       })}

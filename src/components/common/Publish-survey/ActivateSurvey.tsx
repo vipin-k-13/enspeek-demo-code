@@ -6,6 +6,7 @@ import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import { LuBadgeCheck, LuInfo, LuPower } from "react-icons/lu";
 import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
 interface ActivateSurveyProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isConfirmed = inputValue.trim().toLowerCase() === "activate";
+  const definition = modalDefinitions.activateSurvey;
 
   useEffect(() => {
     if (isOpen && !isPending) {
@@ -53,13 +55,13 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
 
   return (
     <DynamicModel
-      Title="Activate Survey"
+      Title={definition.title}
       headerIcon={
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
           <LuBadgeCheck className="h-5 w-5" />
         </span>
       }
-      ButtonText={isPending ? "Activating..." : "Activate Survey"}
+      ButtonText={isPending ? definition.submittingLabel! : definition.submitLabel!}
       buttonVariant="success"
       buttonIcon={
         isPending ? (
@@ -78,10 +80,10 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
         <Button
           type="button"
           varinat="cancel"
-        onClick={() => !isPending && onClose()}
-        disabled={isPending}
+          onClick={() => !isPending && onClose()}
+          disabled={isPending}
         >
-          Cancel
+          {definition.cancelLabel}
         </Button>
       }
     >
