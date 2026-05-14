@@ -1,72 +1,77 @@
-import { useEffect, useState, type FC } from "react";
+import { useEffect, useRef, useState, type FC } from "react";
 import DynamicModel from "../../global/DynamicModel";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "../../../services/apiService";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import { useLocation } from "react-router";
 import { toast } from "sonner";
-import { queryClient } from "../../../App";
+import { handleKeyPress } from "../../../utils";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import { LuInfo, LuPlay, LuUsers } from "react-icons/lu";
 import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
+import { modalDefinitions } from "../../../config/modalDefinitions";
+import { useInitiateSampleCollectionMutation } from "../../../api-network/publish-survey/mutation";
 
-interface SampleCollectionModelProps {
-  isOpen: boolean;
-  Closed: () => void;
-  studyName?: string;
-}
-
-const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
+const SampleCollectionModel: FC<SampleCollectionModalProps> = ({
   isOpen,
-  Closed,
+  onClose,
   studyName,
 }) => {
   const [inputValueInitiate, setInputValueInitiate] = useState("");
-  const user = useSelector((state: RootState) => state.user);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const isConfirmed = inputValueInitiate.trim().toLowerCase() === "collect";
   const studyInfo = useSelector((state: RootState) => state.study);
   const { state } = useLocation();
-  const { mutate, isPending } = useMutation({
-    mutationKey: ["Initiate Sample", state.studyID],
-    mutationFn: async () => {
-      const res = await apiRequest("post", "study/set/launch", {
-        apiToken: user.apiToken,
-        studyID: state.studyID,
-      });
-      return res.response;
-    },
-    onSuccess: () => {
-      toast.success("Study set for sample collection");
-      queryClient.invalidateQueries({ queryKey: ["studyInfo"] });
-      setInputValueInitiate("");
-      Closed();
-    },
-  });
+  const { mutateAsync, isPending } = useInitiateSampleCollectionMutation(state.studyID);
+  const definition = modalDefinitions.initiateSampleCollection;
+  const title =
+    studyInfo.closed === 1 ? "Relaunch Survey" : definition.title;
+  const submitLabel =
+    studyInfo.closed === 1 ? "Relaunch Survey" : definition.submitLabel!;
 
   useEffect(() => {
     if (isOpen && !isPending) {
       setInputValueInitiate("");
+      const focusInput = () => {
+        const input = inputRef.current;
+        if (!input) return;
+        input.focus();
+        const caretPosition = input.value.length;
+        input.setSelectionRange(caretPosition, caretPosition);
+      };
+
+      requestAnimationFrame(focusInput);
+      const timeoutId = window.setTimeout(focusInput, 120);
+
+      return () => {
+        window.clearTimeout(timeoutId);
+      };
     }
   }, [isOpen, isPending]);
 
-  const handleInitiate = () => {
+  const handleInitiate = async () => {
     if (inputValueInitiate.trim().toLowerCase() !== "collect") {
       toast.error("Please type 'collect' to confirm sample collection.");
       return;
     }
-    mutate();
+    try {
+      await mutateAsync();
+      setInputValueInitiate("");
+      onClose();
+    } catch {
+      return;
+    }
   };
 
   return (
     <DynamicModel
-      Title={studyInfo.closed === 1 ? "Relaunch Survey" : "Initiate Sample Collection"}
+      Title={title}
       headerIcon={
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
           <LuUsers className="h-5 w-5" />
         </span>
       }
-      ButtonText={isPending ? "Collecting..." : studyInfo.closed === 1 ? "Relaunch Survey" : "Initiate Sample Collection"}
+      ButtonText={isPending ? definition.submittingLabel! : submitLabel}
       buttonVariant="success"
       buttonIcon={
         isPending ? (
@@ -77,18 +82,19 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
       }
       isOpen={isOpen}
       onClick={handleInitiate}
-      onClose={() => !isPending && Closed()}
+      onClose={() => !isPending && onClose()}
       className="max-w-lg"
-      disable={isPending}
+      disable={isPending || !isConfirmed}
+      closeDisabled={isPending}
       bodyClassName="bg-white"
       secondaryAction={
         <Button
           type="button"
           varinat="cancel"
-          onClick={Closed}
+          onClick={onClose}
           disabled={isPending}
         >
-          Cancel
+          {definition.cancelLabel}
         </Button>
       }
     >
@@ -99,9 +105,9 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
           ?
         </p>
         <ModalInfoBlock
-          className="modal-card rounded-[20px] bg-[var(--color-surface-base)] px-4 py-4"
+          className="modal-info-block"
           icon={
-            <span className="modal-header-icon h-10 w-10 text-[var(--color-brand-primary)]">
+            <span className="modal-info-icon text-[var(--color-brand-primary)]">
               <LuInfo className="h-4 w-4" />
             </span>
           }
@@ -111,13 +117,16 @@ const SampleCollectionModel: FC<SampleCollectionModelProps> = ({
         </ModalInfoBlock>
       </div>
       <Input
+        ref={inputRef}
         variant="modal"
         type="text"
+        autoFocus={isOpen && !isPending}
         data-test-id="Initiate_INPUT"
         placeholder="eg. collect"
         className="questionnaire-heading mt-4 rounded-[18px]"
         value={inputValueInitiate}
         onChange={(e) => setInputValueInitiate(e.target.value)}
+        onKeyDown={(e) => handleKeyPress(e, handleInitiate)}
         disabled={isPending}
       />
     </DynamicModel>

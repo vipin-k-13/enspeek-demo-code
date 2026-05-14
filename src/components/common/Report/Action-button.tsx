@@ -1,44 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
 import Button from "../../ui/Button";
-import {
-  LuArrowRight,
-  LuChartColumnBig,
-  LuDownload,
-  LuEllipsis,
-  LuFileSpreadsheet,
-  LuFilter,
-  LuFiles,
-  LuHand,
-  LuListFilter,
-  LuPresentation,
-  LuTable2,
-  LuToggleLeft,
-  LuToggleRight,
-} from "react-icons/lu";
+import { LuArrowRight, LuChartColumnBig, LuDownload, LuEllipsis, LuFileSpreadsheet, LuFilter, LuFiles, LuHand, LuListFilter, LuPresentation, LuTable2, LuToggleLeft, LuToggleRight } from "react-icons/lu";
 import ReportFilter from "./ReportFilter";
 import FilterModal from "./FilterModal";
 import HistoryModal from "./HistoryModal";
-import {
-  useExcelDownload,
-  usePptDownloadHook,
-  useProcessHook,
-  useSpssHook,
-  useTableDownload,
-} from "./ReportMutations";
+import { useReportSideBySideVariables } from "../../../api-network/report/query";
+import { useReportExcelDownload, useReportPptDownload, useReportProcessDownload, useReportSpssDownload, useReportTableDownload } from "../../../api-network/report/mutation";
 import LoaderSpinner from "../../global/LoaderSpinner";
 import DropDown from "../../global/DropDown";
 import SetSubgroupModal from "./SetSubGroupModal";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "../../../services/apiService";
+import { useQueryClient } from "@tanstack/react-query";
 import type { RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setFliterReportData,
-  setSelected,
-  setSide_by_side,
-} from "../../../store/FiltersSlice";
+import { setFliterReportData, setSelected, setSide_by_side } from "../../../store/FiltersSlice";
 import { Link, useLocation } from "react-router";
 import { setSubgroupOn } from "../../../store/CrosstabSlice";
+import reportKeys from "../../../api-network/report/keys";
 
 type ActionButtonProps = {
   showTableView: boolean;
@@ -54,44 +31,39 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
-  const subgroupOn = useSelector(
-    (state: RootState) => state.crosstab.subgroupOn
-  );
+  const subgroupOn = useSelector((state: RootState) => state.crosstab.subgroupOn);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const selectDropdownRef = useRef<HTMLDivElement>(null);
-  const user = useSelector((state: RootState) => state.user);
-  const { tableQList, fliterReportData } = useSelector(
-    (state: RootState) => state.filter
-  );
+  const { tableQList, fliterReportData } = useSelector((state: RootState) => state.filter);
   const { state } = useLocation();
   const [showSubgroupModal, setshowSubgroupModal] = useState(false);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
-  const { Process } = useProcessHook();
-  const { DownloadExcel, isDownloadExcelPending } = useExcelDownload({
+  const { processDownload } = useReportProcessDownload();
+  const { downloadExcel, isDownloadExcelPending } = useReportExcelDownload({
     studyID: state.studyID,
     cb: ({ studyID, pid }) => {
-      Process({ studyID, pid });
+      processDownload({ studyID, pid });
     },
   });
-  const { DownloadSpss, isDownloadSpssPending } = useSpssHook({
+  const { downloadSpss, isDownloadSpssPending } = useReportSpssDownload({
     studyID: state.studyID,
     cb: ({ studyID, pid }) => {
-      Process({ studyID, pid });
+      processDownload({ studyID, pid });
     },
   });
-  const { DownloadTable, isDownloadTablePending } = useTableDownload({
+  const { downloadTable, isDownloadTablePending } = useReportTableDownload({
     studyID: state.studyID,
     cb: ({ studyID, pid }) => {
-      Process({ studyID, pid });
+      processDownload({ studyID, pid });
     },
   });
-  const { DownloadPpt, isDownloadPptPending } = usePptDownloadHook({
+  const { downloadPpt, isDownloadPptPending } = useReportPptDownload({
     studyID: state.studyID,
     cb: ({ studyID, pid }) => {
-      Process({ studyID, pid });
+      processDownload({ studyID, pid });
     },
   });
 
@@ -137,22 +109,22 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     {
       Title: "Download Excel Raw Data",
       Icon: LuFileSpreadsheet,
-      onClick: () => DownloadExcel(),
+      onClick: () => downloadExcel(),
     },
     {
       Title: "Download SPSS Raw Data",
       Icon: LuFiles,
-      onClick: () => DownloadSpss(),
+      onClick: () => downloadSpss(),
     },
     {
       Title: "Download Table Raw Data",
       Icon: LuTable2,
-      onClick: () => DownloadTable(),
+      onClick: () => downloadTable(),
     },
     {
       Title: "Download PPT",
       Icon: LuPresentation,
-      onClick: () => DownloadPpt(),
+      onClick: () => downloadPpt(),
     },
     {
       Title: "Download History",
@@ -163,23 +135,12 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     },
   ];
 
-  const { data } = useQuery({
-    queryKey: ["listVar"],
-    queryFn: async () => {
-      const res = await apiRequest("post", "/report/side_by_side/list/vars", {
-        apiToken: user.apiToken,
-        studyID: state.studyID,
-      });
-      return res.response;
-    },
-    refetchOnWindowFocus: false,
-    retry: 1,
-  });
+  const { sideBySideVariables } = useReportSideBySideVariables(state.studyID);
 
   const handleSave = async (selectedValue: string) => {
     dispatch(setSelected(selectedValue));
     await queryClient.refetchQueries({
-      queryKey: ["ReportView"],
+      queryKey: reportKeys.viewByIdRoot(state.studyID),
       type: "active",
     });
     setshowSubgroupModal(false);
@@ -189,7 +150,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     if (!!subgroupOn) {
       dispatch(setSide_by_side("0"));
     } else {
-      dispatch(setSelected([...data][0].qID));
+      dispatch(setSelected(sideBySideVariables?.[0]?.qID ?? ""));
       dispatch(setSide_by_side("1"));
     }
     dispatch(setSubgroupOn(!subgroupOn));
@@ -282,7 +243,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
           onClick={() => {
             setShowFilter(true);
           }}
-          disabled
+          
         >
           <LuFilter />
         </Button>
@@ -313,12 +274,12 @@ const ActionButton: React.FC<ActionButtonProps> = ({
         </Link>
       </div>
       {showFilter && (
-        <ReportFilter onClose={() => setShowFilter(false)} onClear={() => {}} />
+        <ReportFilter onClose={() => setShowFilter(false)} onClear={() => { }} />
       )}
       <div>
         {showSubgroupModal && (
           <SetSubgroupModal
-            options={data}
+            options={sideBySideVariables}
             onSave={handleSave}
             onClose={() => setshowSubgroupModal(false)}
           />

@@ -79,7 +79,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
     Boolean(isArchived)
       ? {
           id: "active",
-          label: "Unarchive",
+          label: "Restore",
           icon: <LuArchive className="h-4 w-4" />,
           onClick: () => {
             dispatch(setSelectedId(id));

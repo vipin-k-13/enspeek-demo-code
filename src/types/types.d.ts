@@ -94,7 +94,6 @@ declare type Study = {
 };
 
 declare type QuestionPayload = {
-  apiToken: string;
   studyID: string;
   newQID: string;
   qType: string;
@@ -398,4 +397,201 @@ declare type QuesLogicPayload = {
       }
     ];
   };
+};
+
+declare type QueryStructureProps = {
+  queryKey: readonly unknown[];
+  queryFn: () => any;
+  enable?: boolean;
+  refetchOnWindowFocus?: boolean;
+  retry?: number;
+};
+
+declare type ModalDefinitionId =
+  | "archiveStudy"
+  | "unarchiveStudy"
+  | "copyStudy"
+  | "deleteStudy"
+  | "copyQuestion"
+  | "deleteQuestion"
+  | "activateSurvey"
+  | "initiateSampleCollection"
+  | "facebookLink"
+  | "whatsappLink"
+  | "chooseSubgroup"
+  | "reportFilters"
+  | "downloadHistory"
+  | "addBanner"
+  | "copyBanner"
+  | "deleteBanner"
+  | "bannerSettings"
+  | "updateTable"
+  | "logicEditor"
+  | "tableHistory"
+  | "addCustomTable"
+  | "addGroup"
+  | "crosstabTable"
+  | "fullChartView"
+  | "fullTableView";
+
+declare type BaseModalControlProps = {
+  isOpen: boolean;
+  onClose: () => void;
+};
+
+declare type DynamicModalProps = BaseModalControlProps & {
+  Title: string;
+  headerIcon?: React.ReactNode;
+  description?: React.ReactNode;
+  descriptionClassName?: string;
+  ButtonText: string;
+  buttonIcon?: React.ReactNode;
+  children: React.ReactNode;
+  onClick: () => void;
+  disable?: boolean;
+  closeDisabled?: boolean;
+  className?: string;
+  bodyClassName?: string;
+  footerContent?: React.ReactNode;
+  secondaryAction?: React.ReactNode;
+  secondaryActionPosition?: "before" | "after";
+  buttonVariant?: import("../components/ui/Button").ButtonProps["varinat"];
+};
+
+declare type LogicModalProps = BaseModalControlProps & {
+  Title: string;
+  description?: React.ReactNode;
+  children: React.ReactNode;
+  disable?: boolean;
+  closeDisabled?: boolean;
+  className?: string;
+  footerContent?: React.ReactNode;
+};
+
+declare type ConfirmKeywordModalProps = BaseModalControlProps & {
+  onConfirm: () => void;
+  titleKey: ModalDefinitionId;
+  targetLabel: string;
+  keyword?: string;
+  actionVerb?: string;
+  warningToneClass?: string;
+  isPending?: boolean;
+  testId?: string;
+  infoText?: React.ReactNode;
+  appendIrreversibleWarning?: boolean;
+  fieldLabel?: React.ReactNode;
+};
+
+declare type NameCopyModalProps = BaseModalControlProps & {
+  onConfirm: (value: string) => void;
+  titleKey: ModalDefinitionId;
+  sourceLabel: string;
+  fieldLabel: string;
+  placeholder: string;
+  defaultValue: string;
+  copyText: string;
+  isPending?: boolean;
+};
+
+declare type SocialLinkModalProps = BaseModalControlProps & {
+  titleKey: ModalDefinitionId;
+  headerIcon: React.ReactNode;
+  accentClassName: string;
+  linkData?: {
+    short_url?: string;
+    Message?: string;
+  };
+  copySuccessMessage: string;
+  onSave?: (selected: string) => void;
+};
+
+declare type CopyQuestionModalProps = BaseModalControlProps & {
+  onClick: (id: string, value: string) => void;
+  qID?: string;
+  label: string;
+  isPending?: boolean;
+};
+
+declare type DeleteQuestionModalProps = BaseModalControlProps & {
+  onClick: () => void;
+  qID?: string;
+  label: string;
+  isPending?: boolean;
+};
+
+declare type ShareStudyModalProps = BaseModalControlProps & {
+  studyName: string;
+  onClick?: () => void;
+};
+
+declare type ActivateSurveyModalProps = BaseModalControlProps & {
+  activate: () => Promise<unknown>;
+  studyInfo: any;
+  isPending: boolean;
+};
+
+declare type SampleCollectionModalProps = BaseModalControlProps & {
+  studyName?: string;
+};
+
+declare type QuestionLogicModalProps = BaseModalControlProps & {
+  qID: string | null;
+};
+
+declare type AddBannerModalProps = BaseModalControlProps & {
+  onBannerDesignClick: (e: AddBannerPayload) => void;
+  isPending: boolean;
+};
+
+declare type BannerSettingsModalProps = BaseModalControlProps & {
+  Id: string;
+};
+
+declare type AddCustomTableModalProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSubmit?: (data: {
+    label: string;
+    text: string;
+    logic: string;
+    rows: {
+      id: string;
+      title: string;
+      variables: string;
+      logic: { pointLogic: string }[];
+      controls: { id: number; variable: string }[];
+    }[];
+  }) => void;
+};
+
+declare type EditTableModalProps = {
+  qid: string;
+  tid: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+declare type SetSubgroupModalProps = {
+  options: Record<string, any>[];
+  onSave: (selected: string) => void | Promise<void>;
+  onClose: () => void;
+};
+
+declare type HistoryModalProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+declare type FilterModalProps = {
+  isOpen: boolean;
+  setIsOpen: () => void;
+};
+
+declare type TableAndChartModalProps = BaseModalControlProps & {
+  message: any;
+  type: "chart" | "table";
+};
+
+declare type CrosstabTableModalProps = BaseModalControlProps & {
+  message: any;
 };

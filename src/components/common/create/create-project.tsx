@@ -38,7 +38,6 @@ export default function CreationProject() {
         projectDescription: formData.projectDescription,
         panel: formData.panelProvider,
         meta: formData.metaDescription || "",
-        apiToken: user.apiToken,
       };
 
       const res = await apiRequest("post", "study/create", payload);
@@ -109,11 +108,9 @@ export default function CreationProject() {
     queryFn: async () => {
       const [categories, specs] = await Promise.all([
         apiRequest("post", "/specification/getCategories", {
-          apiToken: user.apiToken,
           survey: "CS",
         }),
         apiRequest("post", "/specification/getSpecs", {
-          apiToken: user.apiToken,
           survey: "CS",
         }),
       ]);
@@ -129,7 +126,6 @@ export default function CreationProject() {
     queryKey: [studyID],
     queryFn: async () => {
       const res = await apiRequest("post", "study/info", {
-        apiToken: user.apiToken,
         studyID: studyID,
       });
       dispatch(

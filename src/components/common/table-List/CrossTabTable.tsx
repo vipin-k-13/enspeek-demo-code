@@ -12,7 +12,7 @@ import EditTableModal from "./EditTable";
 import { useLocation } from "react-router";
 import HistoryModal from "../Report/HistoryModal";
 import Error from "../../global/Error";
-import { useTableList } from "../Crosstab/CrossTab.Api";
+import { useTableList } from "../../../api-network/crosstab/tablelist/query";
 import QuestionsList from "../Crosstab/QuestionTable";
 import BannerSettings from "../Crosstab/BannerSettings";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";

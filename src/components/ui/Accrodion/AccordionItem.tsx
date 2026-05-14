@@ -27,13 +27,27 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({
     >
       {React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child, {
-            value,
-            disabled,
-            expanded,
-            headingId,
-            contentId,
-          } as any);
+          const childType = child.type;
+
+          if (childType === AccordionTrigger) {
+            return React.cloneElement(child, {
+              value,
+              disabled,
+              expanded,
+              headingId,
+              contentId,
+            } as any);
+          }
+
+          if (childType === AccordionContent) {
+            return React.cloneElement(child, {
+              expanded,
+              headingId,
+              contentId,
+            } as any);
+          }
+
+          return child;
         }
         return child;
       })}
@@ -62,16 +76,33 @@ export const AccordionTrigger: React.FC<AccordionTriggerProps> = ({
 }) => {
   const { toggleItem } = useAccordionContext();
 
-  const handleClick = () => {
+  const isNestedAction = (target: EventTarget | null) => {
+    if (!(target instanceof HTMLElement)) return false;
+    return Boolean(
+      target.closest(
+        '[data-accordion-action="true"], button, a, input, select, textarea, [role="button"]'
+      )
+    );
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (isNestedAction(e.target) && e.target !== e.currentTarget) {
+      return;
+    }
     if (!disabled && value) {
       toggleItem(value);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (isNestedAction(e.target) && e.target !== e.currentTarget) {
+      return;
+    }
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
-      handleClick();
+      if (!disabled && value) {
+        toggleItem(value);
+      }
     }
   };
 

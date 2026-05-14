@@ -1,10 +1,11 @@
 import axios from "axios";
 import { toast } from "sonner";
+import { store } from "../store/store";
 
 const platform_url = import.meta.env.VITE_REACT_APP_API_URL || "";
 
-type ApiMethod = "get" | "post" | "put" | "delete";
-
+export type ApiMethod = "get" | "post" | "put" | "delete";
+const AUTH_EXCLUDED_PATHS = new Set(["user/login", "uam/login"]);
 
 const apiClient = axios.create({
   baseURL: platform_url,
@@ -24,20 +25,56 @@ apiClient.interceptors.request.use(
 );
 
 apiClient.interceptors.response.use(
-    (response) => {
-        const token = response.headers['access-token'];
-        if(token){
-          localStorage.setItem('token', token)
-        }
-        return response;
-    },
-    (error) => Promise.reject(error.response || error.message)
+  (response) => {
+    const token = response.headers['access-token'];
+    if (token) {
+      localStorage.setItem('token', token)
+    }
+    return response;
+  },
+  (error) => Promise.reject(error.response || error.message)
 );
 
 const handleSessionExpiration = (): void => {
   sessionStorage.clear();
   localStorage.clear();
   window.location.href = "/login";
+};
+
+const normalizePath = (url: string) => url.replace(/^\/+/, "");
+
+const shouldSkipApiToken = (url: string) => AUTH_EXCLUDED_PATHS.has(normalizePath(url));
+
+const injectApiToken = (url: string, data: any) => {
+  if (shouldSkipApiToken(url)) {
+    return data;
+  }
+
+  const apiToken = store.getState().user.apiToken;
+
+  if (!apiToken) {
+    return data;
+  }
+
+  if (data instanceof FormData) {
+    if (!data.has("apiToken")) {
+      data.append("apiToken", apiToken);
+    }
+    return data;
+  }
+
+  if (data && typeof data === "object" && !Array.isArray(data)) {
+    if ("apiToken" in data) {
+      return data;
+    }
+
+    return {
+      ...data,
+      apiToken,
+    };
+  }
+
+  return { apiToken };
 };
 
 export const apiRequest = async (
@@ -47,12 +84,8 @@ export const apiRequest = async (
   responseType: "json" | "blob" = "json"
 ) => {
   try {
-    const response = await apiClient.request({
-      method,
-      url,
-      data,
-      responseType,
-    });
+    const requestData = injectApiToken(url, data);
+    const response = await apiClient.request({ method, url, data: requestData, responseType });
     if (responseType === "json") {
       if (response?.data?.code === 200) {
         return response.data;
@@ -66,7 +99,7 @@ export const apiRequest = async (
         };
       }
     } else {
-      return { response: response.data, headers:response.headers };
+      return { response: response.data, headers: response.headers };
     }
   } catch (error: any) {
     if (error?.status === 401) {

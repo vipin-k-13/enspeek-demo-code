@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from "react";
+import { useEffect, useRef, useState, type FC } from "react";
 import DynamicModel from "../../global/DynamicModel";
 import { toast } from "sonner";
 import { handleKeyPress } from "../../../utils";
@@ -6,16 +6,9 @@ import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import { LuBadgeCheck, LuInfo, LuPower } from "react-icons/lu";
 import ModalInfoBlock from "../../ui/modal/ModalInfoBlock";
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
-interface ActivateSurveyProps {
-  isOpen: boolean;
-  activate: () => void;
-  onClose: () => void;
-  studyInfo: any;
-  isPending: boolean;
-}
-
-const ActivateSurvey: FC<ActivateSurveyProps> = ({
+const ActivateSurvey: FC<ActivateSurveyModalProps> = ({
   isOpen,
   activate,
   onClose,
@@ -23,29 +16,52 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
   isPending,
 }) => {
   const [inputValue, setInputValue] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const isConfirmed = inputValue.trim().toLowerCase() === "activate";
+  const definition = modalDefinitions.activateSurvey;
 
   useEffect(() => {
     if (isOpen && !isPending) {
       setInputValue("");
+      const focusInput = () => {
+        const input = inputRef.current;
+        if (!input) return;
+        input.focus();
+        const caretPosition = input.value.length;
+        input.setSelectionRange(caretPosition, caretPosition);
+      };
+
+      requestAnimationFrame(focusInput);
+      const timeoutId = window.setTimeout(focusInput, 120);
+
+      return () => {
+        window.clearTimeout(timeoutId);
+      };
     }
   }, [isOpen, isPending]);
 
-  const handleActivateSurvey = () => {
+  const handleActivateSurvey = async () => {
     if (inputValue.trim().toLowerCase() !== "activate") {
         return toast.warning(`Please type "activate" to confirm`)
     }
-    activate();
+    try {
+      await activate();
+      setInputValue("");
+      onClose();
+    } catch {
+      return;
+    }
   };
 
   return (
     <DynamicModel
-      Title="Activate Survey"
+      Title={definition.title}
       headerIcon={
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
           <LuBadgeCheck className="h-5 w-5" />
         </span>
       }
-      ButtonText={isPending ? "Activating..." : "Activate Survey"}
+      ButtonText={isPending ? definition.submittingLabel! : definition.submitLabel!}
       buttonVariant="success"
       buttonIcon={
         isPending ? (
@@ -58,16 +74,17 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
       onClick={handleActivateSurvey}
       onClose={() => !isPending && onClose()}
       className="max-w-lg"
-      disable={isPending}
+      disable={isPending || !isConfirmed}
+      closeDisabled={isPending}
       bodyClassName="bg-white"
       secondaryAction={
         <Button
           type="button"
           varinat="cancel"
-          onClick={onClose}
+          onClick={() => !isPending && onClose()}
           disabled={isPending}
         >
-          Cancel
+          {definition.cancelLabel}
         </Button>
       }
     >
@@ -80,9 +97,11 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
           ?
         </p>
         <ModalInfoBlock
-          className="modal-card rounded-[20px] bg-[var(--color-surface-base)] px-4 py-4"
+          // className="modal-card rounded-[20px] bg-[var(--color-surface-base)] px-4 py-4 force_align_center"
+          className="modal-info-block"
           icon={
-            <span className="modal-header-icon h-10 w-10 text-[var(--color-brand-primary)]">
+            <span className="modal-info-icon text-[var(--color-brand-primary)]">
+              {/* modal-header-icon h-10 w-10 */}
               <LuInfo className="h-4 w-4" />
             </span>
           }
@@ -95,14 +114,16 @@ const ActivateSurvey: FC<ActivateSurveyProps> = ({
         </ModalInfoBlock>
       </div>
       <Input
+        ref={inputRef}
         variant="modal"
         type="text"
+        autoFocus={isOpen && !isPending}
         data-test-id="ACTIVATE_INPUT"
         placeholder="Type 'activate' here..."
         className="questionnaire-heading mt-4 rounded-[18px]"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={(e)=>handleKeyPress(e, handleActivateSurvey)}
+        onKeyDown={(e) => handleKeyPress(e, handleActivateSurvey)}
         disabled={isPending}
       />
     </DynamicModel>

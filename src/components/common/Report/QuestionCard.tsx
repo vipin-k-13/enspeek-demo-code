@@ -1,8 +1,11 @@
 import React from "react";
 import { LuDownload } from "react-icons/lu";
-import { usePptDownloadHook, useProcessHook } from "./ReportMutations";
 import { useLocation } from "react-router";
 import Button from "../../ui/Button";
+import {
+  useReportPptDownload,
+  useReportProcessDownload,
+} from "../../../api-network/report/mutation";
 import {
   SurfaceCard,
   SurfaceCardContent,
@@ -19,11 +22,11 @@ interface QuestionCardProps {
 
 const QuestionCard: React.FC<QuestionCardProps> = ({ title, children, qId, studyID }) => {
   const { state } = useLocation();
-  const { Process } = useProcessHook();
-  const { DownloadPpt } = usePptDownloadHook({
+  const { processDownload } = useReportProcessDownload();
+  const { downloadPpt } = useReportPptDownload({
      studyID: studyID ? studyID : state?.studyID,
     cb: ({ studyID, pid }) => {
-      Process({ studyID, pid });
+      processDownload({ studyID, pid });
     },
   });
   return (
@@ -33,7 +36,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ title, children, qId, study
         <Button
           className="report-toolbar-btn bg-[var(--color-brand-primary-softest)] text-login-primary hover:bg-[var(--color-brand-primary-soft)] hover:text-white"
           onClick={() => {
-            DownloadPpt(qId);
+            downloadPpt(qId);
           }}
         >
           <LuDownload />

@@ -1,75 +1,57 @@
-import { useMutation } from "@tanstack/react-query";
-import QuestionLogic from "./QuestionLogic";
-import { apiRequest } from "../../../services/apiService";
+import { useState } from "react";
+import { useLocation } from "react-router";
+import { toast } from "sonner";
+import { LuSave } from "react-icons/lu";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
-import { toast } from "sonner";
-import { useLocation } from "react-router";
+import QuestionLogic from "./QuestionLogic";
 import Button from "../../ui/Button";
 import LogicModel from "../../global/LogicModal";
-import { useState } from "react";
-import { LuSave } from "react-icons/lu";
-
-interface QuesLogicModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  qID: string | null;
-  onSubmit: (qID: string) => void;
-}
+import { useSaveQuestionLogicMutation } from "../../../api-network/questionnaire/mutation";
 
 export default function QuesLogicModal({
   isOpen,
   onClose,
   qID,
-  onSubmit,
-}: QuesLogicModalProps) {
-  const user = useSelector((state: RootState) => state.user);
+}: QuestionLogicModalProps) {
   const location = useLocation();
   const studyID = location.state?.studyID;
   const [resetFlag, setResetFlag] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-
   const logicPayload = useSelector(
     (state: RootState) => state.question.logicPayload
   );
-  const { mutate: QuesLogic, isPending } = useMutation({
-    mutationKey: ["quesLogic"],
-    mutationFn: async (qlPayload: QuesLogicPayload) => {
-      const response = await apiRequest(
-        "post",
-        `questionnaire/edit/${qID}/logic`,
-        {
-          studyID,
-          apiToken: user.apiToken,
-          ...qlPayload,
-        }
-      );
-      return response.response;
-    },
-    onSuccess: () => {
-      if (isResetting) {
-        toast.success("Logic reset successfully");
-        setIsResetting(false);
-        if (qID) onSubmit(qID);
-        return;
-      }
-
-      toast.success("Logic saved successfully");
-      if (qID) onSubmit(qID);
-      onClose();
-    },
-  });
+  const { mutate: saveQuestionLogic, isPending } = useSaveQuestionLogicMutation(
+    studyID,
+    qID
+  );
 
   const handleSave = () => {
     if (!qID) {
       toast.error("Question ID not found");
       return;
     }
-    if(resetFlag){
-      QuesLogic({logic1:{}}as QuesLogicPayload)
-      return
+
+    if (resetFlag) {
+      saveQuestionLogic(
+        { payload: { logic1: {} } as QuesLogicPayload, isResetting: true },
+        {
+          onSuccess: () => {
+            setIsResetting(false);
+          },
+        }
+      );
+      return;
     }
-    QuesLogic((logicPayload ?? {}) as QuesLogicPayload);
+
+    saveQuestionLogic(
+      { payload: (logicPayload ?? {}) as QuesLogicPayload },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      }
+    );
   };
 
   const handleReset = () => {
@@ -87,14 +69,13 @@ export default function QuesLogicModal({
       onClose={onClose}
       Title="Add/Edit Question Logic"
       description="Configure logic rules for this question. Save when the conditions, skip path, or termination behavior are ready."
+      closeDisabled={isPending}
       className="max-w-[90vw]"
       footerContent={
         <div className="flex flex-wrap items-center justify-end gap-3">
           <Button
             varinat="cancel"
-            onClick={() => {
-              handleReset();
-            }}
+            onClick={handleReset}
             disabled={isPending}
           >
             {isPending && isResetting ? (

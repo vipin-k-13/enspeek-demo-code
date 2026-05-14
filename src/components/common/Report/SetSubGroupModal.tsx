@@ -5,18 +5,14 @@ import type { RootState } from "../../../store/store";
 import { LuListFilter, LuSave } from "react-icons/lu";
 import Button from "../../ui/Button";
 import Radio from "../../ui/Radio";
-
-interface SetSubgroupModalProps {
-  options: Record<string, any>[];
-  onSave: (selected: string) => void | Promise<void>;
-  onClose: () => void;
-}
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
 const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
   options,
   onSave,
   onClose,
 }) => {
+  const definition = modalDefinitions.chooseSubgroup;
   const { selected } = useSelector((state: RootState) => state.filter);
   const [select, setSelect] = useState<string>(selected);
   const [isSaving, setIsSaving] = useState(false);
@@ -34,7 +30,7 @@ const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
     <DynamicModel
       isOpen={true}
       onClose={onClose}
-      Title="Choose Subgroup"
+      Title={definition.title}
       headerIcon={
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
           <LuListFilter className="h-5 w-5" />
@@ -42,7 +38,7 @@ const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
       }
       description="Choose the subgroup variable you want to apply in the report view."
       descriptionClassName="theme-text-default"
-      ButtonText={isSaving ? "Saving..." : "Save"}
+      ButtonText={isSaving ? definition.submittingLabel! : definition.submitLabel!}
       buttonIcon={
         isSaving ? (
           <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
@@ -59,7 +55,7 @@ const SetSubgroupModal: React.FC<SetSubgroupModalProps> = ({
           onClick={onClose}
           disabled={isSaving}
         >
-          Cancel
+          {definition.cancelLabel}
         </Button>
       }
       buttonVariant="success"

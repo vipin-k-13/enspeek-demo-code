@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useQList } from "./CrossTab.Api";
+import { useQList } from "../../../api-network/crosstab/query";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { setSelectedQuestions } from "../../../store/CrosstabSlice";
 import { useLocation } from "react-router";
@@ -53,8 +53,19 @@ export default function QuestionsList() {
         Please add questions to table list
       </p>
       <div className="crosstab-surface px-3 py-3">
-        <div className="border border-[var(--color-text-strong)]/25 flex items-center px-4 py-3 font-semibold mb-2 rounded-lg">
-          <div>
+        <div
+          className="border border-[var(--color-text-strong)]/25 flex cursor-pointer items-center px-4 py-3 font-semibold mb-2 rounded-lg"
+          role="button"
+          tabIndex={0}
+          onClick={() => toggleSelectAll(!allSelected)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              toggleSelectAll(!allSelected);
+            }
+          }}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
             <Checkbox
               data-test-id="CHECKBOX"
               checked={allSelected}
@@ -65,8 +76,20 @@ export default function QuestionsList() {
         </div>
 
         {QListData.map((question: any, i: number) => (
-          <div key={i} className="border border-[var(--color-text-strong)]/25 mb-2 flex items-center px-4 py-3 rounded-lg">
-            <div className="mr-8 ">
+          <div
+            key={i}
+            className="border border-[var(--color-text-strong)]/25 mb-2 flex cursor-pointer items-center px-4 py-3 rounded-lg"
+            role="button"
+            tabIndex={0}
+            onClick={() => toggleSelect(question.qID)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggleSelect(question.qID);
+              }
+            }}
+          >
+            <div className="mr-8" onClick={(e) => e.stopPropagation()}>
               <Checkbox
                 checked={selectedQuestions.includes(question.qID)}
                 onChange={() => toggleSelect(question.qID)}

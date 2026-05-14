@@ -2,7 +2,11 @@ import DynamicModel from "../../global/DynamicModel";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
-import { useEditBanner, useQList, useTableListAdd } from "./CrossTab.Api";
+import {
+  useEditBanner,
+  useTableListAdd,
+} from "../../../api-network/crosstab/mutation";
+import { useQList } from "../../../api-network/crosstab/query";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import BannerLogic from "../../global/BannerLogic";
 import { useLocation } from "react-router";
@@ -12,19 +16,15 @@ import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import Checkbox from "../../ui/Checkbox";
 import { LuPanelsTopLeft, LuSave } from "react-icons/lu";
-
-interface BannerSettingsProps {
-  Id: string;
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
 export default function BannerSettings({
   Id,
   isOpen,
   onClose,
-}: BannerSettingsProps) {
+}: BannerSettingsModalProps) {
   if (!isOpen) return null;
+  const definition = modalDefinitions.bannerSettings;
   const [bannerLogic, setBannerLogic] = useState<{ pointLogic: string }[]>([]);
   const { BannersAll, BannerPointer, tableData } = useSelector(
     (state: RootState) => state.crossTabData
@@ -106,13 +106,13 @@ export default function BannerSettings({
 
   return (
     <DynamicModel
-      Title={`Banner Settings: ${value.title}`}
+      Title={`${definition.title}: ${value.title}`}
       headerIcon={
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
           <LuPanelsTopLeft className="h-5 w-5" />
         </span>
       }
-      ButtonText={isSaving ? "Saving..." : "Save Banner Settings"}
+      ButtonText={isSaving ? definition.submittingLabel! : definition.submitLabel!}
       buttonIcon={
         isSaving ? (
           <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
@@ -133,7 +133,7 @@ export default function BannerSettings({
           onClick={onClose}
           disabled={isSaving}
         >
-          Close
+          {definition.cancelLabel}
         </Button>
       }
       className="max-w-4xl"
@@ -223,12 +223,25 @@ export default function BannerSettings({
         <div className="crosstab-surface p-4">
           <h3 className="crosstab-title mb-3 text-base font-semibold">Question list</h3>
           <div>
-            <div className="border border-[#e2e4f1] rounded-lg flex items-center px-4 py-3 mb-2">
-              <Checkbox
-                className="mr-3"
-                checked={isAllSelected}
-                onChange={toggleAll}
-              />
+            <div
+              className="border border-[#e2e4f1] rounded-lg flex cursor-pointer items-center px-4 py-3 mb-2"
+              role="button"
+              tabIndex={0}
+              onClick={toggleAll}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleAll();
+                }
+              }}
+            >
+              <div onClick={(e) => e.stopPropagation()}>
+                <Checkbox
+                  className="mr-3"
+                  checked={isAllSelected}
+                  onChange={toggleAll}
+                />
+              </div>
               <span className="crosstab-title font-medium">Select All Questions</span>
             </div>
 
@@ -238,14 +251,25 @@ export default function BannerSettings({
               QListData.map((question: any, idx: number) => (
                 <div
                   key={idx}
-                  className="border border-[#e2e4f1] rounded-lg mb-2 flex items-center px-4 py-3 last:mb-0"
+                  className="border border-[#e2e4f1] rounded-lg mb-2 flex cursor-pointer items-center px-4 py-3 last:mb-0"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => toggleQuestion(question.qID)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleQuestion(question.qID);
+                    }
+                  }}
                 >
-                  <Checkbox
-                    data-test-id={`Q_${idx}`}
-                    className="mr-3"
-                    checked={selectedQuestions.includes(question.qID)}
-                    onChange={() => toggleQuestion(question.qID)}
-                  />
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      data-test-id={`Q_${idx}`}
+                      className="mr-3"
+                      checked={selectedQuestions.includes(question.qID)}
+                      onChange={() => toggleQuestion(question.qID)}
+                    />
+                  </div>
                   <span className="home-text">{question.qLabel}</span>
                 </div>
               ))

@@ -1,30 +1,9 @@
 import React from "react";
 import Button from "../ui/Button";
 import { cn } from "../../utils";
-import type { ButtonProps } from "../ui/Button";
 import ModalScaffold from "../ui/modal/ModalScaffold";
 
-interface DynamicModelProps {
-  isOpen: boolean;
-  onClose: () => void;
-  Title: string;
-  headerIcon?: React.ReactNode;
-  description?: React.ReactNode;
-  descriptionClassName?: string;
-  ButtonText: string;
-  buttonIcon?: React.ReactNode;
-  children: React.ReactNode;
-  onClick: () => void;
-  disable?: boolean;
-  className?: string;
-  bodyClassName?: string;
-  footerContent?: React.ReactNode;
-  secondaryAction?: React.ReactNode;
-  secondaryActionPosition?: "before" | "after";
-  buttonVariant?: ButtonProps["varinat"];
-}
-
-const DynamicModel: React.FC<DynamicModelProps> = ({
+const DynamicModel: React.FC<DynamicModalProps> = ({
   isOpen,
   onClose,
   Title,
@@ -36,6 +15,7 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
   children,
   onClick,
   disable,
+  closeDisabled,
   className = "",
   bodyClassName = "theme-surface",
   footerContent,
@@ -62,7 +42,7 @@ const DynamicModel: React.FC<DynamicModelProps> = ({
       icon={headerIcon}
       description={description}
       descriptionClassName={descriptionClassName}
-      closeDisabled={disable}
+      closeDisabled={closeDisabled ?? disable}
       bodyClassName={bodyClassName}
       footerNote={
         footerContent ? (

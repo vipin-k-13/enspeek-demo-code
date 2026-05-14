@@ -4,7 +4,7 @@ import Button from "../../ui/Button";
 import { useDispatch } from "react-redux";
 import { setIsAddBannerModalOpen } from "../../../store/CrosstabSlice";
 import { useState } from "react";
-import { useStudyInfo } from "./CrossTab.Api";
+import { useCrosstabStudyInfo } from "../../../api-network/crosstab/query";
 import Input from "../../ui/Input";
 import HistoryModal from "../Report/HistoryModal";
 import PageSubheader from "../../ui/PageSubheader";
@@ -22,7 +22,7 @@ export default function CrosstabHeader({
   const dispatch = useDispatch();
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
-  const {} = useStudyInfo(location.state.studyID);
+  const {} = useCrosstabStudyInfo(location.state.studyID);
 
   return (
     <PageSubheader
@@ -51,6 +51,9 @@ export default function CrosstabHeader({
               className="home-text border-0 bg-transparent px-2 py-0 focus:outline-none focus-visible:ring-0"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyUp={(e) =>
+                setSearchTerm((e.target as HTMLInputElement).value)
+              }
             />
           </div>
           <Button

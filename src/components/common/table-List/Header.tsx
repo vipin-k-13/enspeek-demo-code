@@ -12,7 +12,7 @@ import {
 } from "../../../store/CrosstabSlice";
 import DropDown from "../../global/DropDown";
 import { toast } from "sonner";
-import { useTableListAdd } from "../Crosstab/CrossTab.Api";
+import { useTableListAdd } from "../../../api-network/crosstab/mutation";
 import PageBreadcrumbs from "../../ui/PageBreadcrumbs";
 import PageSubheader from "../../ui/PageSubheader";
 

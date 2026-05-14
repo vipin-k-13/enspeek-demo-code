@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
 import { toast } from "sonner";
 import { queryClient } from "../../../App";
+import homepageKeys from "../../../api-network/homepage/keys";
 import { setFilterStudys } from "../../../store/CrosstabStudySlice";
 import {
   REFRESH_STUDY_LIST_EVENT,
@@ -31,24 +32,22 @@ const refreshStudyList = async (options?: RefreshStudyListOptions) => {
     );
   });
   await queryClient.invalidateQueries({
-    queryKey: ["studyList"],
+    queryKey: homepageKeys.all,
     exact: false,
   });
   await queryClient.refetchQueries({
-    queryKey: ["studyList"],
+    queryKey: homepageKeys.all,
     exact: false,
     type: "active",
   });
 };
 
 export const useArchive = (onArchived?: () => void) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const { FilterStudys } = useSelector((state: RootState) => state.study);
   const dispatch = useDispatch<AppDispatch>();
   const { mutate: Archived, isPending } = useMutation({
     mutationFn: async (selectedStudies: string) => {
       return await apiRequest("post", "study/archive", {
-        apiToken: apiToken,
         study_list: [selectedStudies],
       });
     },
@@ -67,14 +66,12 @@ export const useArchive = (onArchived?: () => void) => {
 };
 
 export const useDelete = () => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const { FilterStudys } = useSelector((state: RootState) => state.study);
   const dispatch = useDispatch<AppDispatch>();
   const { mutate: Delete, isPending } = useMutation({
     mutationKey: ["studyDelete"],
     mutationFn: async (selectedStudies: string) => {
       const res = await apiRequest("post", "study/delete", {
-        apiToken: apiToken,
         study_list: [selectedStudies],
       });
       if (!res) {
@@ -90,7 +87,10 @@ export const useDelete = () => {
       if (!data) {
         return;
       }
-      await refreshStudyList();
+      await refreshStudyList({
+        selection: "myactive",
+        resetSearch: true,
+      });
       dispatch(setSelectedId(""));
       dispatch(setSelectedStudyName(""));
       dispatch(setDeleteModel(false));
@@ -102,7 +102,6 @@ export const useDelete = () => {
 };
 
 export const useCopy = () => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const { mutate: Copy, isPending } = useMutation({
     mutationKey: ["CopyStudy"],
@@ -114,7 +113,6 @@ export const useCopy = () => {
       studyName: string;
     }) => {
       const res = await apiRequest("post", "study/replicate", {
-        apiToken: apiToken,
         studyID: studyId,
         studyName: studyName,
       });
@@ -139,14 +137,12 @@ export const useCopy = () => {
 };
 
 export const useActive = (onActivated?: () => void) => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
   const { FilterStudys } = useSelector((state: RootState) => state.study);
   const dispatch = useDispatch<AppDispatch>();
   const { mutate: Active, isPending } = useMutation({
     mutationKey: ["activeProject"],
     mutationFn: async (selectedStudies: string) => {
       return await apiRequest("post", "study/activate", {
-        apiToken: apiToken,
         study_list: [selectedStudies],
       });
     },
@@ -168,8 +164,6 @@ export const useActive = (onActivated?: () => void) => {
 };
 
 export const useFieldReport = () => {
-  const { apiToken } = useSelector((state: RootState) => state.user);
-
   const {
     mutate: fetchFieldReport,
     data,
@@ -177,7 +171,6 @@ export const useFieldReport = () => {
     mutationKey: ["fieldReport"],
     mutationFn: async (studyId: string) => {
       const res = await apiRequest("post", "crosstab/freport", {
-        apiToken: apiToken,
         studyID: studyId,
       });
       return res.response;

@@ -3,8 +3,6 @@ import Button from "../ui/Button";
 import Input from "../ui/Input";
 import DynamicModel from "./DynamicModel";
 import EmailPermissionsTable from "../common/list/shareModaltable";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../store/store";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "../../services/apiService";
 
@@ -15,13 +13,6 @@ interface EmailEntry {
   output: boolean;
   initiateSample: boolean;
 }
-
-interface ShareStudyModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onClick: () => void;
-  studyName: string;
-}
 export default function ShareStudyModal({
   isOpen,
   onClose,
@@ -30,14 +21,12 @@ export default function ShareStudyModal({
   const [inputValue, setInputValue] = useState("");
   const [addedEmails, setAddedEmails] = useState<EmailEntry[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const user = useSelector((state: RootState) => state.user);
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchSuggestions = useMutation({
     mutationKey: ["lookUp"],
     mutationFn: async (query: string) => {
       const resp = await apiRequest("post", "user/lookup", {
-        apiToken: user.apiToken,
         email_address: query,
       });
       return resp.response || [];

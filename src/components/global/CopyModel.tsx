@@ -8,16 +8,7 @@ import ModalField from "../ui/modal/ModalField";
 import ModalInfoBlock from "../ui/modal/ModalInfoBlock";
 import { modalDefinitions } from "../../config/modalDefinitions";
 
-interface CopyModelProps {
-  isOpen: boolean;
-  onClick: (id: string, value: string) => void;
-  onClose: () => void;
-  qID?: string;
-  label: string;
-  isPending?: boolean;
-}
-
-const CopyModel: React.FC<CopyModelProps> = ({
+const CopyModel: React.FC<CopyQuestionModalProps> = ({
   isOpen,
   onClick,
   onClose,
@@ -27,6 +18,7 @@ const CopyModel: React.FC<CopyModelProps> = ({
 }) => {
   const [QID, setQID] = React.useState<string>("");
   const [QLabel, setQlabel] = React.useState<string>("");
+  const questionIdInputRef = React.useRef<HTMLInputElement | null>(null);
   const displayLabel =
     label?.replace(/^[A-Za-z0-9_-]+\s*:\s*/, "").trim() || label;
   const definition = modalDefinitions.copyQuestion;
@@ -35,6 +27,13 @@ const CopyModel: React.FC<CopyModelProps> = ({
     if (isOpen) {
       setQID("");
       setQlabel("");
+      requestAnimationFrame(() => {
+        const input = questionIdInputRef.current;
+        if (!input) return;
+        input.focus();
+        const caretPosition = input.value.length;
+        input.setSelectionRange(caretPosition, caretPosition);
+      });
     }
   }, [isOpen, qID, label]);
 
@@ -90,6 +89,7 @@ const CopyModel: React.FC<CopyModelProps> = ({
               CQ
             </span>
             <Input
+              ref={questionIdInputRef}
               variant="modal"
               data-test-id="COPY_QUESTIONNAIRE_MODEL_1"
               placeholder="Enter question id"

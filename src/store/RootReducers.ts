@@ -7,6 +7,7 @@ import crosstabReducer from "./CrosstabSlice";
 import crosstabDataReducer from "./CrossTabDataSlice";
 import studyReducer from "./CrosstabStudySlice";
 import chatReducer from "./ChatSlice";
+import modalReducer from "./ModalSlice";
 
 const appReducer = combineReducers({
   user: UserReducer,
@@ -17,6 +18,7 @@ const appReducer = combineReducers({
     crossTabData: crosstabDataReducer,
     study: studyReducer,
     chat: chatReducer,
+    modal: modalReducer,
 });
 
 const rootReducer = (state: any, action: any) => {

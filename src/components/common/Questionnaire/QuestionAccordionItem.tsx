@@ -2,7 +2,6 @@ import React from "react";
 import {
   AccordionContent,
   AccordionItem,
-  AccordionTrigger,
 } from "../../ui/Accrodion";
 import {
   LuChevronDown,
@@ -37,9 +36,10 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
   setEditData,
   openLogicModal,
 }) => {
-  const { isExpanded } = useAccordionContext();
+  const { isExpanded, toggleItem } = useAccordionContext();
   const { launch, output } = useSelector((state: RootState) => state.study);
   const disableActions = launch === 1 && output === 1;
+  const isLoaded = (Data as Question & { isLoaded?: boolean }).isLoaded !== false;
   const displayLabel =
     Data.qLabel?.replace(/^[A-Za-z0-9_-]+\s*:\s*/, "").trim() || Data.qLabel;
   const logic2Skip = useSelector(
@@ -48,124 +48,150 @@ const QuestionAccordionItem: React.FC<QuestionAccordionItem> = ({
   const expanded = isExpanded(Data.qID);
 
   return (
-    <AccordionItem value={Data.qID} className="border-0">
-      <AccordionTrigger>
-        <div
-          data-test-id={Data.qID}
-          className={cn(
-            "questionnaire-card questionnaire-border w-full rounded-[24px] border px-4 py-4 shadow-sm transition-shadow md:px-6",
-            expanded && "rounded-b-none border-b-0 shadow-none"
-          )}
-        >
-          <div className="flex w-full items-center gap-3">
-            <div
+    <AccordionItem value={Data.qID} className="border-0" disabled={!isLoaded}>
+      <div
+        data-test-id={Data.qID}
+        className={cn(
+          "questionnaire-card questionnaire-border w-full rounded-[24px] border px-4 py-4 shadow-sm transition-shadow md:px-6",
+          expanded && "rounded-b-none border-b-0 shadow-none",
+          !isLoaded && "cursor-not-allowed pointer-events-none"
+        )}
+      >
+        <div className="flex w-full items-center gap-3">
+          <div
+            className={cn(
+              "questionnaire-muted shrink-0",
+              disableActions || !isLoaded ? "cursor-default" : "cursor-move"
+            )}
+          >
+            <LuGripVertical className="h-5 w-5" />
+          </div>
+          <div
+            role="button"
+            tabIndex={isLoaded ? 0 : -1}
+            aria-expanded={expanded}
+            className={cn(
+              "min-w-0 flex-1 self-stretch",
+              isLoaded ? "cursor-pointer" : "cursor-not-allowed"
+            )}
+            onClick={() => {
+              if (isLoaded) {
+                toggleItem(Data.qID);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (!isLoaded) return;
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggleItem(Data.qID);
+              }
+            }}
+          >
+            <div className="flex h-full w-full min-w-0 items-center gap-3">
+              <span className="question-type-default rounded-full px-4 py-1 text-sm font-semibold">
+                {Data.qID}
+              </span>
+              <div className="min-w-0 flex-1 pr-6">
+                <p className="questionnaire-heading truncate text-left text-[18px] font-semibold">
+                  {displayLabel}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="ml-auto hidden items-center justify-end gap-3 md:flex">
+            <button
+              type="button"
+              title="Add or edit logic"
+              className="questionnaire-label questionnaire-clickable inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm"
+              onClick={openLogicModal}
+            >
+              <LuGitBranchPlus className="h-4 w-4" />
+              <span>Add/Edit Logic</span>
+            </button>
+            <span
               className={cn(
-                "questionnaire-muted shrink-0",
-                disableActions ? "cursor-default" : "cursor-move"
+                "rounded-full px-3 py-1.5 text-sm font-semibold",
+                "question-type-open"
               )}
             >
-              <LuGripVertical className="h-5 w-5" />
-            </div>
-            <span className="question-type-default rounded-full px-4 py-1 text-sm font-semibold">
-              {Data.qID}
+              {formatQuestionTypeLabel(Data.qType)}
             </span>
-            <div className="min-w-0 flex-1 pr-1">
-              <p className="questionnaire-heading truncate text-left text-[18px] font-semibold">
-                {displayLabel}
-              </p>
-            </div>
-            <div className="hidden items-center gap-3 md:flex">
-              <span
-                title="Add or edit logic"
-                role="button"
-                tabIndex={0}
-                className="questionnaire-label questionnaire-clickable inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openLogicModal();
-                }}
+          </div>
+          {!disableActions && isLoaded && (
+            <div className="questionnaire-muted flex items-center gap-2 md:gap-3">
+              <IconActionButton
+                tone="primary"
+                tooltip="Edit question"
+                data-test-id={`${Data.qID}_EDIT`}
+                onClick={() => setEditData()}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    e.stopPropagation();
-                    openLogicModal();
+                    setEditData();
                   }
                 }}
               >
-                <LuGitBranchPlus className="h-4 w-4" />
-                <span>Add/Edit Logic</span>
-              </span>
-              <span
-                className={cn(
-                  "rounded-full px-3 py-1.5 text-sm font-semibold",
-                  "question-type-open"
-                )}
+                <LuPencilLine className="h-4 w-4" />
+              </IconActionButton>
+              <IconActionButton
+                tone="primary"
+                tooltip="Copy question"
+                data-test-id={`${Data.qID}_COPY`}
+                onClick={() => setIsCopyOpen(Data.qID, Data.qLabel)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setIsCopyOpen(Data.qID, Data.qLabel);
+                  }
+                }}
               >
-                {formatQuestionTypeLabel(Data.qType)}
-              </span>
+                <LuCopy className="h-4 w-4" />
+              </IconActionButton>
+              <IconActionButton
+                tone="danger"
+                tooltip="Delete question"
+                data-test-id={`${Data.qID}_DELETE`}
+                onClick={() => setIsDeleteOpen()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setIsDeleteOpen();
+                  }
+                }}
+              >
+                <LuTrash2 className="h-4 w-4" />
+              </IconActionButton>
             </div>
-            {!disableActions && (
-              <div
-                className="questionnaire-muted flex items-center gap-2 md:gap-3"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <IconActionButton
-                  tone="primary"
-                  tooltip="Edit question"
-                  data-test-id={`${Data.qID}_EDIT`}
-                  onClick={() => setEditData()}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setEditData();
-                    }
-                  }}
-                >
-                  <LuPencilLine className="h-4 w-4" />
-                </IconActionButton>
-                <IconActionButton
-                  tone="primary"
-                  tooltip="Copy question"
-                  data-test-id={`${Data.qID}_COPY`}
-                  onClick={() => setIsCopyOpen(Data.qID, Data.qLabel)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setIsCopyOpen(Data.qID, Data.qLabel);
-                    }
-                  }}
-                >
-                  <LuCopy className="h-4 w-4" />
-                </IconActionButton>
-                <IconActionButton
-                  tone="danger"
-                  tooltip="Delete question"
-                  data-test-id={`${Data.qID}_DELETE`}
-                  onClick={() => setIsDeleteOpen()}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setIsDeleteOpen();
-                    }
-                  }}
-                >
-                  <LuTrash2 className="h-4 w-4" />
-                </IconActionButton>
-              </div>
+          )}
+          <div
+            title={
+              !isLoaded
+                ? "Loading question details"
+                : expanded
+                  ? "Collapse question"
+                  : "Expand question"
+            }
+            className="questionnaire-muted questionnaire-clickable shrink-0"
+            onClick={() => {
+              if (isLoaded) {
+                toggleItem(Data.qID);
+              }
+            }}
+          >
+            {!isLoaded ? (
+              <span className="copying-dots inline-flex w-[1.5em] justify-start text-lg font-bold leading-none">
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+              </span>
+            ) : expanded ? (
+              <LuChevronDown className="h-5 w-5" />
+            ) : (
+              <LuChevronRight className="h-5 w-5" />
             )}
-            <div
-              title={expanded ? "Collapse question" : "Expand question"}
-              className="questionnaire-muted questionnaire-clickable shrink-0"
-            >
-              {expanded ? (
-                <LuChevronDown className="h-5 w-5" />
-              ) : (
-                <LuChevronRight className="h-5 w-5" />
-              )}
-            </div>
           </div>
         </div>
-      </AccordionTrigger>
+      </div>
       <AccordionContent>
         <div className="questionnaire-card questionnaire-border rounded-b-[24px] border border-t-0 px-4 pb-6 pt-2 md:px-6">
           {logic2Skip &&

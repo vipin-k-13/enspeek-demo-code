@@ -8,13 +8,7 @@ import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import Checkbox from "../../ui/Checkbox";
 import { LuCirclePlus, LuPanelsTopLeft } from "react-icons/lu";
-
-interface AddBannerModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onBannerDesignClick: (e: AddBannerPayload) => void;
-  isPending: boolean;
-}
+import { modalDefinitions } from "../../../config/modalDefinitions";
 
 const AddBannerModal: React.FC<AddBannerModalProps> = ({
   isOpen,
@@ -22,6 +16,7 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
   onBannerDesignClick,
   isPending,
 }) => {
+  const definition = modalDefinitions.addBanner;
   const {name} = useSelector((state:RootState)=>state.study)
   const [bannerName, setBannerNameInput] = useState<string>("");
   const [bannerDescription, setBannerDescription] = useState<string>("");
@@ -92,7 +87,7 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
 
   return (
     <DynamicModel
-      Title={`Add Banner: ${name}`}
+      Title={`${definition.title}: ${name}`}
       headerIcon={
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-brand-primary-softest)] text-login-primary">
           <LuPanelsTopLeft className="h-5 w-5" />
@@ -100,7 +95,11 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
       }
       description="Add the banner details and optional overall filter, then continue to banner design."
       descriptionClassName="theme-text-default"
-      ButtonText={isPending || isCreating ? "Creating..." : "Design Banner"}
+      ButtonText={
+        isPending || isCreating
+          ? definition.submittingLabel!
+          : definition.submitLabel!
+      }
       buttonIcon={
         isPending || isCreating ? (
           <span className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin" />
@@ -119,7 +118,7 @@ const AddBannerModal: React.FC<AddBannerModalProps> = ({
           onClick={handleClose}
           disabled={isPending || isCreating}
         >
-          Cancel
+          {definition.cancelLabel}
         </Button>
       }
       className="max-w-5xl"
