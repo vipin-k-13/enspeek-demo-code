@@ -172,14 +172,14 @@ export const useChat = () => {
           studyID: data.studyID ?? studyID,
           livelink: data.liveLink,
           link: data.liveLink,
-          launch: 1,
+          launch: 0,
         })
       );
       dispatch(
         setStudyInfo({
           studyID: data.studyID ?? studyID,
           hasQuestionnaire: currentStudyState.hasQuestionnaire,
-          launch: 1,
+          launch: 0,
           name: currentStudyState.name,
           output: currentStudyState.output,
           link: 1,

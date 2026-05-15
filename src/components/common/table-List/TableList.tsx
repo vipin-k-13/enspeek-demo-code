@@ -50,6 +50,20 @@ export default function TableList({
 
 const isStatic = !!sdata;
 const dataSource = isStatic ? sdata : tableOutputData;
+const bannerPoints = Array.isArray(bannerPointerListData)
+  ? bannerPointerListData
+  : [];
+const baseData = dataSource?.base ?? {};
+const rowOrder = Array.isArray(dataSource?._row_order)
+  ? dataSource._row_order
+  : [];
+const rowsData = dataSource?._rows ?? {};
+const tableData = dataSource?.data ?? {};
+const isTableReady =
+  bannerPoints.length > 0 &&
+  !!dataSource &&
+  typeof dataSource === "object" &&
+  !isTableOutputRefetching;
 
   const { processDownload } = useReportProcessDownload();
   const { downloadTableMutate } = useDownloadtable({
@@ -108,7 +122,7 @@ const dataSource = isStatic ? sdata : tableOutputData;
           </div>
         </div>
         <div className="crosstab-soft-panel my-4 overflow-x-auto mx-auto">
-          {isTableOutputRefetching ? (
+          {!isTableReady ? (
             <div className="flex p-4 justify-center">
               <LuLoaderCircle size={34} className="animate-spin text-action" />
             </div>
@@ -116,17 +130,17 @@ const dataSource = isStatic ? sdata : tableOutputData;
             <table className="w-full table-fixed divide-y home-border-soft">
               <colgroup>
                 <col className="w-[48%]" />
-                {bannerPointerListData.map((header: BannerPoint) => (
+                {bannerPoints.map((header: BannerPoint) => (
                   <col
                     key={header.pointID}
-                    style={{ width: `${52 / Math.max(bannerPointerListData.length, 1)}%` }}
+                    style={{ width: `${52 / Math.max(bannerPoints.length, 1)}%` }}
                   />
                 ))}
               </colgroup>
               <thead>
                 <tr className="home-panel-soft-bg">
                   <th className="px-6 py-3 text-left crosstab-muted"></th>
-                  {bannerPointerListData.map((header: BannerPoint) => (
+                  {bannerPoints.map((header: BannerPoint) => (
                     <th
                       key={header.pointID}
                       className="px-6 py-3 text-center crosstab-muted border-l home-border-soft"
@@ -142,33 +156,25 @@ const dataSource = isStatic ? sdata : tableOutputData;
                   <td className="px-6 py-4 text-sm font-semibold crosstab-title">
                     Base
                   </td>
-                  {bannerPointerListData.map((seq: BannerPoint) => (
+                  {bannerPoints.map((seq: BannerPoint) => (
                     <td
                       key={seq.pointID}
                       className="px-6 py-4 text-center text-sm font-bold crosstab-title border-l home-border-soft"
                     >
-                      {
-                        dataSource.base[
-                          seq.pointID as keyof typeof dataSource.base
-                        ]
-                      }
+                      {baseData[seq.pointID as keyof typeof baseData] ?? 0}
                     </td>
                   ))}
                 </tr>
-                {dataSource._row_order.map((seq: any) => (
+                {rowOrder.map((seq: any) => (
                   <tr key={seq}>
                     <td className="px-6 py-4 text-sm crosstab-title">
-                      {
-                        dataSource._rows[
-                          seq as keyof typeof dataSource._rows
-                        ]
-                      }
+                      {rowsData[seq as keyof typeof rowsData] ?? ""}
                     </td>
-                    {bannerPointerListData.map((seqData: BannerPoint) => {
+                    {bannerPoints.map((seqData: BannerPoint) => {
                       const value =
-                        dataSource.data[
-                          seq as keyof typeof dataSource.data
-                        ];
+                        tableData[
+                          seq as keyof typeof tableData
+                        ] ?? {};
                       return (
                         <td
                           key={seqData.pointID}

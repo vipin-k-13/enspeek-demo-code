@@ -78,6 +78,22 @@ const studySlice = createSlice({
       localStorage.removeItem("study")
       return state;
     },
+    setHasQuestionnaire: (state, action: PayloadAction<number>) => {
+      state.hasQuestionnaire = Number(action.payload);
+      localStorage.setItem(
+        "study",
+        JSON.stringify({
+          studyID: state.studyID,
+          hasQuestionnaire: Number(action.payload),
+          launch: Number(state.launch),
+          name: state.name,
+          output: Number(state.output),
+          link: Number(state.link),
+          closed: Number(state.closed),
+        })
+      );
+      return state;
+    },
     setStudys: (state, payload: PayloadAction<any[]>) => {
       state.Studys = payload.payload;
       return state;
@@ -89,6 +105,6 @@ const studySlice = createSlice({
   },
 });
 
-export const { setStudyInfo, resetStudyInfo, setStudys, setFilterStudys } =
+export const { setStudyInfo, resetStudyInfo, setHasQuestionnaire, setStudys, setFilterStudys } =
   studySlice.actions;
 export default studySlice.reducer;

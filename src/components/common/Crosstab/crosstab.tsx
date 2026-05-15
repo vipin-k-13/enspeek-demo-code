@@ -15,7 +15,7 @@ import {
   setIsAddBannerModalOpen,
   setSelectedQuestions,
 } from "../../../store/CrosstabSlice";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   resetLogicData,
   resetTableData,
@@ -52,14 +52,35 @@ export default function Crosstab() {
     (state: RootState) => state.crosstab
   );
   const { Banners } = useSelector((state: RootState) => state.crossTabData);
+  const bootstrapKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (QListData && defaultBannerID) {
-      const Q = QListData.map((q: any) => q.qID);
-      dispatch(setSelectedQuestions(Q));
-      tableListAddMutate();
+    const shouldBootstrapDefaultBanner =
+      !!defaultBannerID &&
+      Array.isArray(QListData) &&
+      QListData.length > 0 &&
+      BannerListData?.length === 1 &&
+      Array.isArray(BannerListData[0]?.tableID_list) &&
+      BannerListData[0].tableID_list.length === 0;
+
+    if (!shouldBootstrapDefaultBanner) {
+      return;
     }
-  }, [QListData]);
+
+    const bootstrapKey = `${state.studyID}:${defaultBannerID}`;
+    if (bootstrapKeyRef.current === bootstrapKey) {
+      return;
+    }
+
+    const questionIds = QListData.map((q: any) => q.qID);
+    if (!questionIds.length) {
+      return;
+    }
+
+    bootstrapKeyRef.current = bootstrapKey;
+    dispatch(setSelectedQuestions(questionIds));
+    tableListAddMutate(questionIds);
+  }, [BannerListData, QListData, defaultBannerID, dispatch, state.studyID, tableListAddMutate]);
 
   useEffect(() => {
     dispatch(resetLogicData());

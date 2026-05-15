@@ -95,7 +95,7 @@ export default function BannerSettings({
     }
 
     if (value) {
-      tableListAddMutate();
+      tableListAddMutate(undefined);
       editBannerMutation({
         ...value,
         bannerID: value.bannerid,
