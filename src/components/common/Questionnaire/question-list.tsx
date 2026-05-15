@@ -9,6 +9,7 @@ import type { AppDispatch, RootState } from "../../../store/store";
 import { cn, getTimeGreeting, normalizeDisplayName } from "../../../utils";
 import { setEditingQuestion } from "../../../store/QuestionSlice";
 import { setIsAddingQuestion } from "../../../store/TriggerSlice";
+import { setHasQuestionnaire } from "../../../store/CrosstabStudySlice";
 import QuestionnaireForm from "./QuestionnaireForm";
 import DataList from "./DataList";
 import PageSubheader from "../../ui/PageSubheader";
@@ -25,7 +26,7 @@ export default function QuestionList() {
   const user = useSelector((state: RootState) => state.user);
   const { isAddingQuestion } = useSelector((state: RootState) => state.trigger);
   const { submitItems } = useSelector((state: RootState) => state.question);
-  const { launch, output } = useSelector((state: RootState) => state.study);
+  const { hasQuestionnaire, launch, output } = useSelector((state: RootState) => state.study);
   const isDragDisabled = launch === 1 && output === 1;
   const firstName = user.firstName || "there";
   const normalizedFirstName = normalizeDisplayName(firstName);
@@ -69,6 +70,12 @@ export default function QuestionList() {
       toast.warning("Invalid access route detected. Redirecting you to the homepage for a better experience.");
     }
   }, [navigate, studyID]);
+
+  useEffect(() => {
+    if (submitItems.length > 0 && Number(hasQuestionnaire) === 0) {
+      dispatch(setHasQuestionnaire(1));
+    }
+  }, [dispatch, hasQuestionnaire, submitItems.length]);
 
   const isInitialQuestionnaireLoading =
     isStudyInfoLoading || (isQuestionnaireListLoading && submitItems.length === 0);
