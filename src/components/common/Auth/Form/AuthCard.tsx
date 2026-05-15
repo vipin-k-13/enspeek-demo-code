@@ -8,7 +8,7 @@ const AuthCard: React.FC<AuthCardProps> = ({ title, subtitle, topSlot, children,
   return (
     <div
       className={cn(
-        "w-full max-w-[34rem] rounded-[24px] border border-white/30 bg-login-card/95 shadow-[0_20px_60px_rgba(27,30,78,0.22)] backdrop-blur-sm",
+        "platform-auth-card w-full max-w-[34rem] rounded-[24px] border backdrop-blur-sm",
         compact ? "px-5 py-5 sm:px-6 sm:py-6" : "px-5 py-7 sm:px-7 sm:py-9"
       )}
     >
